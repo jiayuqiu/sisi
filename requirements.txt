@@ -1,0 +1,18 @@
+matplotlib
+numpy
+pandas
+# pyspark==3.2.1
+# findspark
+jupyterlab
+pykml
+pyodbc
+geoalchemy2
+plotly
+shapely
+jupyter
+tqdm
+pandarallel
+scikit-learn
+pymssql
+pyarrow
+fastparquet
