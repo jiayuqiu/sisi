@@ -40,7 +40,7 @@ def compute_convex_hull(df):
     return hulls
 
 
-def hull_points_to_sql(df):
+def hull_points_to_sql_server(df):
     hulls = compute_convex_hull(df)
     conn = pymssql.connect(sql_server_properties['host'], sql_server_properties['user'], 
                            'Amacs@0212', sql_server_properties['database'])

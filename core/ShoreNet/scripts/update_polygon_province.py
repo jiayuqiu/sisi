@@ -39,8 +39,8 @@ def load_polygon():
     conn = pymssql.connect(server, user, password, database)
     cursor = conn.cursor()
 
-    query = "SELECT Id, Name, Polygon.STAsText() as Polygon, Province FROM sisi.ShoreNet.tab_dock_polygon " + \
-            "WHERE Province is NULL;"
+    query = "SELECT Id, Name, Polygon.STAsText() as Polygon FROM ShoreNet.dim_dock_polygon t " + \
+            "WHERE t.Distruct is NULL;"
     dock_df = pd.read_sql(query, conn)
 
     import re
@@ -58,12 +58,12 @@ def load_polygon():
         district = localtion_dict['regeocode']['addressComponent']['district']
         print(province, district)
         if district == '[]':
-            cursor.execute(f"UPDATE sisi.ShoreNet.tab_dock_polygon "
+            cursor.execute(f"UPDATE ShoreNet.dim_dock_polygon "
                            f"SET Province = N'{province}' "
                            f", Distruct = NULL "
                            f", lng = {coordinates[0][0]} , lat = {coordinates[0][1]} WHERE Id = {row['Id']}")
         else:
-            cursor.execute(f"UPDATE sisi.ShoreNet.tab_dock_polygon "
+            cursor.execute(f"UPDATE ShoreNet.dim_dock_polygon "
                            f"SET Province = N'{province}' "
                            f", Distruct = N'{district}' "
                            f", lng = {coordinates[0][0]} , lat = {coordinates[0][1]} WHERE Id = {row['Id']}")

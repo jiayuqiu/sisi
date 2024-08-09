@@ -1,6 +1,11 @@
 import pandas as pd
-import pymssql
 
+from sqlalchemy.orm import sessionmaker
+from geoalchemy2 import WKTElement
+
+from pprint import pprint
+import json
+import codecs
 import os, sys
 import platform
 os_name = platform.system()
@@ -25,41 +30,93 @@ print(parent_path)
 sys.path.append(parent_path)
 print(sys.path)
 
-from core.ShoreNet.scripts.parse_kml import parse_kml_document
+# from core.ShoreNet.scripts.parse_kml import parse_kml_document
+from core.conf import mysql_properties, mysql_engine
+from core.ShoreNet.utils.amap import amap_request
+from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+
+
+def insert_data():
+    Session = sessionmaker(bind=mysql_engine)
+    session = Session()
+
+    # # load kml file
+    # file_name = os.path.join(DATA_PATH, 'dock/extensive_20240730_v2.kml')
+    # dock_polygon_list = parse_kml_document(file_name)
+    # print(f"dock polygon count: {len(dock_polygon_list)}")
+    # print(dock_polygon_list[:5])
+
+    # # load json file
+    file_name = os.path.join(DATA_PATH, 'ShoreNet/dock_polygon.json')
+    with codecs.open(file_name, 'r', 'utf-8-sig') as f:
+        dock_data = json.load(f)
+
+    for dock in dock_data:
+        polygon_coords = dock['polygon']
+        polygon_wkt = f"POLYGON(({', '.join([f'{coord[1]} {coord[0]}' for coord in polygon_coords])}))"
+
+        # Create a DimDockPolygon instance
+        new_dock = DimDockPolygon(
+            Name=dock['name'],
+            Polygon=WKTElement(polygon_wkt, srid=4326),  # srid=4326 is commonly used for GPS coordinates
+            Province=dock['province'],
+            Distruct=None,  # Assuming there is no 'Distruct' key in the JSON, set to None
+            lng=dock['lng'],
+            lat=dock['lat'],
+            type_id=None,  # Assuming 'type_id' is not present in the JSON, set to None
+            stage_id=None  # Assuming 'stage_id' is not present in the JSON, set to None
+        )
+
+        # Add and commit the new dock entry
+        session.add(new_dock)
+
+    # Commit all the changes
+    session.commit()
+
+    # Close the session
+    session.close()
+
+
+def update_location():
+    Session = sessionmaker(bind=mysql_engine)
+    session = Session()
     
+    data_to_update = session.query(
+        DimDockPolygon
+    ).filter(
+        DimDockPolygon.Distruct == None
+    ).all()
+    
+    n = len(data_to_update)
+    execute_count = 0
+    for row in data_to_update:
+        print(f"{execute_count} / {n}")
+        localtion_dict = amap_request(row.lng, row.lat)
+        province = localtion_dict['regeocode']['addressComponent']['province']
+        district = localtion_dict['regeocode']['addressComponent']['district']
+        
+        if isinstance(district, str):
+            session.query(
+                DimDockPolygon
+            ).filter(
+                DimDockPolygon.Id == row.Id
+            ).update(
+                {
+                    DimDockPolygon.Province: province,
+                    DimDockPolygon.Distruct: district
+                }
+            )
+            
+        execute_count += 1
+        if execute_count % 50 == 0:
+            session.commit()
+    
+    # Commit all changes
+    session.commit()
 
-# Define the connection details
-server = '127.0.0.1'
-user = 'sa'
-password = 'Amacs@0212'
-database = 'sisi'
-
-# Connect to SQL Server
-conn = pymssql.connect(server, user, password, database)
-cursor = conn.cursor()
-
-file_name = os.path.join(DATA_PATH, 'dock/extensive_20240730_v2.kml')
-dock_polygon_list = parse_kml_document(file_name)
-print(f"dock polygon count: {len(dock_polygon_list)}")
-print(dock_polygon_list[:5])
+    # Close the session
+    session.close()
 
 
-# Insert polygon data
-insert_query = """
-INSERT INTO ShoreNet.tab_dock_polygon (Name, Polygon)
-VALUES (N'%s', geometry::STGeomFromText('%s', 4326));
-"""
-
-for row in dock_polygon_list:
-    name = row['name']
-    # province = row['province']
-    polygon_coords = row['polygon']
-    polygon_wkt = f"POLYGON(({', '.join([f'{lon} {lat}' for lon, lat in polygon_coords])}))"
-    q = insert_query % (name, polygon_wkt)
-    cursor.execute(q)
-
-conn.commit()
-
-# Close the connection
-cursor.close()
-conn.close()
+if __name__ == '__main__':
+    update_location()

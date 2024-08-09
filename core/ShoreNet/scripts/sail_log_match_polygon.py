@@ -7,7 +7,10 @@ import platform
 import pymssql
 import pandas as pd
 import numpy as np
-from sqlalchemy import text
+from sqlalchemy import text, and_, or_, func
+from sqlalchemy.orm import sessionmaker
+
+from shapely.wkt import loads as load_wkt
 
 parent_path = os.path.abspath('.')
 sys.path.append(parent_path)
@@ -17,9 +20,11 @@ parent_path = os.path.abspath('../../')
 sys.path.append(parent_path)
 print(sys.path)
 
-from core.conf import ss_engine
+from core.conf import mysql_engine
 from core.ShoreNet.utils.geo import point_poly, get_geodist
 from core.conf import sql_server_properties
+from core.ShoreNet.utils.get_stage_id import get_stage_id
+from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 
 os_name = platform.system()
 if os.name == 'nt' or os_name == 'Windows':
@@ -29,21 +34,14 @@ elif os.name == 'posix' or os_name == 'Linux':
 else:
     DATA_PATH = r"/mnt/d/data/sisi/"
 
-STAGE_ID = 5
+
+STAGE_ID = get_stage_id()
+STAGE_ID += 1
 
 
 def truncate_sailing():
-    conn = pymssql.connect(sql_server_properties['host'], sql_server_properties['user'], 
-                           'Amacs@0212', sql_server_properties['database'])
-    cursor = conn.cursor()
-    
-    cursor.execute('TRUNCATE TABLE ShoreNet.tab_sailing_log;')
-    
-    conn.commit()
-
-    # Close the connection
-    cursor.close()
-    conn.close()
+    with mysql_engine.connect() as con:
+        con.execute(text("TRUNCATE TABLE factor_stop_events"))
 
 
 def find_dock(event_row, dock_list):
@@ -68,32 +66,33 @@ def get_dock_polygon():
     get dock polygon from sql server
     :return: [{'dock_id': ..., 'name': ..., 'polygon': [...], 'province': ... }]
     """
-    query = f"""
-        SELECT 
-            Id, Name, Polygon.STAsText() as Polygon, Province 
-        FROM 
-            sisi.ShoreNet.tab_dock_polygon
-        WHERE
-           (type_id = 1 or type_id = 6) and (stage_id = {STAGE_ID-1} or stage_id IS NULL)
-        ORDER BY
-            Id
-    """
-    with ss_engine.connect() as con:
-        dock_df = pd.read_sql(query, con)
+    Session = sessionmaker(bind=mysql_engine)
+    session = Session()
+    polygons = session.query(
+        DimDockPolygon.Id,
+        DimDockPolygon.Name,
+        func.ST_AsText(DimDockPolygon.Polygon).label('Polygon')
+    ).filter(
+        or_(DimDockPolygon.type_id == 1, DimDockPolygon.type_id == 6)
+    ).filter(
+        or_(DimDockPolygon.stage_id == 5, DimDockPolygon.stage_id == None)
+    ).order_by(
+        DimDockPolygon.Id
+    ).all()
 
     dock_polygon_list = []
-    for _, row in dock_df.iterrows():
-        wkt_polygon = row['Polygon']
+    for polygon in polygons:
+        wkt_polygon = polygon.Polygon
         pattern = re.compile(r'\d+\.\d+\s\d+\.\d+')
         matches = pattern.findall(wkt_polygon)
         coordinates = [[float(coord) for coord in match.split()] for match in matches]
-        # if row['Id'] in [9, 10]:
         dock_polygon_list.append(
             {
-                'dock_id': row['Id'], 'name': row['Name'], 'polygon': coordinates, 'province': row['Province']
+                'dock_id': polygon.Id, 'name': polygon.Name, 'polygon': coordinates
             }
         )
     print(f"Dock polygon count: {len(dock_polygon_list)}")
+    session.close()
     return dock_polygon_list
 
 
@@ -123,7 +122,17 @@ class DockDBSCAN(object):
         sail_df = sail_df.loc[(sail_df['lng'] > 105.5) & (sail_df['lng'] < 126) &
                               (sail_df['lat'] > 18) & (sail_df['lat'] < 41.6) &
                               (sail_df['avgSpeed'] < 1)]
+        # sail_df = sail_df.iloc[:10000, :]
         return sail_df
+
+    @staticmethod
+    def get_coal_mmsi_list_init():
+        coal_mmsi_file_name = '/mnt/d/IdeaProjects/SISI/core/ShoreNet/scripts/coal_mmsi_v1_init.json'
+        rf = open(coal_mmsi_file_name, 'r')
+        exists_mmsi_dict = json.load(rf)
+        # print(f"exists mmsi count: {len(exists_mmsi_dict['mmsi'])}")
+        rf.close()
+        return exists_mmsi_dict
 
     @staticmethod
     def update_coal_mmsi_list(sail_df):
@@ -154,10 +163,10 @@ class DockDBSCAN(object):
 
     @staticmethod
     def save_sail_log(df):
-        with ss_engine.connect() as con:
+        with mysql_engine.connect() as con:
             df.to_sql(
-                name='tab_sailing_log',
-                schema='ShoreNet',
+                name='factor_stop_events',
+                schema='sisi',
                 if_exists='append',
                 index=False,
                 con=con
@@ -173,13 +182,12 @@ class DockDBSCAN(object):
             if not np.isnan(row['coal_dock_id']):
                 cursor.execute(f"""
                             update 
-                                ShoreNet.tab_sailing_log
+                                sisi.tab_sailing_log
                             SET 
                                 coal_dock_id = {row['coal_dock_id']}
                             WHERE
                                 mmsi = {row['mmsi']} and Begin_time = {row['Begin_time']}
                             """)
-        
         conn.commit()
 
         # Close the connection
@@ -201,7 +209,7 @@ class DockDBSCAN(object):
         """
         events_df = pd.read_sql(
             sql=load_query,
-            con=ss_engine
+            con=mysql_engine
         )
         
         # update_dock_id_list = [6023, 6022, 6021, 6020, 6019, 6018, 6017, 6016]
@@ -212,13 +220,13 @@ class DockDBSCAN(object):
         # events_df.loc[:, 'stage_id'] = [STAGE_ID] * events_df.shape[0]
         self.update_coal_dock_id(events_df.loc[~events_df['coal_dock_id'].isna()])
         
-    def run(self, if_truncate=False):
+    def run(self, if_truncate=True):
         if if_truncate:
             truncate_sailing()
 
         # sys.exit(1)
         from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=True, nb_workers=12)
+        pandarallel.initialize(progress_bar=True, nb_workers=8)
 
         coal_sail_df_list = []
         for month in self.months:
@@ -234,14 +242,20 @@ class DockDBSCAN(object):
             month_sail_df.loc[:, 'stage_id'] = [STAGE_ID] * month_sail_df.shape[0]
             coal_sail_df_list.append(month_sail_df)
 
-            # update coal mmsi list
-            coal_mmsi_dict = self.update_coal_mmsi_list(month_sail_df)
+            # # update coal mmsi list
+            # coal_mmsi_dict = self.update_coal_mmsi_list(month_sail_df)
+            coal_mmsi_dict = self.get_coal_mmsi_list_init()
+            
             coal_mmsi_list = [int(mmsi) for mmsi in coal_mmsi_dict['mmsi']]
             month_coal_sail_df = month_sail_df.loc[month_sail_df['mmsi'].isin(coal_mmsi_list)]
 
             # output monthly extensive sail log
             extensive_coal_dock_df = month_sail_df.loc[(month_sail_df['coal_dock_id'].isna()) &
                                                        (month_sail_df['mmsi'].isin(coal_mmsi_dict['mmsi']))]
+            
+            if not os.path.exists(os.path.join(f"{DATA_PATH}/extensive_coal_events/stage_{STAGE_ID}/")):
+                os.makedirs(os.path.join(f"{DATA_PATH}/extensive_coal_events/stage_{STAGE_ID}/"))
+                
             extensive_coal_dock_df.to_csv(f"{DATA_PATH}/extensive_coal_events/stage_{STAGE_ID}/{month}.csv",
                                           index=False, encoding='utf-8-sig')
             self.save_sail_log(month_coal_sail_df)
@@ -256,7 +270,8 @@ class DockDBSCAN(object):
 
 
 if __name__ == '__main__':
-    dd = DockDBSCAN(start_month=1, end_month=12)
+    dd = DockDBSCAN(start_month=1, end_month=1)
     print(dd.months)
-    # dd.run()
-    dd.update()
+    dd.run()
+    # dd.update()
+    # get_dock_polygon()
