@@ -27,15 +27,27 @@ from core.conf import sql_server_properties
 from core.ShoreNet.utils.get_stage_id import get_stage_id
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 
+argv_list = sys.argv[1:]
+if len(argv_list) < 1:
+    data_path = ""
+else:
+    data_path = argv_list[0]
+
 os_name = platform.system()
 if os.name == 'nt' or os_name == 'Windows':
     DATA_PATH = r"D:/data/sisi/"
 elif os.name == 'posix' or os_name == 'Linux':
-    DATA_PATH = r"/mnt/d/data/sisi/"
+    if data_path != "":
+        DATA_PATH = data_path
+    else:
+        DATA_PATH = r"/mnt/d/data/sisi/"
 else:
-    DATA_PATH = r"/mnt/d/data/sisi/"
+    if data_path != "":
+        DATA_PATH = data_path
+    else:
+        DATA_PATH = r"/mnt/d/data/sisi/"
 
-
+print(DATA_PATH)
 STAGE_ID = get_stage_id()
 STAGE_ID += 1
 
