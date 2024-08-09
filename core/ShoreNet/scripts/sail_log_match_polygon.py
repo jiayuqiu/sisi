@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import platform
+import traceback
 
 import pymssql
 import pandas as pd
@@ -123,6 +124,7 @@ class DockDBSCAN(object):
                               (sail_df['lat'] > 18) & (sail_df['lat'] < 41.6) &
                               (sail_df['avgSpeed'] < 1)]
         # sail_df = sail_df.iloc[:10000, :]
+        sail_df.drop_duplicates(subset=['mmsi', 'Begin_time', 'End_time'], keep='first')
         return sail_df
 
     @staticmethod
@@ -196,7 +198,7 @@ class DockDBSCAN(object):
                 
     def update(self, ):
         from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=True, nb_workers=8)
+        pandarallel.initialize(progress_bar=True, nb_workers=10)
         
         load_query = f"""
         select 
@@ -226,7 +228,7 @@ class DockDBSCAN(object):
 
         # sys.exit(1)
         from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=True, nb_workers=8)
+        pandarallel.initialize(progress_bar=True, nb_workers=10)
 
         coal_sail_df_list = []
         for month in self.months:
@@ -258,7 +260,11 @@ class DockDBSCAN(object):
                 
             extensive_coal_dock_df.to_csv(f"{DATA_PATH}/extensive_coal_events/stage_{STAGE_ID}/{month}.csv",
                                           index=False, encoding='utf-8-sig')
-            self.save_sail_log(month_coal_sail_df)
+            try:
+                self.save_sail_log(month_coal_sail_df)
+            except:
+                print(f"Save failed. {month}")
+                
             # print(month_coal_sail_df.loc[month_coal_sail_df['coal_dock_id'].isin([9, 10])].shape)
             print(f"{month} done!::::::::::::::::::::::::::::::::::::::::")
 
@@ -270,7 +276,7 @@ class DockDBSCAN(object):
 
 
 if __name__ == '__main__':
-    dd = DockDBSCAN(start_month=1, end_month=1)
+    dd = DockDBSCAN(start_month=1, end_month=12)
     print(dd.months)
     dd.run()
     # dd.update()
