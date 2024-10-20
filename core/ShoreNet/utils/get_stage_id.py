@@ -8,9 +8,7 @@
 @Desc    :   get latest stage id from database
 '''
 
-# here put the import lib
 import pandas as pd
-import numpy as np
 
 import os, sys
 
@@ -22,7 +20,7 @@ parent_path = os.path.abspath('../../')
 sys.path.append(parent_path)
 print(sys.path)
 
-from core.conf import mysql_engine
+from core.ShoreNet.conf import mysql_engine
 
 
 def get_stage_id():

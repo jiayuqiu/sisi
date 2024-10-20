@@ -3,15 +3,10 @@ import os
 import sys
 import json
 import platform
-import traceback
 
-import pymssql
 import pandas as pd
-import numpy as np
-from sqlalchemy import text, and_, or_, func
+from sqlalchemy import text, or_, func
 from sqlalchemy.orm import sessionmaker
-
-from shapely.wkt import loads as load_wkt
 
 parent_path = os.path.abspath('.')
 sys.path.append(parent_path)
@@ -19,13 +14,12 @@ parent_path = os.path.abspath('../')
 sys.path.append(parent_path)
 parent_path = os.path.abspath('../../')
 sys.path.append(parent_path)
-print(sys.path)
+# print(sys.path)
 
-from core.conf import mysql_engine
-from core.ShoreNet.utils.geo import point_poly, get_geodist
-from core.conf import sql_server_properties
+from core.ShoreNet.conf import mysql_engine
 from core.ShoreNet.utils.get_stage_id import get_stage_id
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+
 
 argv_list = sys.argv[1:]
 if len(argv_list) < 1:
@@ -47,7 +41,8 @@ else:
     else:
         DATA_PATH = r"/mnt/d/data/sisi/"
 
-print(DATA_PATH)
+
+# print(DATA_PATH)
 STAGE_ID = get_stage_id()
 STAGE_ID += 1
 
@@ -141,7 +136,7 @@ class DockDBSCAN(object):
 
     @staticmethod
     def get_coal_mmsi_list_init():
-        coal_mmsi_file_name = '/mnt/d/IdeaProjects/SISI/core/ShoreNet/scripts/coal_mmsi_v1_init.json'
+        coal_mmsi_file_name = os.path.join(DATA_PATH, "statics/coal_mmsi_v1_init.json")
         rf = open(coal_mmsi_file_name, 'r')
         exists_mmsi_dict = json.load(rf)
         # print(f"exists mmsi count: {len(exists_mmsi_dict['mmsi'])}")
@@ -156,7 +151,7 @@ class DockDBSCAN(object):
         # save to json
         coal_mmsi_dict = {'mmsi': coal_mmsi_list}
 
-        coal_mmsi_file_name = '/home/qiu/ideaProjects/SISI/core/ShoreNet/scripts/coal_mmsi_v1.json'
+        coal_mmsi_file_name = os.path.join(DATA_PATH, "statics/coal_mmsi_v1_init.json")
         if os.path.exists(coal_mmsi_file_name):
             print(f"exists coal_mmsi, append mmsi")
             rf = open(coal_mmsi_file_name, 'r')
@@ -186,31 +181,31 @@ class DockDBSCAN(object):
                 con=con
             )
     
-    @staticmethod
-    def update_coal_dock_id(df):
-        conn = pymssql.connect(sql_server_properties['host'], sql_server_properties['user'], 
-                               'Amacs@0212', sql_server_properties['database'])
-        cursor = conn.cursor()
-        
-        for _, row in df.iterrows():
-            if not np.isnan(row['coal_dock_id']):
-                cursor.execute(f"""
-                            update 
-                                sisi.tab_sailing_log
-                            SET 
-                                coal_dock_id = {row['coal_dock_id']}
-                            WHERE
-                                mmsi = {row['mmsi']} and Begin_time = {row['Begin_time']}
-                            """)
-        conn.commit()
-
-        # Close the connection
-        cursor.close()
-        conn.close()
+    # @staticmethod
+    # def update_coal_dock_id(df):
+    #     conn = pymssql.connect(sql_server_properties['host'], sql_server_properties['user'],
+    #                            'Amacs@0212', sql_server_properties['database'])
+    #     cursor = conn.cursor()
+    #
+    #     for _, row in df.iterrows():
+    #         if not np.isnan(row['coal_dock_id']):
+    #             cursor.execute(f"""
+    #                         update
+    #                             sisi.tab_sailing_log
+    #                         SET
+    #                             coal_dock_id = {row['coal_dock_id']}
+    #                         WHERE
+    #                             mmsi = {row['mmsi']} and Begin_time = {row['Begin_time']}
+    #                         """)
+    #     conn.commit()
+    #
+    #     # Close the connection
+    #     cursor.close()
+    #     conn.close()
                 
     def update(self, ):
         from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=True, nb_workers=10)
+        pandarallel.initialize(progress_bar=True, nb_workers=8)
         
         load_query = f"""
         select 
@@ -232,15 +227,15 @@ class DockDBSCAN(object):
         dock_tag = events_df.parallel_apply(find_dock, args=(update_polygon_list, ), axis=1)
         events_df.loc[:, 'coal_dock_id'] = dock_tag
         # events_df.loc[:, 'stage_id'] = [STAGE_ID] * events_df.shape[0]
-        self.update_coal_dock_id(events_df.loc[~events_df['coal_dock_id'].isna()])
+        # self.update_coal_dock_id(events_df.loc[~events_df['coal_dock_id'].isna()])
         
-    def run(self, if_truncate=True):
+    def run(self, if_truncate=False):
         if if_truncate:
             truncate_sailing()
 
         # sys.exit(1)
         from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=True, nb_workers=10)
+        pandarallel.initialize(progress_bar=False, nb_workers=8)
 
         coal_sail_df_list = []
         for month in self.months:
@@ -251,14 +246,14 @@ class DockDBSCAN(object):
                 print(f"{month} load failed.!!!!!!!!!!!!!!!!!!!!!")
                 continue
 
+            # # update coal mmsi list
+            # coal_mmsi_dict = self.update_coal_mmsi_list(month_sail_df)
+            coal_mmsi_dict = self.get_coal_mmsi_list_init()
+
             dock_tag = month_sail_df.parallel_apply(find_dock, args=(self.docks, ), axis=1)
             month_sail_df.loc[:, 'coal_dock_id'] = dock_tag
             month_sail_df.loc[:, 'stage_id'] = [STAGE_ID] * month_sail_df.shape[0]
             coal_sail_df_list.append(month_sail_df)
-
-            # # update coal mmsi list
-            # coal_mmsi_dict = self.update_coal_mmsi_list(month_sail_df)
-            coal_mmsi_dict = self.get_coal_mmsi_list_init()
             
             coal_mmsi_list = [int(mmsi) for mmsi in coal_mmsi_dict['mmsi']]
             month_coal_sail_df = month_sail_df.loc[month_sail_df['mmsi'].isin(coal_mmsi_list)]
@@ -276,7 +271,7 @@ class DockDBSCAN(object):
                 self.save_sail_log(month_coal_sail_df)
             except:
                 print(f"Save failed. {month}")
-                
+
             # print(month_coal_sail_df.loc[month_coal_sail_df['coal_dock_id'].isin([9, 10])].shape)
             print(f"{month} done!::::::::::::::::::::::::::::::::::::::::")
 
@@ -290,6 +285,6 @@ class DockDBSCAN(object):
 if __name__ == '__main__':
     dd = DockDBSCAN(start_month=1, end_month=12)
     print(dd.months)
-    dd.run()
+    dd.run(if_truncate=True)
     # dd.update()
     # get_dock_polygon()

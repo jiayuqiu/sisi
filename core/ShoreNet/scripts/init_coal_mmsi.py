@@ -10,7 +10,6 @@
 
 # here put the import lib
 import pandas as pd
-import numpy as np
 
 import sys
 import os
@@ -34,7 +33,7 @@ elif os.name == 'posix' or os_name == 'Linux':
 else:
     DATA_PATH = r"/mnt/d/data/sisi/"
 
-from core.conf import ss_engine
+from core.ShoreNet.conf import ss_engine
 from core.ShoreNet.scripts.sail_log_match_polygon import find_dock
 
 

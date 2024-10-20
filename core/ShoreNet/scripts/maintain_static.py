@@ -5,7 +5,7 @@ import traceback
 
 import math
 
-from core.conf import ss_engine
+from core.ShoreNet.conf import ss_engine
 
 
 def str_to_int(value):

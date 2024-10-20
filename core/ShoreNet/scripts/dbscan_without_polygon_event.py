@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import pymssql
-from sqlalchemy import create_engine, text
 import plotly.express as px
 import plotly.graph_objects as go
 from scipy.spatial import ConvexHull, QhullError
@@ -9,7 +8,6 @@ from simplification.cutil import simplify_coords
 
 import time
 import platform
-import json
 import os
 import sys
 import traceback
@@ -30,7 +28,7 @@ print(sys.path)
 
 from sklearn.cluster import DBSCAN
 
-from core.conf import sql_server_properties
+from core.ShoreNet.conf import sql_server_properties
 
 
 os_name = platform.system()

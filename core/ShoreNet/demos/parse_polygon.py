@@ -1,10 +1,10 @@
-from sqlalchemy import create_engine, MetaData, Column, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base, Session
-from geoalchemy2 import Geometry, Geography
+from geoalchemy2 import Geometry
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Polygon
 
-from core.conf import ss_engine as engine
+from core.ShoreNet.conf import ss_engine as engine
 
 # # Database connection details
 # username = 'sa'

@@ -9,15 +9,12 @@
 '''
 
 # here put the import lib
-import pandas as pd
-import numpy as np
 
 import pymssql
 import time
 
-from sklearn.cluster import DBSCAN
 from scipy.spatial import ConvexHull, QhullError
-from core.conf import sql_server_properties
+from core.ShoreNet.conf import sql_server_properties
 
 
 # Function to compute convex hull and return the coordinates

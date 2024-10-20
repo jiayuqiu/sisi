@@ -1,9 +1,6 @@
-import pandas as pd
-
 from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
 
-from pprint import pprint
 import json
 import codecs
 import os, sys
@@ -31,7 +28,7 @@ sys.path.append(parent_path)
 print(sys.path)
 
 # from core.ShoreNet.scripts.parse_kml import parse_kml_document
-from core.conf import mysql_properties, mysql_engine
+from core.ShoreNet.conf import mysql_engine
 from core.ShoreNet.utils.amap import amap_request
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 
