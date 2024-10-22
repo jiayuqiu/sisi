@@ -13,7 +13,13 @@ from sqlalchemy.engine.base import Engine
 
 from core.ShoreNet.conf import get_data_path
 from core.ShoreNet.conf import connect_database
-from core.ShoreNet.definitions.parameters import DirPathNames, FileNames
+from core.ShoreNet.definitions.parameters import (
+    DirPathNames,
+    FileNames,
+    DBSCANParameters,
+    EventFilterParameters,
+    GeoParameters
+)
 
 
 class VariablesManager:
@@ -21,6 +27,14 @@ class VariablesManager:
         self.data_path: str = get_data_path()
         self.dp_names: DirPathNames = self.define_dir_path()
         self.f_names: FileNames = self.define_file_names()
+        self.event_param = EventFilterParameters()
+        self.geo_param = GeoParameters()
+
+        # TODO: add loading of parameters from config file(yml)
+        self.dbscan_param = DBSCANParameters(
+            eps=0.2/self.geo_param.kms_per_radian,
+            min_samples=30
+        )
 
         # connect to database
         self.engine: Union[Engine, None] = connect_database()

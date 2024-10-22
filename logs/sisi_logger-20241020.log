@@ -1,0 +1,23 @@
+2024-10-20 16:49:30,439, INFO main_upload_statics.py, 39: static data uploaded successfully
+2024-10-20 16:51:57,217, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 16:52:04,304, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 16:53:26,421, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 16:53:33,530, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 16:54:50,748, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 16:54:57,818, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 16:56:00,101, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 16:56:03,148, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 17:04:40,309, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 17:04:47,447, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 17:04:55,170, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 17:04:58,274, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 17:05:31,811, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 17:05:34,834, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 17:05:35,298, INFO main_upload_statics.py, 54: uploading statics data to database...
+2024-10-20 17:07:34,257, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 17:07:37,293, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 17:07:37,733, INFO main_upload_statics.py, 53: uploading statics data to database...
+2024-10-20 17:37:09,287, INFO main_upload_statics.py, 33: static data shape before cleaning: (85353, 17)
+2024-10-20 17:37:12,297, INFO main_upload_statics.py, 37: static data shape after cleaning: (13266, 18)
+2024-10-20 17:37:12,305, INFO main_upload_statics.py, 43: uploading statics data to database...
+2024-10-20 17:37:12,703, INFO main_upload_statics.py, 54: uploaded statics data to database successfully

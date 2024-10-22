@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 '''
-@File    :   hull_polygon.py
+@File    :   polygon.py
 @Time    :   2024/07/25 20:21:04
 @Author  :   qiujiayu 
 @Version :   1.0
@@ -8,13 +8,11 @@
 @Desc    :   None
 '''
 
-# here put the import lib
 
 import pymssql
 import time
 
 from scipy.spatial import ConvexHull, QhullError
-from core.ShoreNet.conf import sql_server_properties
 
 
 # Function to compute convex hull and return the coordinates
