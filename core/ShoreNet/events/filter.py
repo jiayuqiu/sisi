@@ -22,10 +22,10 @@ def print_clean_up_effect(original_df: DataFrame, cleaned_df: DataFrame) -> None
     print(f"cleaned event data shape: {cleaned_df.shape}")
 
 
-def clean_up(
+def clean_up_events(
         df: DataFrame,
         var: VariablesManager,
-        mmsi_enum_list: list[int]
+        mmsi_enum_list: list[int] = []
 ) -> DataFrame:
     """
     clean up error events data
@@ -35,6 +35,7 @@ def clean_up(
        stop duration should less than 7 * 24 * 3600 seconds
 
     2. events category should be equal to "stop_event_poly"
+
 
     :param df: event dataframe
     :param var: variables manager
@@ -47,7 +48,7 @@ def clean_up(
     _df = _df.loc[
         (_df['duration'] > var.event_param.stop_duration_min) &
         (_df['duration'] < var.event_param.stop_duration_max) &
-        (_df['Event_category'] == var.event_param.event_category)
+        (_df['Event_categories'] == var.event_param.event_category)
     ]
 
     # *. if there is mmsi_enum_list, then filter mmsi

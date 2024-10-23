@@ -12,7 +12,7 @@ from pandas.core.frame import DataFrame
 import numpy as np
 
 
-def clean_up(df: DataFrame) -> DataFrame:
+def clean_up_statics(df: DataFrame) -> DataFrame:
     """
     There are error data in static_data.
     This function is aim to filter error data.

@@ -7,10 +7,14 @@
 
 import re
 
+import numpy as np
+from pandas.core.frame import DataFrame
 from sqlalchemy import func, or_
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import engine
+from sklearn.cluster import DBSCAN
 
+from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 
 
@@ -49,3 +53,21 @@ def get_dock_polygon(con: engine):
     print(f"Dock polygon count: {len(dock_polygon_list)}")
     session.close()
     return dock_polygon_list
+
+
+def cluster_dock_polygon_dbscan(
+        events_df: DataFrame,
+        var: VariablesManager
+):
+    # dbscan all_coal_df
+    coords = events_df[['lng', 'lat']].values
+
+    kms_per_radian = 6371.0088
+    epsilon = 0.2 / kms_per_radian
+
+    # DBSCAN clustering
+    db = DBSCAN(eps=epsilon, min_samples=30, algorithm='ball_tree', metric='haversine').fit(np.radians(coords))
+
+    # Add cluster labels to the DataFrame
+    # events_df['cluster'] = db.labels_
+    return db.labels_
