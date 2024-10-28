@@ -12,7 +12,7 @@ import pandas as pd
 
 from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.utils.setup_logger import set_logger
-from core.ShoreNet.statics.filter import clean_up
+from core.ShoreNet.statics.filter import clean_up_statics
 
 _logger = set_logger(__name__)
 
@@ -33,7 +33,7 @@ def run_app() -> None:
     _logger.info(f"static data shape before cleaning: {ship_statics_df.shape}")
 
     # -. clean statics
-    cleaned_statics_df = clean_up(ship_statics_df)
+    cleaned_statics_df = clean_up_statics(ship_statics_df)
     _logger.info(f"static data shape after cleaning: {cleaned_statics_df.shape}")
 
     # -. merge with dwt
@@ -42,16 +42,18 @@ def run_app() -> None:
     # -. upload statics to database
     _logger.info("uploading statics data to database...")
     cleaned_statics_df = cleaned_statics_df.loc[:, ["mmsi", "shipname", "shiptype", "length", "breadth", "DWT_float"]]
-    cleaned_statics_df.rename(
-        {
+    cleaned_statics_df = cleaned_statics_df.rename(
+        columns={
             "shipname": "ship_name",
-            "ship_type": "ship_type",
+            "shiptype": "ship_type",
             "breadth": "width",
             "DWT_float": "dwt"
         }
     )
+    cleaned_statics_df = cleaned_statics_df.drop_duplicates(subset=['mmsi'], keep="first")
     cleaned_statics_df.to_sql("dim_ships_statics", con=var.engine, if_exists='replace', index=False)
     _logger.info("uploaded statics data to database successfully")
+    exit(0)
 
 
 if __name__ == '__main__':

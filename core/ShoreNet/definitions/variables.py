@@ -9,16 +9,14 @@
 import os
 from typing import Union
 
-from sqlalchemy.engine.base import Engine
-
 from core.ShoreNet.conf import get_data_path
 from core.ShoreNet.conf import connect_database
 from core.ShoreNet.definitions.parameters import (
     DirPathNames,
     FileNames,
-    DBSCANParameters,
     EventFilterParameters,
-    GeoParameters
+    GeoParameters,
+    TableNames
 )
 
 
@@ -27,17 +25,18 @@ class VariablesManager:
         self.data_path: str = get_data_path()
         self.dp_names: DirPathNames = self.define_dir_path()
         self.f_names: FileNames = self.define_file_names()
+        self.table_names: TableNames = self.define_table_names()
         self.event_param = EventFilterParameters()
         self.geo_param = GeoParameters()
 
-        # TODO: add loading of parameters from config file(yml)
-        self.dbscan_param = DBSCANParameters(
-            eps=0.2/self.geo_param.kms_per_radian,
-            min_samples=30
-        )
+        self.dbscan_params = {
+            'eps': 0.2 / self.geo_param.kms_per_radian,
+            'min_samples': 30
+        }
 
+        # TODO: add loading of parameters from config file(yml)
         # connect to database
-        self.engine: Union[Engine, None] = connect_database()
+        self.engine = connect_database()
 
         if self.engine is None:
             raise ValueError("database connection failed")
@@ -49,9 +48,14 @@ class VariablesManager:
 
     def define_dir_path(self) -> DirPathNames:
         return DirPathNames(
-            ship_statics_path=os.path.join(self.data_path, 'statics')
+            ship_statics_path=os.path.join(self.data_path, 'statics'),
+            output_path=os.path.join('./', 'output')
         )
 
     @staticmethod
     def define_file_names() -> FileNames:
         return FileNames()
+
+    @staticmethod
+    def define_table_names() -> TableNames:
+        return TableNames()

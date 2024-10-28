@@ -20,14 +20,14 @@ def point_poly(lng, lat, polygon_points):
     j = cor - 1
     inside = False
     while i < cor:
-        if ((((polygon[i, 1] < lat) & (polygon[j, 1] >= lat))
-             | ((polygon[j, 1] < lat) & (polygon[i, 1] >= lat)))
-                & ((polygon[i, 0] <= lng) | (polygon[j, 0] <= lng))):
+        if ((((polygon[i, 1] < lng) & (polygon[j, 1] >= lng))
+             | ((polygon[j, 1] < lng) & (polygon[i, 1] >= lng)))
+                & ((polygon[i, 0] <= lat) | (polygon[j, 0] <= lat))):
             a = (polygon[i, 0] +
-                 (lat - polygon[i, 1]) / (polygon[j, 1] - polygon[i, 1]) *
+                 (lng - polygon[i, 1]) / (polygon[j, 1] - polygon[i, 1]) *
                  (polygon[j, 0] - polygon[i, 0]))
 
-            if a < lng:
+            if a < lat:
                 inside = not inside
         j = i
         i = i + 1

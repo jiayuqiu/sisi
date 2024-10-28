@@ -1,6 +1,6 @@
 matplotlib
 numpy
-pandas
+pandas==2.1.4
 pyspark==2.4.1
 findspark
 jupyterlab
@@ -17,4 +17,4 @@ pymssql
 pyarrow
 fastparquet
 pymysql
-sqlalchemy
+SQLAlchemy==1.4.54

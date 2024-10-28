@@ -1,9 +1,7 @@
 import os
 import platform
-from typing import Union
 
 from sqlalchemy import create_engine
-from sqlalchemy.engine.base import Engine
 
 
 def get_data_path():
@@ -22,7 +20,7 @@ def get_data_path():
     return data_path
 
 
-def connect_mysql() -> Engine:
+def connect_mysql():
     """
     connect mysql
     :return:
@@ -42,7 +40,7 @@ def connect_mysql() -> Engine:
     return mysql_engine
 
 
-def connect_database(sql_type: str = "mysql") -> Union[Engine, None]:
+def connect_database(sql_type: str = "mysql"):
     """
     connect database
 

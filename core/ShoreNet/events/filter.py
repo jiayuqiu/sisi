@@ -31,7 +31,7 @@ def clean_up_events(
     clean up error events data
 
     Valid Data Request:
-    1. stop duration should greater than 1800 sceonds &
+    1. stop duration should greater than 1800 seconds &
        stop duration should less than 7 * 24 * 3600 seconds
 
     2. events category should be equal to "stop_event_poly"
@@ -60,3 +60,15 @@ def clean_up_events(
         # if there is no mmsi_enum_list, return _df directly
         print_clean_up_effect(df, _df)
         return _df
+
+
+# def csv_fields_mapping(df: DataFrame, fields_map: dict[str, str]) -> DataFrame:
+#     """
+#     through fields_map clean events column names
+#
+#     :param df: dataframe loaded from csv directly
+#     :param fields_map: mapping variables
+#     :return: cleaned event dataframe
+#     """
+#     df.rename(columns=fields_map, inplace=True)
+#     return df
