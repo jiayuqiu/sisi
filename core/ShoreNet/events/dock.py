@@ -13,14 +13,22 @@ from pandas.core.frame import DataFrame
 from sklearn.cluster import DBSCAN
 
 from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.parameters import ColumnNames
 
 
 def cluster_dock_polygon_dbscan(
         events_df: DataFrame,
         var: VariablesManager
 ) -> DataFrame:
+    """
+    this function is used to cluster dock polygon by dbscan
+
+    :param events_df:
+    :param var:
+    :return:
+    """
     # dbscan all_coal_df
-    coords = events_df[['lng', 'lat']].values
+    coords = events_df[[ColumnNames.lng_column_name, ColumnNames.lat_column_name]].values
 
     # DBSCAN clustering
     db = DBSCAN(
@@ -60,5 +68,9 @@ def pair_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None
             dst_list.append(geodist)
 
         if min(dst_list) < 20:
-            if point_poly(lng=event_row['begin_lng'], lat=event_row['begin_lat'], polygon_points=polygon['polygon']):
+            if point_poly(
+                lng=event_row[ColumnNames.lng_column_name],
+                lat=event_row[ColumnNames.lat_column_name],
+                polygon_points=polygon['polygon']
+            ):
                 return polygon['dock_id']

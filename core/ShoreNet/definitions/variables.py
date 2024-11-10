@@ -7,7 +7,8 @@
 """
 
 import os
-from typing import Union
+import platform
+from dataclasses import dataclass, fields
 
 from core.ShoreNet.conf import get_data_path
 from core.ShoreNet.conf import connect_database
@@ -22,8 +23,17 @@ from core.ShoreNet.definitions.parameters import (
 
 class VariablesManager:
     def __init__(self):
+        self.root_path = r"D:\IdeaProjects\SISI"
         self.data_path: str = get_data_path()
+
+        # dir path
         self.dp_names: DirPathNames = self.define_dir_path()
+        os_name = platform.system()
+        if os.name == 'nt' or os_name == 'Windows':
+            for key, value in self.dp_names.__dict__.items():
+                self.dp_names.__dict__[key] = value.replace('/', '\\')
+        print(self.dp_names.__dict__.items())
+
         self.f_names: FileNames = self.define_file_names()
         self.table_names: TableNames = self.define_table_names()
         self.event_param = EventFilterParameters()
@@ -49,7 +59,7 @@ class VariablesManager:
     def define_dir_path(self) -> DirPathNames:
         return DirPathNames(
             ship_statics_path=os.path.join(self.data_path, 'statics'),
-            output_path=os.path.join('./', 'output')
+            output_path='output'
         )
 
     @staticmethod

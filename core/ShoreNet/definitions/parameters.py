@@ -38,6 +38,13 @@ class EventFilterParameters:
 class TableNames:
     all_stop_events_table_name: str = "factor_all_stop_events"
     coal_stop_events_table_name: str = "factor_coal_stop_events"
+    dim_ships_statics_table_name: str = "dim_ships_statics"
+
+
+@dataclass
+class ColumnNames:
+    lng_column_name: str = "begin_lng"
+    lat_column_name: str = "begin_lat"
 
 @dataclass
 class FileNames:
@@ -49,3 +56,5 @@ class FileNames:
 class DirPathNames:
     ship_statics_path: str
     output_path: str
+    test_analyze_source_data_path: str = "test/shared_data/analyze/source"
+    test_analyze_result_data_path: str = "test/shared_data/analyze/result"

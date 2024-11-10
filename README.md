@@ -11,31 +11,22 @@ This project focuses on:
 
 The analysis is conducted using Python, leveraging libraries such as Pandas, NumPy, MySQL and etc for efficient data manipulation, and Matplotlib or Poltly for visualization.
 
-## 2 Project Structure
-The project is organized into the following directories and files:
+## 2 run main function
 
-```
-.
-├── bin
-├── core
-│     ├── ShoreNet
-│     │     ├── definitions
-│     │     ├── demos
-│     │     ├── outputs
-│     │     ├── scripts
-│     │     ├── statics
-│     │     └── utils
-│     ├── notebooks
-│     │     └── html
-│     └── python
-├── docs
-└── logs
-```
-
-## 3 run main function
-
-### 3.1 upload statics data
+### 2.1 upload data
 ```bash
-# -. upload statics data
-$ python core.python.main_upload_statics.py
+# -. upload data
+$ python core.python.main_upload_statics.py  # update statics data
+$ python core.python.main_upload_events.py --year=2023 --start_month=1 --end_month=12  # update events data
 ```
+
+### 2.2 map events to polygons
+```bash
+$ python core.python.main_map_events_poygons.py --year=2023 --start_month=1 --end_month=12
+```
+
+### polygon
+
+1. trust polygon
+2. logistic network, line size refer to cargo volume.
+3. 2023 event.

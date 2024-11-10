@@ -1,4 +1,8 @@
 """
+@Project: Pytorch-UNet
+@Title:  main_upload_events.py
+@Description:  load events data from csv and upload to db
+@Environment: Python 3.6.12
 @Author  ： Jerry Qiu
 @Email   :  qiujiayu0212@gmail.com
 @FileName:  main_upload_events.py
@@ -35,7 +39,6 @@ def run_app() -> None:
     for month in range(start_month, end_month+1):
         month_str = f"{year}{month:02}"
         _logger.info(f"{month_str} events processing...")
-        # events_df = pd.read_csv(r"D:\data\sisi\log_data\202301_new_sailingv4.csv")
         events_df = pd.read_csv(os.path.join(var.data_path,'log_data', f"{month_str}_new_sailingv4.csv"))
         events_df.dropna(subset=['mmsi'], inplace=True)
 
@@ -74,7 +77,6 @@ def run_app() -> None:
         _logger.info(f"DELETE month: {month_str} events FINISHED.")
         _logger.info(f"INSERT month: {month_str} count: {events_df.shape[0]} events START.")
         events_df.drop_duplicates(subset='event_id', keep='first', inplace=True)
-        # print(events_df.loc[events_df['event_id']=='20230101000030201202010'])
         events_df.to_sql("factor_all_stop_events", con=var.engine, if_exists='append', index=False)
         _logger.info(f"upload events to db success, count: {events_df.shape[0]}")
 
