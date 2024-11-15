@@ -3,7 +3,7 @@
 @Email   :  qiujiayu0212@gmail.com
 @FileName:  test_events.py
 @DateTime:  10/11/2024 2:49 pm
-@DESC    :  unit test for events
+@DESC    :  unit tests for events
 """
 
 import os
@@ -17,14 +17,14 @@ from core.ShoreNet.analyze.departure_destination_docks import map_dock_pairs
 
 class TestEvents(unittest.TestCase):
     var = VariablesManager()
-
+ 
     def test_dock_pairs(self):
         """
-        test dock pairs
+        tests dock pairs
 
         :return:
         """
-        # -. load test data
+        # -. load tests data
         df = pd.read_csv(
             os.path.join(
                 self.var.root_path,

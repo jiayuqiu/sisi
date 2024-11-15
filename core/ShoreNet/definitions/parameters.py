@@ -56,5 +56,5 @@ class FileNames:
 class DirPathNames:
     ship_statics_path: str
     output_path: str
-    test_analyze_source_data_path: str = "test/shared_data/analyze/source"
-    test_analyze_result_data_path: str = "test/shared_data/analyze/result"
+    test_analyze_source_data_path: str = "tests/shared_data/analyze/source"
+    test_analyze_result_data_path: str = "tests/shared_data/analyze/result"

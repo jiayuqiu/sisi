@@ -32,7 +32,7 @@ def map_dock_pairs(df, ) -> pd.DataFrame:
     g_n = len(gdf)
     n = 1
     for mmsi, group in gdf:
-        _logger.info(f"processing {mmsi}, {g_n - n} left.")
+        # _logger.info(f"processing {mmsi}, {g_n - n} left.")
         group.sort_values('begin_time', inplace=True)
         group.loc[:, 'next_polygon_id'] = group['coal_dock_id'].shift(-1)
         group.loc[:, 'next_polygon_arrive_time'] = group['begin_time'].shift(-1)
