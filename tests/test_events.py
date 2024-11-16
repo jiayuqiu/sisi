@@ -15,9 +15,6 @@ from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.analyze.departure_destination_docks import map_dock_pairs
 
 
-
-
-
 class TestEvents(unittest.TestCase):
     var = VariablesManager()
  

@@ -32,6 +32,8 @@ def get_root_path():
     os_name = platform.system()
     if os.name == 'nt' or os_name == 'Windows':
         root_path = "D:\\IdeaProjects\\SISI"
+    elif os.name == 'posix' or os_name == 'Linux':
+        root_path = r"/mnt/d/IdeaProjects/SISI"
     else:
         raise RuntimeError("not support linux os. please add root path for linux.")
 
