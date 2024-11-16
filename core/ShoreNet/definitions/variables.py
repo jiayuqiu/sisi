@@ -8,9 +8,8 @@
 
 import os
 import platform
-from dataclasses import dataclass, fields
 
-from core.ShoreNet.conf import get_data_path
+from core.ShoreNet.conf import get_data_path, get_root_path
 from core.ShoreNet.conf import connect_database
 from core.ShoreNet.definitions.parameters import (
     DirPathNames,
@@ -23,7 +22,7 @@ from core.ShoreNet.definitions.parameters import (
 
 class VariablesManager:
     def __init__(self):
-        self.root_path = r"D:\IdeaProjects\SISI"
+        self.root_path: str = get_root_path()
         self.data_path: str = get_data_path()
 
         # dir path
@@ -32,17 +31,23 @@ class VariablesManager:
         if os.name == 'nt' or os_name == 'Windows':
             for key, value in self.dp_names.__dict__.items():
                 self.dp_names.__dict__[key] = value.replace('/', '\\')
-        print(self.dp_names.__dict__.items())
 
+        # file names
         self.f_names: FileNames = self.define_file_names()
+
+        # table names
         self.table_names: TableNames = self.define_table_names()
+
+        # parameters
         self.event_param = EventFilterParameters()
         self.geo_param = GeoParameters()
-
         self.dbscan_params = {
             'eps': 0.2 / self.geo_param.kms_per_radian,
             'min_samples': 30
         }
+
+        # MULTIPLE PROCESS WORKERS SETTINGS
+        self.process_workers = 8
 
         # TODO: add loading of parameters from config file(yml)
         # connect to database

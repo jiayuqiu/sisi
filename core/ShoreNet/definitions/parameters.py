@@ -10,6 +10,11 @@ from dataclasses import dataclass
 
 
 @dataclass
+class MultiProcessWorkers:
+    process_workers: int = 8
+
+
+@dataclass
 class GeoParameters:
     kms_per_radian: float = 6371.0088
 

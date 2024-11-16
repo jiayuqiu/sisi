@@ -7,6 +7,8 @@ from sqlalchemy import create_engine
 def get_data_path():
     """
     get data path, the only hard code.
+    TODO: put this dir into a configuration yml file
+
     :return:
     """
     os_name = platform.system()
@@ -18,6 +20,22 @@ def get_data_path():
         data_path = r"/mnt/d/data/sisi/"
 
     return data_path
+
+
+def get_root_path():
+    """
+    get root path
+    TODO: put this dir into a configuration yml file
+
+    :return:
+    """
+    os_name = platform.system()
+    if os.name == 'nt' or os_name == 'Windows':
+        root_path = "D:\\IdeaProjects\\SISI"
+    else:
+        raise RuntimeError("not support linux os. please add root path for linux.")
+
+    return root_path
 
 
 def connect_mysql():

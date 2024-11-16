@@ -43,7 +43,6 @@ def run_app() -> None:
         events_df = load_events_all(
             year=year,
             month=month,
-            all_event_table_name=var.table_names.all_stop_events_table_name,
             con=var.engine
         )
         _logger.info(f"original events shape: {events_df.shape}")
@@ -58,7 +57,7 @@ def run_app() -> None:
 
         # -. match polygon
         from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=False, nb_workers=8)
+        pandarallel.initialize(progress_bar=False, nb_workers=var.process_workers)
         dock_tag = coal_events_df.parallel_apply(
             pair_event_polygon, args=(dock_polygon_list, ), axis=1
         )

@@ -14,9 +14,10 @@ from sqlalchemy import func, or_, text
 from sqlalchemy.orm import sessionmaker
 
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+from core.ShoreNet.definitions.parameters import TableNames as tbn
 
 
-def load_events_all(year: int, month: int, all_event_table_name: str, con) -> pd.DataFrame:
+def load_events_all(year: int, month: int, con) -> pd.DataFrame:
     query = f"""
     SELECT
         event_id,
@@ -30,7 +31,7 @@ def load_events_all(year: int, month: int, all_event_table_name: str, con) -> pd
         begin_year as year,
         begin_month as month
     FROM
-        sisi.{all_event_table_name}
+        sisi.{tbn.all_stop_events_table_name}
     WHERE
         begin_year = {year} AND begin_month = {month}
     """
@@ -39,6 +40,39 @@ def load_events_all(year: int, month: int, all_event_table_name: str, con) -> pd
             sql=text(query), con=conn
         )
     return df
+
+
+def load_events_with_dock(year: int, con) -> pd.DataFrame:
+    """
+    load events with dock
+    :param year: year condition
+    :return: dataframe
+    """
+    _df = pd.read_sql(
+        sql=text(
+            f"""
+            SELECT
+                event_id,
+                mmsi,
+                begin_time,
+                end_time,
+                begin_lng,
+                begin_lat,
+                avg_speed,
+                event_categories,
+                coal_dock_id,
+                begin_year as year,
+                begin_month as month
+            FROM
+                sisi.{tbn.all_stop_events_table_name}
+            WHERE
+                begin_year = {year} and coal_dock_id is not null
+            -- LIMIT 1000
+            """
+        ),
+        con=con
+    )
+    return _df
 
 
 def load_dock_polygon(con) -> list:

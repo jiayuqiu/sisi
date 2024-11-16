@@ -15,6 +15,9 @@ from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.analyze.departure_destination_docks import map_dock_pairs
 
 
+
+
+
 class TestEvents(unittest.TestCase):
     var = VariablesManager()
  
@@ -30,7 +33,8 @@ class TestEvents(unittest.TestCase):
                 self.var.root_path,
                 self.var.dp_names.test_analyze_source_data_path,
                 'test_departure_destination_docks.csv'
-            )
+            ),
+            low_memory=True
         )
         cal_dd_df = map_dock_pairs(df)
         res_dd_df = pd.read_csv(
@@ -38,6 +42,7 @@ class TestEvents(unittest.TestCase):
                 self.var.root_path,
                 self.var.dp_names.test_analyze_result_data_path,
                 'test_departure_destination_docks.csv'
-            )
+            ),
+            low_memory=True
         )
         assert_frame_equal(cal_dd_df, res_dd_df)
