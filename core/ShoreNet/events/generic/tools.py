@@ -49,8 +49,7 @@ def load_events_with_dock(year: int, con) -> pd.DataFrame:
     :return: dataframe
     """
     _df = pd.read_sql(
-        sql=text(
-            f"""
+        sql=f"""
             SELECT
                 event_id,
                 mmsi,
@@ -67,15 +66,14 @@ def load_events_with_dock(year: int, con) -> pd.DataFrame:
                 sisi.{tbn.all_stop_events_table_name}
             WHERE
                 begin_year = {year} and coal_dock_id is not null
-            -- LIMIT 1000
             """
-        ),
+        ,
         con=con
     )
     return _df
 
 
-def load_dock_polygon(con) -> list:
+def load_dock_polygon(con) -> pd.DataFrame:
     """
     get dock polygon from sql server
     :return: [{'dock_id': ..., 'name': ..., 'polygon': [...], 'province': ... }]
@@ -87,7 +85,8 @@ def load_dock_polygon(con) -> list:
         DimDockPolygon.Name,
         func.ST_AsText(DimDockPolygon.Polygon).label('Polygon'),
         DimDockPolygon.lng,
-        DimDockPolygon.lat
+        DimDockPolygon.lat,
+        DimDockPolygon.type_id
     ).filter(
         or_(DimDockPolygon.type_id == 1, DimDockPolygon.type_id == 6)
     ).filter(
@@ -104,9 +103,15 @@ def load_dock_polygon(con) -> list:
         coordinates = [[float(coord) for coord in match.split()] for match in matches]
         dock_polygon_list.append(
             {
-                'dock_id': polygon.Id, 'name': polygon.Name, 'polygon': coordinates, 'lng': polygon.lng, 'lat': polygon.lat
+                'dock_id': polygon.Id,
+                'name': polygon.Name,
+                'polygon': coordinates,
+                'lng': polygon.lng,
+                'lat': polygon.lat,
+                'type_id': polygon.type_id
             }
         )
     # print(f"Dock polygon count: {len(dock_polygon_list)}")
     session.close()
-    return dock_polygon_list
+    dock_polygon_df = pd.DataFrame(dock_polygon_list)
+    return dock_polygon_df

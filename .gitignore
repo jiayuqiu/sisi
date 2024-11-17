@@ -302,5 +302,6 @@ pyrightconfig.json
 core/notebooks/analysis_backup.ipynb
 logs/*
 output/*
+.gitkeep
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python,jupyternotebooks

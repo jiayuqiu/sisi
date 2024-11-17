@@ -1,7 +1,7 @@
 matplotlib
 numpy
 pandas==2.1.4
-pyspark==2.4.1
+# pyspark==2.4.1
 findspark
 jupyterlab
 pykml
@@ -18,3 +18,4 @@ pyarrow
 fastparquet
 pymysql
 SQLAlchemy==1.4.54
+python-dotenv

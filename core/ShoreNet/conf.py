@@ -4,40 +4,22 @@ import platform
 from sqlalchemy import create_engine
 
 
-def get_data_path():
+def get_data_path() -> str:
     """
-    get data path, the only hard code.
-    TODO: put this dir into a configuration yml file
+    get data path.
 
     :return:
     """
-    os_name = platform.system()
-    if os.name == 'nt' or os_name == 'Windows':
-        data_path = "D:\\data\\sisi\\"
-    elif os.name == 'posix' or os_name == 'Linux':
-        data_path = r"/mnt/d/data/sisi/"
-    else:
-        data_path = r"/mnt/d/data/sisi/"
-
-    return data_path
+    return os.environ["DATA_PATH"]
 
 
-def get_root_path():
+def get_root_path() -> str:
     """
     get root path
-    TODO: put this dir into a configuration yml file
 
     :return:
     """
-    os_name = platform.system()
-    if os.name == 'nt' or os_name == 'Windows':
-        root_path = "D:\\IdeaProjects\\SISI"
-    elif os.name == 'posix' or os_name == 'Linux':
-        root_path = r"/mnt/d/IdeaProjects/SISI"
-    else:
-        raise RuntimeError("not support linux os. please add root path for linux.")
-
-    return root_path
+    return os.environ["ROOT_PATH"]
 
 
 def connect_mysql():

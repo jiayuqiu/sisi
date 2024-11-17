@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JupyterPersistentConnectionParameters">
+    <option name="moduleParameters">
+      <map>
+        <entry key="$PROJECT_DIR$/.idea/SISI.iml">
+          <value>
+            <JupyterConnectionParameters>
+              <option name="managed" value="true" />
+              <option name="sdkName" value="" />
+              <option name="environmentVariables">
+                <map>
+                  <entry name="DATA_PATH" value="/mnt/d/data/sisi/" />
+                  <entry name="ROOT_PATH" value="/home/qiu/codebase/sisi/" />
+                  <entry name="SISI_DB_DATABASE" value="sisi" />
+                  <entry name="SISI_DB_HOST" value="127.0.0.1" />
+                  <entry name="SISI_DB_PASSWORD" value="UZcM7g1%40i4" />
+                  <entry name="SISI_DB_PORT" value="3306" />
+                  <entry name="SISI_DB_TYPE" value="mysql" />
+                  <entry name="SISI_DB_USER" value="root" />
+                </map>
+              </option>
+            </JupyterConnectionParameters>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

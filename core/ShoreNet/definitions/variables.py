@@ -16,7 +16,8 @@ from core.ShoreNet.definitions.parameters import (
     FileNames,
     EventFilterParameters,
     GeoParameters,
-    TableNames
+    TableNames,
+    ColumnNames
 )
 
 
@@ -37,6 +38,9 @@ class VariablesManager:
 
         # table names
         self.table_names: TableNames = self.define_table_names()
+
+        # column names
+        self.column_names: ColumnNames = self.define_column_names()
 
         # parameters
         self.event_param = EventFilterParameters()
@@ -74,3 +78,7 @@ class VariablesManager:
     @staticmethod
     def define_table_names() -> TableNames:
         return TableNames()
+
+    @staticmethod
+    def define_column_names() -> ColumnNames:
+        return ColumnNames()

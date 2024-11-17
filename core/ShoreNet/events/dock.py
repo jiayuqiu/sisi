@@ -54,7 +54,7 @@ def cluster_dock_polygon_dbscan(
     return cleaned_event_df
 
 
-def pair_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
+def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
     from core.ShoreNet.utils.geo import point_poly, get_geodist
     for polygon in dock_list:
         dst_list = []

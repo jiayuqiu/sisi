@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
 from core.ShoreNet.statics.generic.tools import load_coal_ship_statics
-from core.ShoreNet.events.dock import pair_event_polygon
+from core.ShoreNet.events.dock import map_event_polygon
 from core.ShoreNet.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
@@ -59,7 +59,7 @@ def run_app() -> None:
         from pandarallel import pandarallel
         pandarallel.initialize(progress_bar=False, nb_workers=var.process_workers)
         dock_tag = coal_events_df.parallel_apply(
-            pair_event_polygon, args=(dock_polygon_list, ), axis=1
+            map_event_polygon, args=(dock_polygon_list,), axis=1
         )
 
         coal_events_df.loc[:, 'coal_dock_id'] = dock_tag
