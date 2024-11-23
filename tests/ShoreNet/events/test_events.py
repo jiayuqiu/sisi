@@ -12,7 +12,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 
 from core.ShoreNet.definitions.variables import VariablesManager
-from core.ShoreNet.analyze.departure_destination_docks import map_dock_pairs
+from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
 
 
 class TestEvents(unittest.TestCase):
@@ -29,7 +29,7 @@ class TestEvents(unittest.TestCase):
             os.path.join(
                 self.var.root_path,
                 self.var.dp_names.test_analyze_source_data_path,
-                'test_departure_destination_docks.csv'
+                'test_departure_arrival_docks.csv'
             ),
             low_memory=True
         )
@@ -38,7 +38,7 @@ class TestEvents(unittest.TestCase):
             os.path.join(
                 self.var.root_path,
                 self.var.dp_names.test_analyze_result_data_path,
-                'test_departure_destination_docks.csv'
+                'test_departure_arrival_docks.csv'
             ),
             low_memory=True
         )

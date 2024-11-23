@@ -55,13 +55,15 @@ def load_events_with_dock(year: int, con) -> pd.DataFrame:
                 mmsi,
                 begin_time,
                 end_time,
+                end_time - begin_time as duration,
                 begin_lng,
                 begin_lat,
                 avg_speed,
                 event_categories,
                 coal_dock_id,
                 begin_year as year,
-                begin_month as month
+                begin_month as month,
+                begin_quarter as quarter
             FROM
                 sisi.{tbn.all_stop_events_table_name}
             WHERE
@@ -115,3 +117,30 @@ def load_dock_polygon(con) -> pd.DataFrame:
     session.close()
     dock_polygon_df = pd.DataFrame(dock_polygon_list)
     return dock_polygon_df
+
+
+def load_od_pairs(year: int, con) -> pd.DataFrame:
+    """
+    load od pairs
+    :param year: year condition
+    :return: dataframe
+    """
+    _df = pd.read_sql(
+        sql=f"""
+            SELECT
+                departure_dock_id,
+                arrival_dock_id,
+                departure_year,
+                departure_month,
+                arrival_year,
+                arrival_month,
+                sail_duration
+            FROM
+                sisi.{tbn.data_od_pairs_table_name}
+            WHERE
+                departure_year = {year}
+            """
+        ,
+        con=con
+    )
+    return _df

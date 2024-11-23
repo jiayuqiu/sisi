@@ -44,6 +44,9 @@ class TableNames:
     all_stop_events_table_name: str = "factor_all_stop_events"
     coal_stop_events_table_name: str = "factor_coal_stop_events"
     dim_ships_statics_table_name: str = "dim_ships_statics"
+    data_od_pairs_table_name: str = "data_od_pairs"
+    data_features_trust_score_month_table_name: str = "data_features_trust_score_month"
+    data_features_trust_score_quarter_table_name: str = "data_features_trust_score_quarter"
 
 
 @dataclass

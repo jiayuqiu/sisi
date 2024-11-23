@@ -47,8 +47,8 @@ def clean_up_events(
     # *. filter stop duration and event category
     _df = _df.loc[
         (_df['duration'] > var.event_param.stop_duration_min) &
-        (_df['duration'] < var.event_param.stop_duration_max) &
-        (_df['event_categories'] == var.event_param.event_category)
+        (_df['duration'] < var.event_param.stop_duration_max)
+        # (_df['event_categories'] == var.event_param.event_category)
     ]
 
     # *. if there is mmsi_enum_list, then filter mmsi
