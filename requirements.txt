@@ -1,7 +1,6 @@
 matplotlib
 numpy
 pandas==2.1.4
-
 jupyterlab
 pykml
 pyodbc
@@ -14,7 +13,6 @@ pandarallel
 scikit-learn
 pymssql
 pyarrow
-fastparquet
 pymysql
 SQLAlchemy==1.4.54
 python-dotenv

@@ -32,13 +32,12 @@ $ python core.python.main_map_events_poygons.py --year=2023 --start_month=1 --en
 $ python core.python.main_mapping_od_paris.py --year=2023
 ```
 
-### 2.4 
-
 ## 3. Now Researching
 
-### 3.1 Trust Score of Polygon
+### 3.1 Trust Score of Polygon(Depreciated)
 
 #### Status:
+Depreciated. Switch to classify the event category.
 Not clear. Still can not find the right way to calculate the trust score of polygon.
 
 #### Pre-Processed:
@@ -51,3 +50,21 @@ Not clear. Still can not find the right way to calculate the trust score of poly
 1. calculate the density of each dbscan-ed cluster. density = event_count / mmsi_count
 2. departure ship count and arrival ship count of each polygon, in month level and quarter level.
 3. calculate the percentage of stop events in each dbscan-ed cluster.
+
+### 3.2 Polygon Classification
+
+#### 3.2.1 Feature of Events
+
+There are 2 types of events:
+1. Stop event: the ship moors at a pier, wharf, terminal or dock closed to land.
+2. Anchor event: the ship anchors at a place far away from land.
+
+##### 3.2.1.1 True Head of AIS
+1. Stop event: True Head of AIS Data will be constant.
+2. Anchor event: True Head of AIS Data will be changing.
+
+### 3.2.2 Feature of Ship types
+1. Analyze distribution of ship types, including length, width, draught, etc.
+
+### 3.2.3 Loading or Unloading
+Analyze polygon is for loading or unloading.
