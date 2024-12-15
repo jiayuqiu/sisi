@@ -66,11 +66,11 @@ There are 2 types of events:
 ### 3.2.2 Feature of Ship types
 1. Analyze distribution of ship types, including length, width, draught, etc.
 2. Analyze 70-79 ships types percentage in each polygon.
-    - The average share of cargo shipd in each polygon is 17%.
+    - The average share of cargo ships in each polygon is 17%. (core.notebook.trust_score.ipynb)
 
 ### 3.2.3 Loading or Unloading
 Analyze polygon is for loading or unloading.
 
 ### 3.2.4 Departure : Arrival Ratio
 
-Ratio is in range of [0.7, 1.2] in quarter level. Reasonable.
+Ratio is in range of [0.7, 1.2] in quarter level. Reasonable. (core.notebook.trust_score.ipynb)
