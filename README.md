@@ -65,6 +65,7 @@ There are 2 types of events:
 
 ### 3.2.2 Feature of Ship types
 1. Analyze distribution of ship types, including length, width, draught, etc.
+2. Analyze 70-79 ships types percentage in each polygon.
 
 ### 3.2.3 Loading or Unloading
 Analyze polygon is for loading or unloading.
