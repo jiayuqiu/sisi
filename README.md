@@ -34,9 +34,21 @@ $ python core.python.main_map_events_poygons.py --year=2023 --start_month=1 --en
 $ python core.python.main_mapping_od_paris.py --year=2023
 ```
 
-## 3. Now Researching
+## 3. Now Working on:
 
-### 3.1 Trust Score of Polygon(Deprecated)
+Make a delievery srcipt, including:
+1. polygons start from a specifc port or province, which contains a large amount of one particular type of ship
+2. based on the polygons from step 1, find the ships which has berthed in those polygons.
+3. based on the ships from step 2, find where these ships has berthed and then extend the polygons set.
+4. now, we have updated polygons set. based on the latest polygon set, find more ships and marked them as particular type, and then we have updated ships set.
+5. looping step 1 to step 4 back and forth till there is no more polygons come up.
+
+infrastructural data:
+1. global or regional ships events log
+2. ais ships statical data
+
+## Backup
+### B.1 Trust Score of Polygon(Deprecated)
 
 #### Status:
 Deprecated. Switch to classify the event category.
@@ -53,26 +65,26 @@ Not clear. Still can not find the right way to calculate the trust score of poly
 2. departure ship count and arrival ship count of each polygon, in month level and quarter level.
 3. calculate the percentage of stop events in each dbscan-ed cluster.
 
-### 3.2 Polygon Classification
+### B.2 Polygon Classification
 
-#### 3.2.1 Feature of Events
+#### B.2.1 Feature of Events
 
 There are 2 types of events:
 1. Stop event: the ship moors at a pier, wharf, terminal or dock closed to land.
 2. Anchor event: the ship anchors at a place far away from land.
 
-##### 3.2.1.1 True Head of AIS
+##### B.2.1.1 True Head of AIS
 1. Stop event: True Head of AIS Data will be constant.
 2. Anchor event: True Head of AIS Data will be changing.
 
-### 3.2.2 Feature of Ship types
+### B.2.2 Feature of Ship types
 1. Analyze distribution of ship types, including length, width, draught, etc.
 2. Analyze 70-79 ships types percentage in each polygon.
     - The average share of cargo ships in each polygon is 17%. (core.notebook.trust_score.ipynb)
 
-### 3.2.3 Loading or Unloading
+### B.2.3 Loading or Unloading
 Analyze polygon is for loading or unloading.
 
-### 3.2.4 Departure : Arrival Ratio
+### B.2.4 Departure : Arrival Ratio
 
 Ratio is in range of [0.7, 1.2] in quarter level. Reasonable. (core.notebook.trust_score.ipynb)
