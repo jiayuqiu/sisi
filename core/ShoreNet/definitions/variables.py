@@ -8,8 +8,9 @@
 
 import os
 import platform
+from dotenv import load_dotenv
 
-from core.ShoreNet.conf import get_data_path, get_root_path
+# from core.ShoreNet.conf import get_data_path, get_root_path
 from core.ShoreNet.conf import connect_database
 from core.ShoreNet.definitions.parameters import (
     DirPathNames,
@@ -23,9 +24,10 @@ from core.ShoreNet.definitions.parameters import (
 
 class VariablesManager:
     def __init__(self):
-        self.root_path: str = get_root_path()
-        self.data_path: str = get_data_path()
-
+        load_dotenv("./.env")        
+        self.root_path = os.environ["ROOT_PATH"]
+        self.data_path = os.environ["DATA_PATH"]
+        
         # dir path
         self.dp_names: DirPathNames = self.define_dir_path()
         os_name = platform.system()
@@ -82,3 +84,9 @@ class VariablesManager:
     @staticmethod
     def define_column_names() -> ColumnNames:
         return ColumnNames()
+
+
+if __name__ == "__main__":
+    var = VariablesManager()
+    print(var.engine)
+    

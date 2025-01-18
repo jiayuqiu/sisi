@@ -33,7 +33,11 @@ class TestEvents(unittest.TestCase):
             ),
             low_memory=True
         )
-        cal_dd_df = map_dock_pairs(df)
+        cal_dd_df = map_dock_pairs(df).loc[:, 
+                                           ["mmsi", 
+                                            "departure_dock_id", "departure_lng", "departure_lat", 
+                                            "arrival_dock_id", "arrival_lng", "arrival_lat", 
+                                            "sail_duration"]]
         res_dd_df = pd.read_csv(
             os.path.join(
                 self.var.root_path,

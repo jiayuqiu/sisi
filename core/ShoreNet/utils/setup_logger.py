@@ -17,7 +17,7 @@ DATE = datetime.datetime.now().strftime('%Y%m%d')
 
 def set_logger(
     logger_name: str,
-    log_file: str = f'D:/IdeaProjects/SISI/logs/sisi_logger-{DATE}.log',
+    log_file: str = f'logs/sisi_logger-{DATE}.log',
     level=logging.INFO
 ):
     """

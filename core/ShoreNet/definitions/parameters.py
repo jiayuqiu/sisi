@@ -27,13 +27,6 @@ class EventFilterParameters:
     cluster_unique_mmsi_min_count: int = 200  # means the cluster should have at least 200 unique ships
     cluster_events_min_count: int = 400 # means the cluster should have at least 400 events
 
-    # lng_field_name: str = "Begin_lon"
-    # lat_field_name: str = "Begin_lat"
-    # use_fields = [
-    #     'mmsi', 'Begin_time', 'End_time', lng_field_name, lat_field_name, 'avgSpeed', 'Point_num',
-    #     'Event_categories'
-    # ]
-
     event_lng_range = [73, 136]
     event_lat_range = [18, 50]
     event_avg_speed_max = 0.72
@@ -66,3 +59,5 @@ class DirPathNames:
     output_path: str
     test_analyze_source_data_path: str = "tests/shared_data/analyze/source"
     test_analyze_result_data_path: str = "tests/shared_data/analyze/result"
+    root_path: str = "./"
+    data_path: str = "/mnt/d/data/sisi"
