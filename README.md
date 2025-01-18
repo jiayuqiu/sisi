@@ -2,6 +2,8 @@
 
 ## 1 Overview
 
+![roadmap](dataflow_roadmap.png)
+
 ### 1.1 Transportation Network
 This project focuses on:
 - Generate coal docks in China.
@@ -34,10 +36,10 @@ $ python core.python.main_mapping_od_paris.py --year=2023
 
 ## 3. Now Researching
 
-### 3.1 Trust Score of Polygon(Depreciated)
+### 3.1 Trust Score of Polygon(Deprecated)
 
 #### Status:
-Depreciated. Switch to classify the event category.
+Deprecated. Switch to classify the event category.
 Not clear. Still can not find the right way to calculate the trust score of polygon.
 
 #### Pre-Processed:

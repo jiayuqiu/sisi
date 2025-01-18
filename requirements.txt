@@ -18,3 +18,4 @@ SQLAlchemy==1.4.54
 python-dotenv
 geopandas
 cryptography
+pytest
