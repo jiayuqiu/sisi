@@ -3,30 +3,6 @@ import os
 from sqlalchemy import create_engine
 
 
-# def get_data_path() -> str:
-#     """
-#     get data path.
-
-#     :return:
-#     """
-#     if "DATA_PATH" in os.environ:
-#         return os.environ["DATA_PATH"]
-#     else:
-#         return "/mnt/d/data/sisi"
-
-
-# def get_root_path() -> str:
-#     """
-#     get root path
-
-#     :return:
-#     """
-#     if "ROOT_PATH" in os.environ:
-#         return os.environ["ROOT_PATH"]
-#     else:
-#         return "./"
-
-
 def connect_mysql():
     """
     connect mysql

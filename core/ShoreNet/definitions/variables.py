@@ -24,7 +24,7 @@ from core.ShoreNet.definitions.parameters import (
 
 class VariablesManager:
     def __init__(self):
-        load_dotenv("./.env")        
+        load_dotenv("./.env")
         self.root_path = os.environ["ROOT_PATH"]
         self.data_path = os.environ["DATA_PATH"]
         
