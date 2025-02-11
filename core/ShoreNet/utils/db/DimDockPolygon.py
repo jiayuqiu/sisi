@@ -8,14 +8,11 @@
 @Desc    :   None
 '''
 
+from core.ShoreNet.utils.db.base import Base
 
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, Float, Index
 from geoalchemy2 import Geometry
 
-
-# Define the base model
-Base = declarative_base()
 
 # Define the Docks model
 class DimDockPolygon(Base):
@@ -29,3 +26,15 @@ class DimDockPolygon(Base):
     lat = Column(Float, nullable=True)
     type_id = Column(Integer, nullable=True)
     stage_id = Column(Integer, nullable=True)
+    
+    __table_args__ = (
+        Index(
+            'idx_dock_polygon',  # Index name
+            'Id',
+            'Province',
+            'Distruct',
+            'lng',
+            'lat',
+            'type_id'
+        ),
+    )

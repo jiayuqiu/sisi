@@ -8,6 +8,9 @@ def connect_mysql():
     connect mysql
     :return:
     """
+    tmp_db_name = "sisi_backup"
+    os.environ["SISI_DB_DATABASE"] = tmp_db_name
+    
     mysql_properties = {
         "host": os.environ["SISI_DB_HOST"],
         "port": os.environ["SISI_DB_PORT"],

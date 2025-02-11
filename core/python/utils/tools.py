@@ -1,32 +1,25 @@
-"""
-@Author  ： Jerry Qiu
-@Email   :  qiujiayu0212@gmail.com
-@FileName:  tools.py
-@DateTime:  23/11/2024 10:04 am
-@DESC    :  
-"""
+# -*- encoding: utf-8 -*-
+'''
+@File    :   tools.py
+@Time    :   2025/02/11 21:00:23
+@Author  :   Jiayu(Jerry) Qiu
+@Version :   1.0
+@Contact :   qiujiayu0212@gmail.com
+@Desc    :   None
+'''
 
-import datetime
-
-
-def get_quarter(timestamp: int) -> int:
-    month = datetime.datetime.fromtimestamp(timestamp).month
-    if month in [1, 2, 3]:
-        return 1
-    elif month in [4, 5, 6]:
-        return 2
-    elif month in [7, 8, 9]:
-        return 3
-    else:
-        return 4
+from sqlalchemy import inspect
 
 
-# def get_year_month_day(ts: int) -> [int, int, int, int]:
-#     """
-#     get year, month, day from timestamp
-#     :param ts: timestamp
-#     :return: year, month, day
-#     """
-#     dt = datetime.datetime.fromtimestamp(ts)
-#     quarter = get_quarter(ts)
-#     return dt.year, quarter, dt.month, dt.day
+def table_exists(engine, table_name: str) -> bool:
+    """check table if exists
+
+    Args:
+        engine (_type_): db connect engine
+        table_name (str): table_name
+
+    Returns:
+        bool: exists return True, other wise return False
+    """
+    inspector = inspect(engine)
+    return inspector.has_table(table_name)

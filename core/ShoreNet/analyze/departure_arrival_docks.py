@@ -14,7 +14,7 @@ from core.ShoreNet.definitions.parameters import (
     ColumnNames as Cn,
     TableNames as Tbn
 )
-from core.python.utils.tools import get_quarter
+from core.python.utils.dt import get_quarter
 from core.ShoreNet.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
