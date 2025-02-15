@@ -18,8 +18,8 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 ### 2.1 TODO List
 
 - [x] Database initialization
-- [ ] Uploading data
-- [ ] Generate dummy data for test
+- [x] Uploading data
+- [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script
 - [ ] DBSCAN un-matched events and output html plots on map.
