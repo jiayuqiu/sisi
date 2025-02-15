@@ -45,8 +45,8 @@ def clean_up_statics(df: DataFrame) -> DataFrame:
     min_ratio_threshold = np.percentile(static_df['length_width_ratio'], 5)  # should be equal to 3
     max_ratio_threshold = np.percentile(static_df['length_width_ratio'], 95)  # should be equal to 7.1
 
-    static_df = static_df.loc[(static_df['length_width_ratio'] > min_ratio_threshold) &
-                              (static_df['length_width_ratio'] < max_ratio_threshold)]
+    static_df = static_df.loc[(static_df['length_width_ratio'] >= min_ratio_threshold) &
+                              (static_df['length_width_ratio'] <= max_ratio_threshold)]
 
     # *. some ships have multiple pairs of length and width, we need to filter them.
     static_info_list = []

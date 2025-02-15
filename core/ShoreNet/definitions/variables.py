@@ -9,8 +9,9 @@
 import os
 import platform
 from dotenv import load_dotenv
+import sqlalchemy
 
-# from core.ShoreNet.conf import get_data_path, get_root_path
+
 from core.ShoreNet.conf import connect_database
 from core.ShoreNet.definitions.parameters import (
     DirPathNames,
@@ -23,10 +24,10 @@ from core.ShoreNet.definitions.parameters import (
 
 
 class VariablesManager:
-    def __init__(self):
+    def __init__(self, stage_env: str):
         load_dotenv("./.env")
+        self.stage_env = stage_env
         self.root_path = os.environ["ROOT_PATH"]
-        self.data_path = os.environ["DATA_PATH"]
         
         # dir path
         self.dp_names: DirPathNames = self.define_dir_path()
@@ -53,23 +54,25 @@ class VariablesManager:
         }
 
         # MULTIPLE PROCESS WORKERS SETTINGS
-        self.process_workers = 8
+        self.process_workers = 2
 
         # TODO: add loading of parameters from config file(yml)
         # connect to database
-        self.engine = connect_database()
+        self.engine = connect_database(stage_env)
 
         if self.engine is None:
             raise ValueError("database connection failed")
         else:
             try:
                 self.engine.connect()
-            except Exception as e:
-                raise ConnectionError(f"database connection failed. error: {e}")
+            except sqlalchemy.exc.OperationalError as e:
+                if "Unknown database" in str(e):
+                    raise ConnectionError(f"database connection failed. error: {e}, please create database first.")
+                else:
+                    raise ConnectionError(f"database connection failed. error: {e}")
 
     def define_dir_path(self) -> DirPathNames:
         return DirPathNames(
-            ship_statics_path=os.path.join(self.data_path, 'statics'),
             output_path='output'
         )
 
@@ -84,9 +87,4 @@ class VariablesManager:
     @staticmethod
     def define_column_names() -> ColumnNames:
         return ColumnNames()
-
-
-if __name__ == "__main__":
-    var = VariablesManager()
-    print(var.engine)
     

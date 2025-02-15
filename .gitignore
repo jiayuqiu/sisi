@@ -313,3 +313,5 @@ db/
 tmp/
 .vscode/
 data/*
+!data/dummy/
+private/

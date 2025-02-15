@@ -13,11 +13,13 @@ import pandas as pd
 from sqlalchemy import func, or_, text
 from sqlalchemy.orm import sessionmaker
 
+from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.parameters import Prefix
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from core.ShoreNet.definitions.parameters import TableNames as tbn
 
 
-def load_events_all(year: int, month: int, con) -> pd.DataFrame:
+def load_events_all(year: int, month: int, vars: VariablesManager) -> pd.DataFrame:
     query = f"""
     SELECT
         event_id,
@@ -31,18 +33,18 @@ def load_events_all(year: int, month: int, con) -> pd.DataFrame:
         begin_year as year,
         begin_month as month
     FROM
-        sisi.{tbn.all_stop_events_table_name}
+        {Prefix.sisi}{vars.stage_env}.{tbn.all_stop_events_table_name}
     WHERE
         begin_year = {year} AND begin_month = {month}
     """
-    with con.connect() as conn:
+    with vars.engine.connect() as conn:
         df = pd.read_sql(
             sql=text(query), con=conn
         )
     return df
 
 
-def load_events_with_dock(year: int, con) -> pd.DataFrame:
+def load_events_with_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
     """
     load events with dock
     :param year: year condition
@@ -65,37 +67,35 @@ def load_events_with_dock(year: int, con) -> pd.DataFrame:
                 begin_month as month,
                 begin_quarter as quarter
             FROM
-                sisi.{tbn.all_stop_events_table_name}
+                {Prefix.sisi}{vars.stage_env}.{tbn.all_stop_events_table_name}
             WHERE
                 begin_year = {year} and coal_dock_id is not null
             """
         ,
-        con=con
+        con=vars.engine
     )
     return _df
 
 
-def load_dock_polygon(con) -> pd.DataFrame:
+def load_dock_polygon(vars: VariablesManager) -> pd.DataFrame:
     """
     get dock polygon from sql server
     :return: [{'dock_id': ..., 'name': ..., 'polygon': [...], 'province': ... }]
     """
-    Session = sessionmaker(bind=con)
+    Session = sessionmaker(bind=vars.engine)
     session = Session()
-    polygons = session.query(
+    polygons_query = session.query(
         DimDockPolygon.Id,
         DimDockPolygon.Name,
         func.ST_AsText(DimDockPolygon.Polygon).label('Polygon'),
         DimDockPolygon.lng,
         DimDockPolygon.lat,
         DimDockPolygon.type_id
-    ).filter(
-        or_(DimDockPolygon.type_id == 1, DimDockPolygon.type_id == 6)
-    ).filter(
-        or_(DimDockPolygon.stage_id == 5, DimDockPolygon.stage_id is None)
     ).order_by(
         DimDockPolygon.Id
-    ).all()
+    )
+    
+    polygons = polygons_query.all()
 
     dock_polygon_list = []
     for polygon in polygons:
@@ -115,11 +115,11 @@ def load_dock_polygon(con) -> pd.DataFrame:
         )
     # print(f"Dock polygon count: {len(dock_polygon_list)}")
     session.close()
-    dock_polygon_df = pd.DataFrame(dock_polygon_list)
-    return dock_polygon_df
+    # dock_polygon_df = pd.DataFrame(dock_polygon_list)
+    return dock_polygon_list
 
 
-def load_od_pairs(year: int, con) -> pd.DataFrame:
+def load_od_pairs(year: int, vars: VariablesManager) -> pd.DataFrame:
     """
     load od pairs
     :param year: year condition
@@ -136,11 +136,11 @@ def load_od_pairs(year: int, con) -> pd.DataFrame:
                 arrival_month,
                 sail_duration
             FROM
-                sisi.{tbn.data_od_pairs_table_name}
+                {Prefix.sisi}{vars.stage_env}.{tbn.data_od_pairs_table_name}
             WHERE
                 departure_year = {year}
             """
         ,
-        con=con
+        con=vars.engine
     )
     return _df

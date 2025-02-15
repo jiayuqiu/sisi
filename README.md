@@ -18,11 +18,13 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 ### 2.1 TODO List
 
 - [x] Database initialization
-- [x] Uploading data
-- [ ] Parsing kml files from Google Earth Pro
+- [ ] Uploading data
+- [ ] Generate dummy data for test
+- [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script
-- [ ] DBSCAN un-matched events
+- [ ] DBSCAN un-matched events and output html plots on map.
 - [x] OD pairs Calculation script
+- [ ] unit test
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:

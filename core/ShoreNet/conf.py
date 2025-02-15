@@ -2,19 +2,18 @@ import os
 
 from sqlalchemy import create_engine
 
+from core.ShoreNet.definitions.parameters import Prefix
 
-def connect_mysql():
+
+def connect_mysql(stage_env: str):
     """
     connect mysql
     :return:
     """
-    tmp_db_name = "sisi_backup"
-    os.environ["SISI_DB_DATABASE"] = tmp_db_name
-    
     mysql_properties = {
         "host": os.environ["SISI_DB_HOST"],
         "port": os.environ["SISI_DB_PORT"],
-        "database": os.environ["SISI_DB_DATABASE"],
+        "database": f"{Prefix.sisi}{stage_env}",
         "user": os.environ["SISI_DB_USER"],
         "password": os.environ["SISI_DB_PASSWORD"]
     }
@@ -26,7 +25,7 @@ def connect_mysql():
     return mysql_engine
 
 
-def connect_database(sql_type: str = "mysql"):
+def connect_database(stage_env: str, sql_type: str = "mysql"):
     """
     connect database
 
@@ -34,7 +33,7 @@ def connect_database(sql_type: str = "mysql"):
     :return: sqlalchemy engine
     """
     if sql_type == "mysql":
-        _e = connect_mysql()
+        _e = connect_mysql(stage_env)
         return _e
     else:
         return None

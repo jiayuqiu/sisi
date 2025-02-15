@@ -12,7 +12,7 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 from sklearn.cluster import DBSCAN
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import VariablesManager, EventFilterParameters
 from core.ShoreNet.definitions.parameters import ColumnNames
 
 
@@ -56,6 +56,8 @@ def cluster_dock_polygon_dbscan(
 
 def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
     from core.ShoreNet.utils.geo import point_poly, get_geodist
+    if event_row["event_id"] == "20230101000030201202010":
+        print(1)
     for polygon in dock_list:
         dst_list = []
         for d_lat, d_lng in polygon['polygon']:
@@ -67,7 +69,7 @@ def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]
             )
             dst_list.append(geodist)
 
-        if min(dst_list) < 20:
+        if min(dst_list) < EventFilterParameters.polygon_event_max_distance:
             if point_poly(
                 lng=event_row[ColumnNames.lng_column_name],
                 lat=event_row[ColumnNames.lat_column_name],

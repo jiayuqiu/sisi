@@ -43,19 +43,48 @@ def getRadian(x):
 
 def get_geodist(lon1, lat1, lon2, lat2):
     """
-    get geo distance, return unit: km.
+    Calculate the great-circle distance between two geographic points
+    on the Earth's surface using the haversine formula.
+    
+    The coordinates are provided in decimal degrees.
+    
+    Args:
+        lon1 (float): Longitude of the first point.
+        lat1 (float): Latitude of the first point.
+        lon2 (float): Longitude of the second point.
+        lat2 (float): Latitude of the second point.
+    
+    Returns:
+        float: Distance between the two points in kilometers.
     """
-    lon1, lat1 = float(lon1), float(lat1)
-    lon2, lat2 = float(lon2), float(lat2)
-    radLat1 = getRadian(lat1)
-    radLat2 = getRadian(lat2)
+    # Convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(math.radians, [lon1, lat1, lon2, lat2])
+    
+    # Haversine formula
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+    c = 2 * math.asin(math.sqrt(a))
+    distance = EARTH_RADIUS * c
 
-    a = radLat1 - radLat2
-    b = getRadian(lon1) - getRadian(lon2)
+    return distance
 
-    dst = 2 * math.asin(math.sqrt(math.pow(math.sin(a / 2), 2) +
-                                  math.cos(radLat1) * math.cos(radLat2) * math.pow(math.sin(b / 2), 2)))
-    dst = dst * EARTH_RADIUS
-    dst = round(dst * 100000000) / 100000000
 
-    return dst
+# def get_geodist_backup(lon1, lat1, lon2, lat2):
+#     """
+#     get geo distance, return unit: km.
+#     """
+#     lon1, lat1 = float(lon1), float(lat1)
+#     lon2, lat2 = float(lon2), float(lat2)
+#     radLat1 = getRadian(lat1)
+#     radLat2 = getRadian(lat2)
+
+#     a = radLat1 - radLat2
+#     b = getRadian(lon1) - getRadian(lon2)
+
+#     dst = 2 * math.asin(math.sqrt(math.pow(math.sin(a / 2), 2) +
+#                                   math.cos(radLat1) * math.cos(radLat2) * math.pow(math.sin(b / 2), 2)))
+#     dst = dst * EARTH_RADIUS
+#     dst = round(dst * 100000000) / 100000000
+
+#     return dst

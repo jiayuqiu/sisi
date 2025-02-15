@@ -8,11 +8,13 @@
 @Desc    :   init database
 '''
 
+import argparse
 import os
 from sqlalchemy import text
 from sqlalchemy import inspect
 
 from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
 from core.ShoreNet.utils.db.base import Base
 from core.ShoreNet.utils.db.DataODPairs import DataODPairs
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
@@ -25,7 +27,12 @@ _logger = set_logger(__name__)
 
 
 def run_app():
-    vars = VariablesManager()
+    parser = argparse.ArgumentParser(description='process match polygon for events')
+    parser.add_argument(f"--{Ad.stage_env}", type=str, required=True, help='Process stage name')
+    args = parser.parse_args()
+    stage_env = args.__getattribute__(Ad.stage_env)
+    
+    vars = VariablesManager(stage_env)
 
     # -. check database if exists
     with vars.engine.connect() as con:
@@ -51,11 +58,11 @@ def run_app():
     ]
     
     if tables_to_create:
-        print(f"Creating tables: {tables_to_create}")
+        _logger.info(f"Creating tables: {tables_to_create}")
         Base.metadata.create_all(vars.engine)
-        print("Tables created successfully!")
+        _logger.info("Tables created successfully!")
     else:
-        print("All tables already exist. No new tables were created.")
+        _logger.info("All tables already exist. No new tables were created.")
     
 
 if __name__ == "__main__":

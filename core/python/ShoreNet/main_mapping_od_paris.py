@@ -26,7 +26,7 @@ def run_app():
 
     year = args.year
 
-    var = VariablesManager()
+    var = VariablesManager(stage_env)
     # -. load events
     events_with_dock_df = load_events_with_dock(year=year, con=var.engine)
 

@@ -10,6 +10,11 @@ from dataclasses import dataclass
 
 
 @dataclass
+class Prefix:
+    sisi: str = "sisi_"
+
+
+@dataclass
 class MultiProcessWorkers:
     process_workers: int = 8
 
@@ -30,6 +35,8 @@ class EventFilterParameters:
     event_lng_range = [73, 136]
     event_lat_range = [18, 50]
     event_avg_speed_max = 0.72
+    
+    polygon_event_max_distance = 500  # NOTE: 500 km is for dummy data, if real data, should be 50 km
 
 
 @dataclass
@@ -49,15 +56,30 @@ class ColumnNames:
 
 @dataclass
 class FileNames:
-    ship_statics_fn: str = "coal_mmsi_v1_init_static.csv"
-    ship_dwt_fn: str = "coal_mmsi_v1_init.csv"
+    ship_statics_fn: str = "statics.csv"
+    ship_dwt_fn: str = "statics_dwt.csv"
 
 
 @dataclass
 class DirPathNames:
-    ship_statics_path: str
     output_path: str
     test_analyze_source_data_path: str = "tests/shared_data/analyze/source"
     test_analyze_result_data_path: str = "tests/shared_data/analyze/result"
+    test_utils_data_path: str = "tests/shared_data/utils"
     root_path: str = "./"
-    data_path: str = "/mnt/d/data/sisi"
+    data_path: str = "./data"
+
+
+@dataclass
+class StageName:
+    dummy: str = "dummy"
+    prod: str = "prod"
+    test: str = "test"
+
+
+@dataclass
+class ArgsDefinition:
+    stage_env: str = "stage_env"
+    year: str = "year"
+    start_month: str = "start_month"
+    end_month: str = "end_month"

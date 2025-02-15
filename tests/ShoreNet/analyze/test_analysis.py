@@ -12,7 +12,8 @@ import unittest
 from core.ShoreNet.definitions.variables import VariablesManager
 
 class TestAnalysis(unittest.TestCase):
-    var = VariablesManager()
+    stage_env = "dummy"
+    var = VariablesManager(stage_env)
 
     def test_polygon_score(self):
         """
