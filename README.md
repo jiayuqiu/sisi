@@ -22,9 +22,9 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script
-- [ ] DBSCAN un-matched events and output html plots on map.
+- [x] DBSCAN un-matched events and output html plots on map.
 - [x] OD pairs Calculation script
-- [ ] unit test
+- [x] unit test
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:
