@@ -22,7 +22,9 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script
-- [x] DBSCAN un-matched events and output html plots on map.
+- [x] DBSCAN
+  - [x] DBSCAN events with null dock id, and then output new polygons
+  - [x] plot polygons on map in HTML.
 - [x] OD pairs Calculation script
 - [x] unit test
 
@@ -34,6 +36,6 @@ Make a delievery srcipt, including:
 4. now, we have updated polygons set. based on the latest polygon set, find more ships and marked them as particular type, and then we have updated ships set.
 5. looping step 1 to step 4 back and forth till there is no more polygons come up.
 
-infrastructural data:
+Dependences data:
 1. global or regional ships events log
 2. ais ships statical data
