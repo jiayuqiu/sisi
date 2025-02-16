@@ -77,6 +77,39 @@ def load_events_with_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
     return _df
 
 
+def load_events_without_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
+    """
+    load events with dock
+    :param year: year condition
+    :return: dataframe
+    """
+    _df = pd.read_sql(
+        sql=f"""
+            SELECT
+                event_id,
+                mmsi,
+                begin_time,
+                end_time,
+                end_time - begin_time as duration,
+                begin_lng,
+                begin_lat,
+                avg_speed,
+                event_categories,
+                coal_dock_id,
+                begin_year as year,
+                begin_month as month,
+                begin_quarter as quarter
+            FROM
+                {Prefix.sisi}{vars.stage_env}.{tbn.all_stop_events_table_name}
+            WHERE
+                begin_year = {year} and coal_dock_id is null
+            """
+        ,
+        con=vars.engine
+    )
+    return _df
+
+
 def load_dock_polygon(vars: VariablesManager) -> pd.DataFrame:
     """
     get dock polygon from sql server

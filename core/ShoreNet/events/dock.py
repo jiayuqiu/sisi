@@ -18,7 +18,7 @@ from core.ShoreNet.definitions.parameters import ColumnNames
 
 def cluster_dock_polygon_dbscan(
         events_df: DataFrame,
-        var: VariablesManager
+        vars: VariablesManager
 ) -> DataFrame:
     """
     this function is used to cluster dock polygon by dbscan
@@ -32,8 +32,8 @@ def cluster_dock_polygon_dbscan(
 
     # DBSCAN clustering
     db = DBSCAN(
-        eps=var.dbscan_params["eps"],
-        min_samples=var.dbscan_params["min_samples"],
+        eps=vars.dbscan_params["eps"],
+        min_samples=vars.dbscan_params["min_samples"],
         algorithm='ball_tree',
         metric='haversine'
     ).fit(np.radians(coords))
@@ -47,8 +47,8 @@ def cluster_dock_polygon_dbscan(
     # filter by ship count and event count
     cleaned_cluster_id_list = []
     for cluster_id, group in events_df.groupby("cluster"):
-        if ((group['mmsi'].nunique() > var.event_param.cluster_unique_mmsi_min_count) &
-                (group.shape[0] > var.event_param.cluster_events_min_count)):
+        if ((group['mmsi'].nunique() > vars.event_param.cluster_unique_mmsi_min_count) &
+                (group.shape[0] > vars.event_param.cluster_events_min_count)):
             cleaned_cluster_id_list.append(cluster_id)
     cleaned_event_df = events_df.loc[events_df['cluster'].isin(cleaned_cluster_id_list)]
     return cleaned_event_df

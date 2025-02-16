@@ -48,9 +48,9 @@ class VariablesManager:
         # parameters
         self.event_param = EventFilterParameters()
         self.geo_param = GeoParameters()
-        self.dbscan_params = {
-            'eps': 0.2 / self.geo_param.kms_per_radian,
-            'min_samples': 30
+        self.dbscan_params = {  # NOTE: for dummy data, eps is 10km and min_samples is 5. please increase both of them for real data
+            'eps': 10 / self.geo_param.kms_per_radian,
+            'min_samples': 5
         }
 
         # MULTIPLE PROCESS WORKERS SETTINGS

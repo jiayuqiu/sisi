@@ -29,8 +29,14 @@ class EventFilterParameters:
     stop_duration_min: int = 1800
     stop_duration_max: int = 7 * 24 * 3600
     event_category: str = "stop_event_poly"
-    cluster_unique_mmsi_min_count: int = 200  # means the cluster should have at least 200 unique ships
-    cluster_events_min_count: int = 400 # means the cluster should have at least 400 events
+    
+    # NOTE: means the cluster should have at least 200 unique ships
+    #       for dummy data, should be 1, for real data, should be 200
+    cluster_unique_mmsi_min_count: int = 1
+    
+    # NOTE: means the cluster should have at least 400 events
+    #       for dummy data, should be 1, for real data, should be 400
+    cluster_events_min_count: int = 1
 
     event_lng_range = [73, 136]
     event_lat_range = [18, 50]

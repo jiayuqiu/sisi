@@ -17,7 +17,7 @@ from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
 
 class TestEvents(unittest.TestCase):
     stage_env = "dummy"
-    var = VariablesManager(stage_env)
+    vars = VariablesManager(stage_env)
  
     def test_dock_pairs(self):
         """
