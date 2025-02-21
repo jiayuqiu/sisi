@@ -28,7 +28,7 @@ def cluster_dock_polygon_dbscan(
     :return:
     """
     # dbscan all_coal_df
-    coords = events_df[[ColumnNames.lng_column_name, ColumnNames.lat_column_name]].values
+    coords = events_df[[ColumnNames.lng, ColumnNames.lat]].values
 
     # DBSCAN clustering
     db = DBSCAN(
@@ -71,8 +71,8 @@ def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]
 
         if min(dst_list) < EventFilterParameters.polygon_event_max_distance:
             if point_poly(
-                lng=event_row[ColumnNames.lng_column_name],
-                lat=event_row[ColumnNames.lat_column_name],
+                lng=event_row[ColumnNames.lng],
+                lat=event_row[ColumnNames.lat],
                 polygon_points=polygon['polygon']
             ):
                 return polygon['dock_id']

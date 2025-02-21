@@ -15,7 +15,7 @@ from core.ShoreNet.definitions.parameters import (
     TableNames as Tbn
 )
 from core.python.utils.dt import get_quarter
-from core.ShoreNet.utils.setup_logger import set_logger
+from core.utilities.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
@@ -31,8 +31,8 @@ def map_od_paris_mmsi(df: pd.DataFrame) -> list[dict]:
     df.sort_values('begin_time', inplace=True)
     df.loc[:, 'next_polygon_id'] = df['coal_dock_id'].shift(-1)
     df.loc[:, 'next_polygon_arrive_time'] = df['begin_time'].shift(-1)
-    df.loc[:, 'next_polygon_lng'] = df[Cn.lng_column_name].shift(-1)
-    df.loc[:, 'next_polygon_lat'] = df[Cn.lat_column_name].shift(-1)
+    df.loc[:, 'next_polygon_lng'] = df[Cn.lng].shift(-1)
+    df.loc[:, 'next_polygon_lat'] = df[Cn.lat].shift(-1)
     df.loc[:, 'next_polygon_arrive_time'] = df['begin_time'].shift(-1)
 
     for _row_id, _row in df.iterrows():
@@ -50,8 +50,8 @@ def map_od_paris_mmsi(df: pd.DataFrame) -> list[dict]:
                     'departure_year': datetime.datetime.fromtimestamp(_row['begin_time']).year,
                     'departure_month': datetime.datetime.fromtimestamp(_row['begin_time']).month,
                     'departure_quarter': get_quarter(_row['begin_time']),
-                    'departure_lng': float(_row[Cn.lng_column_name]),
-                    'departure_lat': float(_row[Cn.lat_column_name]),
+                    'departure_lng': float(_row[Cn.lng]),
+                    'departure_lat': float(_row[Cn.lat]),
                     'arrival_dock_id': int(_row['next_polygon_id']),
                     'arrival_time': _row['next_polygon_arrive_time'],
                     'arrival_year': datetime.datetime.fromtimestamp(_row['next_polygon_arrive_time']).year,

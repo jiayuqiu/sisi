@@ -13,7 +13,7 @@ from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.events.generic.tools import load_events_with_dock
 from core.ShoreNet.events.filter import clean_up_events
 from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
-from core.ShoreNet.utils.setup_logger import set_logger
+from core.utilities.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
@@ -45,7 +45,7 @@ def run_app():
     )
 
     events_od_df.to_sql(
-        name=var.table_names.data_od_pairs_table_name,
+        name=var.table_names.data_od_pairs,
         con=var.engine,
         if_exists='replace',
         index=False

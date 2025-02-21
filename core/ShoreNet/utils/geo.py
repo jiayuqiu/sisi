@@ -68,23 +68,3 @@ def get_geodist(lon1, lat1, lon2, lat2):
     distance = EARTH_RADIUS * c
 
     return distance
-
-
-# def get_geodist_backup(lon1, lat1, lon2, lat2):
-#     """
-#     get geo distance, return unit: km.
-#     """
-#     lon1, lat1 = float(lon1), float(lat1)
-#     lon2, lat2 = float(lon2), float(lat2)
-#     radLat1 = getRadian(lat1)
-#     radLat2 = getRadian(lat2)
-
-#     a = radLat1 - radLat2
-#     b = getRadian(lon1) - getRadian(lon2)
-
-#     dst = 2 * math.asin(math.sqrt(math.pow(math.sin(a / 2), 2) +
-#                                   math.cos(radLat1) * math.cos(radLat2) * math.pow(math.sin(b / 2), 2)))
-#     dst = dst * EARTH_RADIUS
-#     dst = round(dst * 100000000) / 100000000
-
-#     return dst

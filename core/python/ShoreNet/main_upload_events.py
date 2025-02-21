@@ -1,14 +1,13 @@
-"""
-@Project: Pytorch-UNet
-@Title:  main_upload_events.py
-@Description:  load events data from csv and upload to db
-@Environment: Python 3.6.12
-@Author  ： Jerry Qiu
-@Email   :  qiujiayu0212@gmail.com
-@FileName:  main_upload_events.py
-@DateTime:  27/10/2024 4:52 pm
-@DESC    :  load events data from csv and upload to db
-"""
+# -*- encoding: utf-8 -*-
+'''
+@File    :   main_upload_events.py
+@Time    :   2025/02/22 00:42:51
+@Author  :   Jiayu(Jerry) Qiu
+@Version :   1.0
+@Contact :   qiujiayu0212@gmail.com
+@Desc    :   None
+'''
+
 
 import os
 import argparse
@@ -18,13 +17,13 @@ import numpy as np
 from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, Prefix, StageName
 from core.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
-from core.ShoreNet.utils.setup_logger import set_logger
+from core.utilities.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
 
 def run_app() -> None:
-    parser = argparse.ArgumentParser(description='process match polygon for events')
+    parser = argparse.ArgumentParser(description='process: upload events')
     parser.add_argument(f"--{Ad.stage_env}", type=str, required=True, help='Process stage name')
     parser.add_argument(f'--{Ad.year}', type=int, required=True, help='Process year')
     parser.add_argument(f'--{Ad.start_month}', type=int, required=True, help='The start month')

@@ -21,7 +21,7 @@ from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from core.ShoreNet.utils.db.DimPolygonType import DimPolygonType
 from core.ShoreNet.utils.db.DimShipsStatics import DimShipsStatics
 from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
-from core.ShoreNet.utils.setup_logger import set_logger
+from core.utilities.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 

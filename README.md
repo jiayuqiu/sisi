@@ -22,11 +22,15 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script
+- [ ] Output ship mmsi list.
 - [x] DBSCAN
   - [x] DBSCAN events with null dock id, and then output new polygons
   - [x] plot polygons on map in HTML.
 - [x] OD pairs Calculation script
 - [x] unit test
+- [ ] Documentation
+
+- [ ] moor, stop event classifier. # print to He zhiqiang.
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:

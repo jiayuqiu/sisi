@@ -21,7 +21,7 @@ from simplification.cutil import simplify_coords
 from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, ColumnNames as Cn
 from core.ShoreNet.events.generic.tools import load_events_without_dock
-from core.ShoreNet.events.dock import cluster_dock_polygon_dbscan
+from core.ShoreNet.events.polygon import cluster_dock_polygon_dbscan
 
 
 def simplify_polygon(polygon, tolerance):
@@ -67,8 +67,8 @@ def generate_points_hulls(df):
         _row = group.iloc[0, :]
         _d = {
             'cluster': cluster_id, 
-            'lng': _row[Cn.lng_column_name], 
-            'lat': _row[Cn.lat_column_name], 
+            'lng': _row[Cn.lng], 
+            'lat': _row[Cn.lat], 
             'size': group.shape[0]
         }
         plot_row_list.append(_d)
@@ -94,7 +94,7 @@ def hull_polygon_by_cluster(hull_df, cluster_name):
         if cluster == -1:  # Skip noise points
             continue
         
-        cluster_points = hull_df[hull_df[cluster_name] == cluster][[Cn.lng_column_name, Cn.lat_column_name]].values
+        cluster_points = hull_df[hull_df[cluster_name] == cluster][[Cn.lng, Cn.lat]].values
 
         if len(cluster_points) > 2:  # Convex hull requires at least 3 points
             try:
@@ -134,7 +134,7 @@ def plot_on_map(plot_df, hull_df, cluster_name):
     for cluster in unique_clusters:
         if cluster == -1:  # Skip noise points
             continue
-        cluster_points = hull_df[hull_df[cluster_name] == cluster][[Cn.lng_column_name, Cn.lat_column_name]].values
+        cluster_points = hull_df[hull_df[cluster_name] == cluster][[Cn.lng, Cn.lat]].values
     
         if len(cluster_points) > 2:  # Convex hull requires at least 3 points
             try:

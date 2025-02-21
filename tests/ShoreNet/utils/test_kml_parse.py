@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 '''
-@File    :   test_polygon_parse.py
+@File    :   test_kml_parse.py
 @Time    :   2025/02/15 11:42:54
 @Author  :   Jiayu(Jerry) Qiu
 @Version :   1.0
 @Contact :   qiujiayu0212@gmail.com
-@Desc    :   This script is to test the polygon parse functions
+@Desc    :   This script is to test the kml parse functions
 '''
 
 

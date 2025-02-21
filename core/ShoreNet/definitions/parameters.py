@@ -47,18 +47,23 @@ class EventFilterParameters:
 
 @dataclass
 class TableNames:
-    all_stop_events_table_name: str = "factor_all_stop_events"
-    coal_stop_events_table_name: str = "factor_coal_stop_events"
-    dim_ships_statics_table_name: str = "dim_ships_statics"
-    data_od_pairs_table_name: str = "data_od_pairs"
-    data_features_trust_score_month_table_name: str = "data_features_trust_score_month"
-    data_features_trust_score_quarter_table_name: str = "data_features_trust_score_quarter"
+    all_stop_events: str = "factor_all_stop_events"
+    coal_stop_events: str = "factor_coal_stop_events"
+    dim_ships_statics: str = "dim_ships_statics"
+    data_od_pairs: str = "data_od_pairs"
+    data_features_trust_score_month: str = "data_features_trust_score_month"
+    data_features_trust_score_quarter: str = "data_features_trust_score_quarter"
 
 
 @dataclass
 class ColumnNames:
-    lng_column_name: str = "begin_lng"
-    lat_column_name: str = "begin_lat"
+    mmsi: str = "mmsi"
+    lng: str = "begin_lng"
+    lat: str = "begin_lat"
+    sog: str = "avg_speed"
+    year: str = "begin_year"
+    month: str = "begin_month"
+    day: str = "begin_day"
 
 @dataclass
 class FileNames:
