@@ -17,22 +17,21 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 
 ### 2.1 TODO List
 
-- [x] Database initialization
+- [x] Database initialization  
   - [ ] Statics structure update
 - [x] Uploading data
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
-- [x] Matching events with polygons script
-  - [ ] apply cython version `point_poly`, accelerate 10 times to matching events with polygons.
+- [x] Matching events with polygons script  
+  - [ ] Apply cython version `point_poly`, accelerate 10 times to matching events with polygons.
 - [ ] Output ship mmsi list.
-- [x] DBSCAN
-  - [x] DBSCAN events with null dock id, and then output new polygons
-  - [x] plot polygons on map in HTML.
+- [x] DBSCAN  
+  - [x] DBSCAN events with null dock id, and then output new polygons  
+  - [x] Plot polygons on map in HTML.
 - [x] OD pairs Calculation script
-- [x] unit test
+- [x] Unit test
 - [ ] Documentation
-
-- [ ] moor, stop event classifier.  # print to He zhiqiang.
+- [ ] Moor, stop event classifier.  # print to He zhiqiang.
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:
@@ -45,3 +44,9 @@ Make a delievery srcipt, including:
 Dependences data:
 1. global or regional ships events log
 2. ais ships statical data
+
+### 2.3 Documentation
+
+| Module         | Arguments                                                                                                                                      | Details                                                                                                   |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| main_init_db   | `--stage_env` (str, required): Process stage environment <br> `--force` (flag): Set to true if provided                                                 | [See Details](./core/python/ShoreNet/README.md#main_init_db)              |

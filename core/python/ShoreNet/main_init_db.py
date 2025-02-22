@@ -27,10 +27,12 @@ _logger = set_logger(__name__)
 
 
 def run_app():
-    parser = argparse.ArgumentParser(description='process match polygon for events')
+    parser = argparse.ArgumentParser(description='process init database tables')
+    parser.add_argument(f"--{Ad.force_flag}", action="store_true", help='if force to init database')
     parser.add_argument(f"--{Ad.stage_env}", type=str, required=True, help='Process stage name')
     args = parser.parse_args()
     stage_env = args.__getattribute__(Ad.stage_env)
+    force = args.__getattribute__(Ad.force_flag)
     
     vars = VariablesManager(stage_env)
 
@@ -38,18 +40,25 @@ def run_app():
     with vars.engine.connect() as con:
         result = con.execute(
             text("SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :db_name"),
-            {"db_name": os.environ["SISI_DB_DATABASE"]}
+            {"db_name": vars.warehouse_schema}
         )
     
     if not result.scalar():
-        vars.engine.execute(text(f"CREATE DATABASE {os.environ['SISI_DB_DATABASE']}"))
-        _logger.info(f"Database '{os.environ['SISI_DB_DATABASE']}' created successfully.")
+        raise RuntimeError(
+            f"Database '{vars.warehouse_schema}' not found. Please create the database first."
+        )
     else:
-        _logger.info(f"Database '{os.environ['SISI_DB_DATABASE']}' already existed.")
+        _logger.info(f"Database '{vars.warehouse_schema}' already existed.")
     
     # -. check tables
     inspector = inspect(vars.engine)
     existing_tables = inspector.get_table_names()
+
+    # -. if force, drop tables first
+    if force:
+        # _logger.info("Force to init database")
+        Base.metadata.drop_all(vars.engine)
+        existing_tables = []
     
     tables_to_create = [
         cls.__tablename__

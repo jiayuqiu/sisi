@@ -74,7 +74,7 @@ def run_app() -> None:
         vars.engine.execute(
             f"""
             DELETE FROM 
-                {Prefix.sisi}{stage_env}.factor_all_stop_events
+                {vars.warehouse_schema}.factor_all_stop_events
             WHERE 
                 begin_year = {year} AND begin_month = {month}
             """

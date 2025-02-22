@@ -46,7 +46,7 @@ class EventFilterParameters:
 
 
 @dataclass
-class TableNames:
+class WarehouseDefinitions:
     all_stop_events: str = "factor_all_stop_events"
     coal_stop_events: str = "factor_coal_stop_events"
     dim_ships_statics: str = "dim_ships_statics"
@@ -90,7 +90,9 @@ class StageName:
 
 @dataclass
 class ArgsDefinition:
+    force_flag: str = "force"
     stage_env: str = "stage_env"
     year: str = "year"
     start_month: str = "start_month"
     end_month: str = "end_month"
+    

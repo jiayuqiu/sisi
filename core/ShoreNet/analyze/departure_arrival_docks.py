@@ -12,7 +12,7 @@ from multiprocessing import Pool
 
 from core.ShoreNet.definitions.parameters import (
     ColumnNames as Cn,
-    TableNames as Tbn
+    WarehouseDefinitions as Tbn
 )
 from core.python.utils.dt import get_quarter
 from core.basis.setup_logger import set_logger

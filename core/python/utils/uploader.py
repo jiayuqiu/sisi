@@ -84,6 +84,7 @@ class DataUploader:
         self.year = year
         self.start_month = start_month
         self.end_month = end_month
+        self.warehouse_schema = f"{Prefix.sisi}{self.stage_env}"
     
     def upload_events(self, ):
         for month in range(self.start_month, self.end_month+1):
@@ -121,7 +122,7 @@ class DataUploader:
             self.vars.engine.execute(
                 f"""
                 DELETE FROM 
-                    {Prefix.sisi}{self.stage_env}.factor_all_stop_events
+                    {self.warehouse_schema}{self.stage_env}.factor_all_stop_events
                 WHERE 
                     begin_year = {self.year} AND begin_month = {month}
                 """
@@ -199,19 +200,19 @@ class DataUploader:
         self.vars.engine.execute(
             f"""
             DELETE FROM 
-                {Prefix.sisi}{self.stage_env}.factor_all_stop_events
+                {self.warehouse_schema}{self.stage_env}.factor_all_stop_events
             """
         )
         self.vars.engine.execute(
             f"""
             DELETE FROM 
-                {Prefix.sisi}{self.stage_env}.dim_ships_statics
+                {self.warehouse_schema}{self.stage_env}.dim_ships_statics
             """
         )
         self.vars.engine.execute(
             f"""
             DELETE FROM 
-                {Prefix.sisi}{self.stage_env}.dim_dock_polygon
+                {self.warehouse_schema}{self.stage_env}.dim_dock_polygon
             """
         )
         _logger.info("All data cleaned successfully.")

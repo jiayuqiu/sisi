@@ -16,7 +16,7 @@ from sqlalchemy.orm import sessionmaker
 from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.definitions.parameters import Prefix
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
-from core.ShoreNet.definitions.parameters import TableNames as tbn
+from core.ShoreNet.definitions.parameters import WarehouseDefinitions as tbn
 
 
 def load_events_all(year: int, month: int, vars: VariablesManager) -> pd.DataFrame:
@@ -33,7 +33,7 @@ def load_events_all(year: int, month: int, vars: VariablesManager) -> pd.DataFra
         begin_year as year,
         begin_month as month
     FROM
-        {Prefix.sisi}{vars.stage_env}.{tbn.all_stop_events}
+        {vars.warehouse_schema}.{tbn.all_stop_events}
     WHERE
         begin_year = {year} AND begin_month = {month}
     """
@@ -67,7 +67,7 @@ def load_events_with_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
                 begin_month as month,
                 begin_quarter as quarter
             FROM
-                {Prefix.sisi}{vars.stage_env}.{tbn.all_stop_events}
+                {vars.warehouse_schema}.{tbn.all_stop_events}
             WHERE
                 begin_year = {year} and coal_dock_id is not null
             """
@@ -100,7 +100,7 @@ def load_events_without_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
                 begin_month as month,
                 begin_quarter as quarter
             FROM
-                {Prefix.sisi}{vars.stage_env}.{tbn.all_stop_events}
+                {vars.warehouse_schema}.{tbn.all_stop_events}
             WHERE
                 begin_year = {year} and coal_dock_id is null
             """
@@ -169,7 +169,7 @@ def load_od_pairs(year: int, vars: VariablesManager) -> pd.DataFrame:
                 arrival_month,
                 sail_duration
             FROM
-                {Prefix.sisi}{vars.stage_env}.{tbn.data_od_pairs}
+                {vars.warehouse_schema}.{tbn.data_od_pairs}
             WHERE
                 departure_year = {year}
             """

@@ -14,11 +14,12 @@ import sqlalchemy
 
 from core.ShoreNet.conf import connect_database
 from core.ShoreNet.definitions.parameters import (
+    Prefix,
     DirPathNames,
     FileNames,
     EventFilterParameters,
     GeoParameters,
-    TableNames,
+    WarehouseDefinitions,
     ColumnNames
 )
 
@@ -40,7 +41,7 @@ class VariablesManager:
         self.f_names: FileNames = self.define_file_names()
 
         # table names
-        self.table_names: TableNames = self.define_table_names()
+        self.table_names: WarehouseDefinitions = self.define_warehouse()
 
         # column names
         self.column_names: ColumnNames = self.define_column_names()
@@ -54,7 +55,7 @@ class VariablesManager:
         }
 
         # MULTIPLE PROCESS WORKERS SETTINGS
-        self.process_workers = 2
+        self.process_workers = 4
 
         # TODO: add loading of parameters from config file(yml)
         # connect to database
@@ -70,6 +71,7 @@ class VariablesManager:
                     raise ConnectionError(f"database connection failed. error: {e}, please create database first.")
                 else:
                     raise ConnectionError(f"database connection failed. error: {e}")
+        self.warehouse_schema = f"{Prefix.sisi}{self.stage_env}"
 
     def define_dir_path(self) -> DirPathNames:
         return DirPathNames(
@@ -81,8 +83,8 @@ class VariablesManager:
         return FileNames()
 
     @staticmethod
-    def define_table_names() -> TableNames:
-        return TableNames()
+    def define_warehouse() -> WarehouseDefinitions:
+        return WarehouseDefinitions()
 
     @staticmethod
     def define_column_names() -> ColumnNames:
