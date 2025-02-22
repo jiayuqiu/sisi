@@ -16,7 +16,7 @@ from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, Prefix
 from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
 from core.ShoreNet.statics.generic.tools import load_coal_ship_statics
 from core.ShoreNet.events.polygon import map_event_polygon
-from core.utilities.setup_logger import set_logger
+from core.basis.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 

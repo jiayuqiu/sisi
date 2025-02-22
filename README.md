@@ -18,10 +18,12 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 ### 2.1 TODO List
 
 - [x] Database initialization
+  - [ ] Statics structure update
 - [x] Uploading data
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script
+  - [ ] apply cython version `point_poly`, accelerate 10 times to matching events with polygons.
 - [ ] Output ship mmsi list.
 - [x] DBSCAN
   - [x] DBSCAN events with null dock id, and then output new polygons
@@ -30,7 +32,7 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 - [x] unit test
 - [ ] Documentation
 
-- [ ] moor, stop event classifier. # print to He zhiqiang.
+- [ ] moor, stop event classifier.  # print to He zhiqiang.
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:

@@ -19,7 +19,7 @@ from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
 from core.ShoreNet.utils.polygon import KMLParser
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
-from core.utilities.setup_logger import set_logger
+from core.basis.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 

@@ -13,7 +13,7 @@ from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.events.generic.tools import load_events_with_dock
 from core.ShoreNet.events.filter import clean_up_events
 from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
-from core.utilities.setup_logger import set_logger
+from core.basis.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 

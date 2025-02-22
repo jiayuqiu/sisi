@@ -13,7 +13,7 @@ import pandas as pd
 
 from core.ShoreNet.definitions.variables import VariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
-from core.utilities.setup_logger import set_logger
+from core.basis.setup_logger import set_logger
 from core.ShoreNet.statics.filter import clean_up_statics
 
 _logger = set_logger(__name__)
