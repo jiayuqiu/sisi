@@ -13,7 +13,7 @@ import os
 import pandas as pd
 from pykml import parser
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 # import pymssql
 # import time
 
@@ -42,7 +42,7 @@ class CoordinatePoint(object):
 
 
 class KMLParser(object):
-    def __init__(self, kml_file: str, var: VariablesManager) -> None:
+    def __init__(self, kml_file: str, var: ShoreNetVariablesManager) -> None:
         self.kml_file = kml_file
         # self.df = self.parse_kml()
 

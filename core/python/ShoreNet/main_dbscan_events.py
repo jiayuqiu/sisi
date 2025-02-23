@@ -18,7 +18,7 @@ import pandas as pd
 from scipy.spatial import ConvexHull, QhullError
 from simplification.cutil import simplify_coords
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, ColumnNames as Cn
 from core.ShoreNet.events.generic.tools import load_events_without_dock
 from core.ShoreNet.events.polygon import cluster_dock_polygon_dbscan
@@ -171,7 +171,7 @@ def run_app():
     stage_env = args.__getattribute__(Ad.stage_env)
     year = args.__getattribute__(Ad.year)
     
-    vars = VariablesManager(stage_env)
+    vars = ShoreNetVariablesManager(stage_env)
     
     # -. load events without coal_dock_id
     dbscan_events_df = cluster_dock_polygon_dbscan(

@@ -14,10 +14,10 @@ import argparse
 import pandas as pd
 import numpy as np
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, Prefix, StageName
 from core.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
-from core.basis.setup_logger import set_logger
+from core.infrastructure.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
@@ -37,7 +37,7 @@ def run_app() -> None:
     end_month = args.__getattribute__(Ad.end_month)
     # months = [f"{year}{x:02}" for x in range(start_month, end_month+1)]
 
-    vars = VariablesManager(stage_env)
+    vars = ShoreNetVariablesManager(stage_env)
 
     for month in range(start_month, end_month+1):
         month_str = f"{year}{month:02}"

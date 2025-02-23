@@ -9,11 +9,11 @@
 import os
 import argparse
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.events.generic.tools import load_events_with_dock
 from core.ShoreNet.events.filter import clean_up_events
 from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
-from core.basis.setup_logger import set_logger
+from core.infrastructure.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
@@ -26,7 +26,7 @@ def run_app():
 
     year = args.year
 
-    var = VariablesManager(stage_env)
+    var = ShoreNetVariablesManager(stage_env)
     # -. load events
     events_with_dock_df = load_events_with_dock(year=year, con=var.engine)
 

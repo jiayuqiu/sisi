@@ -8,7 +8,7 @@
 import pandas as pd
 from pandas.core.frame import DataFrame
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 
 
 def print_clean_up_effect(original_df: DataFrame, cleaned_df: DataFrame) -> None:
@@ -24,7 +24,7 @@ def print_clean_up_effect(original_df: DataFrame, cleaned_df: DataFrame) -> None
 
 def clean_up_events(
         df: DataFrame,
-        var: VariablesManager,
+        var: ShoreNetVariablesManager,
         mmsi_enum_list: list[int] = []
 ) -> DataFrame:
     """

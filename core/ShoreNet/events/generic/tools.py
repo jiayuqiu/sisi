@@ -13,13 +13,13 @@ import pandas as pd
 from sqlalchemy import func, or_, text
 from sqlalchemy.orm import sessionmaker
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.definitions.parameters import Prefix
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from core.ShoreNet.definitions.parameters import WarehouseDefinitions as tbn
 
 
-def load_events_all(year: int, month: int, vars: VariablesManager) -> pd.DataFrame:
+def load_events_all(year: int, month: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     query = f"""
     SELECT
         event_id,
@@ -44,7 +44,7 @@ def load_events_all(year: int, month: int, vars: VariablesManager) -> pd.DataFra
     return df
 
 
-def load_events_with_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
+def load_events_with_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     load events with dock
     :param year: year condition
@@ -77,7 +77,7 @@ def load_events_with_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
     return _df
 
 
-def load_events_without_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
+def load_events_without_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     load events with dock
     :param year: year condition
@@ -110,7 +110,7 @@ def load_events_without_dock(year: int, vars: VariablesManager) -> pd.DataFrame:
     return _df
 
 
-def load_dock_polygon(vars: VariablesManager) -> pd.DataFrame:
+def load_dock_polygon(vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     get dock polygon from sql server
     :return: [{'dock_id': ..., 'name': ..., 'polygon': [...], 'province': ... }]
@@ -152,7 +152,7 @@ def load_dock_polygon(vars: VariablesManager) -> pd.DataFrame:
     return dock_polygon_list
 
 
-def load_od_pairs(year: int, vars: VariablesManager) -> pd.DataFrame:
+def load_od_pairs(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     load od pairs
     :param year: year condition

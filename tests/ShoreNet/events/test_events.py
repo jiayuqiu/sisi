@@ -11,13 +11,13 @@ import unittest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
 
 
 class TestEvents(unittest.TestCase):
     stage_env = "dummy"
-    vars = VariablesManager(stage_env)
+    vars = ShoreNetVariablesManager(stage_env)
  
     def test_dock_pairs(self):
         """

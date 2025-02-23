@@ -15,20 +15,20 @@ import argparse
 from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
 from core.ShoreNet.utils.polygon import KMLParser
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
-from core.basis.setup_logger import set_logger
+from core.infrastructure.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
 
-def insert_polygon(vars: VariablesManager, parsed_kp_ls: list) -> None:
+def insert_polygon(vars: ShoreNetVariablesManager, parsed_kp_ls: list) -> None:
     """insert parsed dock polygon data into the database
 
     Args:
-        vars (VariablesManager): variables manager.
+        vars (ShoreNetVariablesManager): variables manager.
         parsed_kp_ls (list): A list of parsed dock polygon data dictionaries.
             Each dictionary in the list represents a dock polygon and has the following keys:
             - 'name' (str): The name of the dock polygon.
@@ -71,7 +71,7 @@ def run_app():
     args = parser.parse_args()
     stage_env = args.__getattribute__(Ad.stage_env)
 
-    vars = VariablesManager(stage_env)
+    vars = ShoreNetVariablesManager(stage_env)
     
     # get all kml files by `glob`
     kml_fn_ls = glob.glob(os.path.join(vars.dp_names.data_path, stage_env, "kml", '*.kml'))

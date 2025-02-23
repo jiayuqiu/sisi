@@ -11,9 +11,9 @@ import argparse
 
 import pandas as pd
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
-from core.basis.setup_logger import set_logger
+from core.infrastructure.setup_logger import set_logger
 from core.ShoreNet.statics.filter import clean_up_statics
 
 _logger = set_logger(__name__)
@@ -24,7 +24,7 @@ def run_app() -> None:
     args = parser.parse_args()
     stage_env = args.__getattribute__(Ad.stage_env)
     
-    var = VariablesManager(stage_env)
+    var = ShoreNetVariablesManager(stage_env)
 
     # -. get DWT
     ship_dwt_df = pd.read_csv(

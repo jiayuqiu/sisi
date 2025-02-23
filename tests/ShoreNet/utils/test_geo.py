@@ -13,7 +13,7 @@ import os
 import unittest
 from functools import wraps
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.utils.geo import point_poly
 from core.cython.geo_cython import point_poly_c
 
@@ -31,7 +31,7 @@ def timer(func):
 
 class TestEvents(unittest.TestCase):
     stage_env = "dummy"
-    vars = VariablesManager(stage_env)
+    vars = ShoreNetVariablesManager(stage_env)
 
     def test_c_point_polygon(self):
         polygon = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]

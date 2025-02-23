@@ -15,7 +15,7 @@ from core.ShoreNet.definitions.parameters import (
     WarehouseDefinitions as Tbn
 )
 from core.python.utils.dt import get_quarter
-from core.basis.setup_logger import set_logger
+from core.infrastructure.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 

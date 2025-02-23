@@ -24,7 +24,7 @@ from core.ShoreNet.definitions.parameters import (
 )
 
 
-class VariablesManager:
+class ShoreNetVariablesManager:
     def __init__(self, stage_env: str):
         load_dotenv("./.env")
         self.stage_env = stage_env

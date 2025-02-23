@@ -9,11 +9,11 @@
 
 import unittest
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 
 class TestAnalysis(unittest.TestCase):
     stage_env = "dummy"
-    var = VariablesManager(stage_env)
+    var = ShoreNetVariablesManager(stage_env)
 
     @unittest.skip("skip test")
     def test_polygon_score(self):

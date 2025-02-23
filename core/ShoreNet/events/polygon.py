@@ -12,13 +12,13 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 from sklearn.cluster import DBSCAN
 
-from core.ShoreNet.definitions.variables import VariablesManager, EventFilterParameters
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager, EventFilterParameters
 from core.ShoreNet.definitions.parameters import ColumnNames
 
 
 def cluster_dock_polygon_dbscan(
         events_df: DataFrame,
-        vars: VariablesManager
+        vars: ShoreNetVariablesManager
 ) -> DataFrame:
     """
     this function is used to cluster dock polygon by dbscan

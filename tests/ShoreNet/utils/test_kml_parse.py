@@ -12,13 +12,13 @@
 import os
 import unittest
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.utils.polygon import KMLParser, CoordinatePoint
 
 
 class TestEvents(unittest.TestCase):
-    stage_env = "dummy"
-    vars = VariablesManager(stage_env)
+    stage_env = "test"
+    vars = ShoreNetVariablesManager(stage_env)
     
     def test_kml_parse(self):
         """load kml file and parse it into polygon data"""

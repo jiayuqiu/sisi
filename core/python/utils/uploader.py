@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
 import pandas as pd
 
-from core.ShoreNet.definitions.variables import VariablesManager
+from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.definitions.parameters import (
     Prefix,
     ColumnNames as Cn
@@ -28,16 +28,16 @@ from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from core.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
 from core.ShoreNet.statics.filter import clean_up_statics
 # from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
-from core.basis.setup_logger import set_logger
+from core.infrastructure.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
 
-def insert_polygon(vars: VariablesManager, parsed_kp_ls: list) -> None:
+def insert_polygon(vars: ShoreNetVariablesManager, parsed_kp_ls: list) -> None:
     """insert parsed dock polygon data into the database
 
     Args:
-        vars (VariablesManager): variables manager.
+        vars (ShoreNetVariablesManager): variables manager.
         parsed_kp_ls (list): A list of parsed dock polygon data dictionaries.
             Each dictionary in the list represents a dock polygon and has the following keys:
             - 'name' (str): The name of the dock polygon.
@@ -73,9 +73,9 @@ def insert_polygon(vars: VariablesManager, parsed_kp_ls: list) -> None:
 
 
 class DataUploader:
-    def __init__(self, 
-                 stage_env: str, 
-                 vars: VariablesManager,
+    def __init__(self,
+                 stage_env: str,
+                 vars: ShoreNetVariablesManager,
                  year: int = None,
                  start_month: int = None,
                  end_month: int = None):
