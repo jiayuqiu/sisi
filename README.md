@@ -23,7 +23,7 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script  
-  - [ ] Apply cython version `point_poly`, accelerate 10 times to matching events with polygons.
+  - [x] Apply cython version `point_poly`, accelerate 10 times to matching events with polygons.
 - [ ] Output ship mmsi list.
 - [x] DBSCAN  
   - [x] DBSCAN events with null dock id, and then output new polygons  

@@ -8,6 +8,10 @@
 """
 
 
+# add: destination, eta, etc.
+# format: shipname(uppercase)
+# keep: utc_ts, imo, callsign, 
+# drop: `""`
 STATICS_COLUMNS_MAPPING = {
     "mmsi": "mmsi",
     "imo": "imo",

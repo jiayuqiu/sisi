@@ -25,6 +25,15 @@ def connect_mysql(stage_env: str):
     return mysql_engine
 
 
+def connect_sqlite():
+    """
+    connect sqlite
+    :return:
+    """
+    sqlite_engine = create_engine(f"sqlite:///./data/dummy/sisi.db")
+    return sqlite_engine
+
+
 def connect_database(stage_env: str, sql_type: str = "mysql"):
     """
     connect database
@@ -34,6 +43,9 @@ def connect_database(stage_env: str, sql_type: str = "mysql"):
     """
     if sql_type == "mysql":
         _e = connect_mysql(stage_env)
+        return _e
+    elif sql_type == "sqlite":
+        _e = connect_sqlite()
         return _e
     else:
         return None
