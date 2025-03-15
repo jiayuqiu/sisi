@@ -14,7 +14,7 @@ import argparse
 from core.infrastructure.data.statics import StaticsDataProcessor
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
-from core.infrastructure.setup_logger import set_logger
+from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
@@ -43,7 +43,7 @@ def run_app():
                 vars.dp_names.data_path, stage_env, 'statics', f"static_{month_str}.csv"
             )
         )
-        df = sd_processor.load_data()
+        df = sd_processor.load()
         df.to_sql("dim_ships_statics", con=vars.engine, if_exists='append', index=False)
 
 

@@ -62,13 +62,13 @@ def clean_up_events(
         return _df
 
 
-# def csv_fields_mapping(df: DataFrame, fields_map: dict[str, str]) -> DataFrame:
+# def csv_fields_mapping(data: DataFrame, fields_map: dict[str, str]) -> DataFrame:
 #     """
 #     through fields_map clean events column names
 #
-#     :param df: dataframe loaded from csv directly
+#     :param data: dataframe loaded from csv directly
 #     :param fields_map: mapping variables
 #     :return: cleaned event dataframe
 #     """
-#     df.rename(columns=fields_map, inplace=True)
-#     return df
+#     data.rename(columns=fields_map, inplace=True)
+#     return data

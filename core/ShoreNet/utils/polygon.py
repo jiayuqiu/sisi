@@ -44,7 +44,7 @@ class CoordinatePoint(object):
 class KMLParser(object):
     def __init__(self, kml_file: str, var: ShoreNetVariablesManager) -> None:
         self.kml_file = kml_file
-        # self.df = self.parse_kml()
+        # self.data = self.parse_kml()
 
     def parse_kml(self) -> list[dict]:
         """
@@ -92,12 +92,12 @@ class KMLParser(object):
 
 
 # # Function to compute convex hull and return the coordinates
-# def compute_convex_hull(df):
-#     unique_clusters = df['cluster'].unique()
+# def compute_convex_hull(data):
+#     unique_clusters = data['cluster'].unique()
 #     hulls = {}
 #
 #     for cluster in unique_clusters:
-#         cluster_points = df[df['cluster'] == cluster][['lng', 'lat']].values
+#         cluster_points = data[data['cluster'] == cluster][['lng', 'lat']].values
 #         if len(cluster_points) > 2:  # Convex hull requires at least 3 points
 #             try:
 #                 hull = ConvexHull(cluster_points)
@@ -111,8 +111,8 @@ class KMLParser(object):
 #     return hulls
 
 
-# def hull_points_to_sql_server(df):
-#     hulls = compute_convex_hull(df)
+# def hull_points_to_sql_server(data):
+#     hulls = compute_convex_hull(data)
 #     conn = pymssql.connect(sql_server_properties['host'], sql_server_properties['user'],
 #                            'Amacs@0212', sql_server_properties['database'])
 #     cursor = conn.cursor()

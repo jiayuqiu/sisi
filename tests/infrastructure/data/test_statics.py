@@ -10,9 +10,7 @@
 
 import unittest
 
-import pandas as pd
-
-from core.infrastructure.data.statics import clean_up, load_statics_data
+from core.infrastructure.data.statics import StaticsDataProcessor
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 
 class TestEvents(unittest.TestCase):
@@ -25,8 +23,12 @@ class TestEvents(unittest.TestCase):
     def tearDown(self):
         """Run some functions at end of the testing. Nothing to do yet."""
 
-    def test_statics_clean_up(self, ):
+    def test_statics_wrangle(self, ):
         """test for statics data clean up"""
-        df = load_statics_data("data/dev/statics/static_202311.csv")
-        cleaned_df = clean_up(df)
-        print("Done.")
+        sdp = StaticsDataProcessor(csv_path="data/dev/statics/static_202311.csv")
+        wrangled_df = sdp.wrangle()
+
+        # valid length_width_ratio
+        # Check that the length_width_ratio column contains no NaN values
+        self.assertFalse(wrangled_df['length_width_ratio'].isna().any(),
+                         "NaN found in length_width_ratio column")

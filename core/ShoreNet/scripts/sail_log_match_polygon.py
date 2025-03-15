@@ -182,12 +182,12 @@ class DockDBSCAN(object):
             )
     
     # @staticmethod
-    # def update_coal_dock_id(df):
+    # def update_coal_dock_id(data):
     #     conn = pymssql.connect(sql_server_properties['host'], sql_server_properties['user'],
     #                            'Amacs@0212', sql_server_properties['database'])
     #     cursor = conn.cursor()
     #
-    #     for _, row in df.iterrows():
+    #     for _, row in data.iterrows():
     #         if not np.isnan(row['coal_dock_id']):
     #             cursor.execute(f"""
     #                         update

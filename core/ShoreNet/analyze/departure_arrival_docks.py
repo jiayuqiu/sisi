@@ -11,11 +11,10 @@ import pandas as pd
 from multiprocessing import Pool
 
 from core.ShoreNet.definitions.parameters import (
-    ColumnNames as Cn,
-    WarehouseDefinitions as Tbn
+    ColumnNames as Cn
 )
 from core.python.utils.dt import get_quarter
-from core.infrastructure.setup_logger import set_logger
+from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 

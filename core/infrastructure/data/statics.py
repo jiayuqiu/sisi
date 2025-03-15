@@ -23,6 +23,7 @@ steps:
 
 import numpy as np
 import pandas as pd
+from pandas.core.frame import DataFrame as PandasDF
 from tqdm import tqdm
 
 from core.infrastructure.definition.mapping import STATICS_COLUMNS_MAPPING
@@ -32,35 +33,33 @@ from core.infrastructure.definition.parameters import StaticsCleanThreshold as S
 class StaticsDataProcessor:
     def __init__(self, csv_path: str):
         self.csv_path = csv_path
+        # -. load as pandas dataframe
+        self.df = pd.read_csv(self.csv_path)
 
-    def clean_up(cls, df, filter_null: bool = False):
+    @staticmethod
+    def clean_up(data: PandasDF):
         """
-        There are error data in static_data.
-        This function is aim to filter error data.
+        Clean the statics data
 
-        Valid Data Request:
-        0. length and width are numerical.
-        1. contains length and width
-        2. length ∈ (0, +∞)
-        3. width ∈ (0, +∞)
+        Key Steps:
+        1. If filter_null is True, filter out null or erroneous rows.
+        2. Calculate the length_width_ratio as length divided by width.
+        3. Filter rows based on the minimum and maximum ratio thresholds.
+        4. Group data by mmsi and date_id, then compute variance for ship length and width.
+        5. Filter valid mmsi records and remove duplicate entries.
 
-        :param df: original statics data
-        :param clean: whether to clean data in manual
-        :return: cleaned statics data
+        :param data: A pandas DataFrame containing the statics data.
+        :return: A cleaned pandas DataFrame with valid statics data.
         """
-        # *. convert length, width, shiptype to float
-        if filter_null:
-            df = cls.filter_null_error(df)
-
         # *. calculate length_width_ratio which indicates the shape of the ship.
-        df.loc[:, 'length_width_ratio'] = df.apply(lambda row: row['length'] / row['width'], axis=1)
-        df = df.loc[(df['length_width_ratio'] >= SCt.min_ratio_threshold) &
-                    (df['length_width_ratio'] <= SCt.max_ratio_threshold)]
+        data.loc[:, 'length_width_ratio'] = data.apply(lambda row: row['length'] / row['width'], axis=1)
+        data = data.loc[(data['length_width_ratio'] >= SCt.min_ratio_threshold) &
+                        (data['length_width_ratio'] <= SCt.max_ratio_threshold)]
 
         # *. some ships have multiple pairs of length and width, we need to filter them.
         static_info_list = []
         group_cols = ['mmsi', 'date_id']
-        group_df = df.groupby(group_cols)
+        group_df = data.groupby(group_cols)
         total_unique = group_df.ngroups
         mmsi_group_bar = tqdm(group_df, total=total_unique, desc="Doing aggregate statics")
         for (mmsi, date_id), group in mmsi_group_bar:
@@ -75,68 +74,58 @@ class StaticsDataProcessor:
         static_statistical_df = pd.DataFrame(static_info_list)
 
         # select valid mmsi data
-        df = df.loc[df['mmsi'].isin(static_statistical_df['mmsi'])]
+        data = data.loc[data['mmsi'].isin(static_statistical_df['mmsi'])]
 
         # select latest statics data
-        df.drop_duplicates(subset=['mmsi', 'date_id'], keep='last', inplace=True)
-        return df
+        data.drop_duplicates(subset=['mmsi', 'date_id'], keep='last', inplace=True)
+        return data
 
-
-    def filter_null_error(cls, df: pd.DataFrame) -> pd.DataFrame:
+    @staticmethod
+    def preprocess(data: pd.DataFrame) -> pd.DataFrame:
         """
         Filter null and error data from statics data.
 
-        :param df: statics data
+        :param data: statics data
         :return: filtered statics data
         """
         # -. filter receivetime
-        df['receivetime'] = pd.to_numeric(df['receivetime'], errors='coerce')
-        df.dropna(subset=['receivetime'], inplace=True)
-        df['receivetime'] = df['receivetime'].astype(int)
-        df = df.loc[df['receivetime'].notnull()]
+        data['receivetime'] = pd.to_numeric(data['receivetime'], errors='coerce')
+        data.dropna(subset=['receivetime'], inplace=True)
+        data['receivetime'] = data['receivetime'].astype(int)
+        data = data.loc[data['receivetime'].notnull()]
 
         # -. filter mmsi
-        df['mmsi'] = pd.to_numeric(df['mmsi'], errors='coerce')
-        df.dropna(subset=['mmsi'], inplace=True)
-        df['mmsi'] = df['mmsi'].astype(int)
-        df = df.loc[df['mmsi'].notnull()]
+        data['mmsi'] = pd.to_numeric(data['mmsi'], errors='coerce')
+        data.dropna(subset=['mmsi'], inplace=True)
+        data['mmsi'] = data['mmsi'].astype(int)
+        data = data.loc[data['mmsi'].notnull()]
 
         # -. filter ship_name
-        df = df.loc[df['ship_name'] != '""']
-        df = df.loc[df['ship_name'].notnull()]
+        data = data.loc[data['ship_name'] != '""']
+        data = data.loc[data['ship_name'].notnull()]
 
-        df = df.loc[df['length'] != '""']
-        df = df.loc[df['width'] != '""']
-        df = df.loc[df['ship_type'] != '""']
+        data = data.loc[data['length'] != '""']
+        data = data.loc[data['width'] != '""']
+        data = data.loc[data['ship_type'] != '""']
         
-        df['length'] = df['length'].astype(float)
-        df['width'] = df['width'].astype(float)
-        df['ship_type'] = df['ship_type'].astype(float)
+        data['length'] = data['length'].astype(float)
+        data['width'] = data['width'].astype(float)
+        data['ship_type'] = data['ship_type'].astype(float)
 
-        df = df.loc[df['length'] > 0]
-        df = df.loc[df['width'] > 0]
-        return df
+        data = data.loc[data['length'] > 0]
+        data = data.loc[data['width'] > 0]
+        return data
 
-    def load_data(self) -> pd.DataFrame:
-        """
-        Load statics data from csv file.
-
-        :return: statics data
-        """
-        # -. load as pandas dataframe
-        df = pd.read_csv(self.csv_path)
-
+    def wrangle(self,) -> PandasDF:
         # -. rename columns by mapping
-        df = df.loc[:, list(STATICS_COLUMNS_MAPPING.keys())]
-        df.rename(columns=STATICS_COLUMNS_MAPPING, inplace=True)
-
-        # -. filter null data
-        df = self.filter_null_error(df)
+        self.df = self.df.loc[:, list(STATICS_COLUMNS_MAPPING.keys())]
+        self.df.rename(columns=STATICS_COLUMNS_MAPPING, inplace=True)
+        formatted_df = self.preprocess(data=self.df)
 
         # -. add date_id column
-        msg_ts = pd.to_datetime(df['receivetime'], unit='s')
-        df['date_id'] = msg_ts.dt.strftime('%Y%m%d').astype(int)
+        msg_ts = pd.to_datetime(formatted_df["receivetime"], unit='s')
+        formatted_df['date_id'] = msg_ts.dt.strftime('%Y%m%d').astype(int)
 
         # -. aggregate by mmsi and date_id
-        df = self.clean_up(df)
-        return df
+        wrangled_df = self.clean_up(data=formatted_df)
+        return wrangled_df

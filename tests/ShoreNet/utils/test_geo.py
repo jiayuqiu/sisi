@@ -19,17 +19,6 @@ from core.ShoreNet.utils.geo import point_poly
 from core.cython.geo_cython import point_poly_c
 
 
-def timer(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        end = time.perf_counter()
-        print(f"{func.__name__} executed in {end - start:.6f} seconds")
-        return result
-    return wrapper
-
-
 class TestEvents(unittest.TestCase):
     stage_env = "dummy"
     vars = ShoreNetVariablesManager(stage_env)

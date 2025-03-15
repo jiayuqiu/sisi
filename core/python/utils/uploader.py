@@ -28,7 +28,7 @@ from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from core.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
 from core.ShoreNet.statics.filter import clean_up_statics
 # from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
-from core.infrastructure.setup_logger import set_logger
+from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
 
