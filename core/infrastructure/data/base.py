@@ -8,19 +8,23 @@
 @Desc    :   None
 """
 
+import pandas as pd
 from abc import ABC, abstractmethod
+
+from pandas.core.frame import DataFrame as PandasDF
 
 
 class BaseDataProcessor(ABC):
     def __init__(self, csv_file):
         self.csv_file = csv_file
-    
+        self.df = pd.read_csv(csv_file)
+
     @abstractmethod
-    def clean_up(self):
+    def clean_up(self, data: PandasDF) -> PandasDF:
         pass
 
     @abstractmethod
-    def filter_null_error(self):
+    def preprocess(self, data: PandasDF) -> PandasDF:
         pass
     
     @abstractmethod

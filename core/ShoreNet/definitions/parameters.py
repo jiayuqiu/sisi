@@ -78,7 +78,7 @@ class DirPathNames:
     test_analyze_result_data_path: str = "tests/shared_data/analyze/result"
     test_utils_data_path: str = "tests/shared_data/utils"
     root_path: str = "./"
-    data_path: str = "./data"
+    data_path: str = "data"
 
 
 @dataclass

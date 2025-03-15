@@ -28,16 +28,14 @@ from tqdm import tqdm
 
 from core.infrastructure.definition.mapping import STATICS_COLUMNS_MAPPING
 from core.infrastructure.definition.parameters import StaticsCleanThreshold as SCt
+from core.infrastructure.data.base import BaseDataProcessor
 
 
-class StaticsDataProcessor:
-    def __init__(self, csv_path: str):
-        self.csv_path = csv_path
-        # -. load as pandas dataframe
-        self.df = pd.read_csv(self.csv_path)
+class StaticsDataProcessor(BaseDataProcessor):
+    def __init__(self, csv_file: str):
+        super().__init__(csv_file)
 
-    @staticmethod
-    def clean_up(data: PandasDF):
+    def clean_up(self, data: PandasDF) -> PandasDF:
         """
         Clean the statics data
 
@@ -80,8 +78,7 @@ class StaticsDataProcessor:
         data.drop_duplicates(subset=['mmsi', 'date_id'], keep='last', inplace=True)
         return data
 
-    @staticmethod
-    def preprocess(data: pd.DataFrame) -> pd.DataFrame:
+    def preprocess(self, data: PandasDF) -> PandasDF:
         """
         Filter null and error data from statics data.
 
