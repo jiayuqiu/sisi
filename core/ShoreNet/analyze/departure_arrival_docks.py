@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from multiprocessing import Pool
 
-from core.ShoreNet.definitions.parameters import (
+from core.infrastructure.definition.parameters import (
     ColumnNames as Cn
 )
 from core.python.utils.dt import get_quarter

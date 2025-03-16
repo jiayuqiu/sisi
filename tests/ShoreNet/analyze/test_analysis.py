@@ -6,13 +6,15 @@
 @DESC    :  unittest for analysis
 """
 
-
+import os
+from dotenv import load_dotenv
 import unittest
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 
 class TestAnalysis(unittest.TestCase):
-    stage_env = "dummy"
+    load_dotenv(".env")
+    stage_env = os.environ["TEST_STAGE_ENV"]
     var = ShoreNetVariablesManager(stage_env)
 
     @unittest.skip("skip test")

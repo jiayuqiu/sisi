@@ -19,7 +19,7 @@ from geoalchemy2 import WKTElement
 import pandas as pd
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import (
+from core.infrastructure.definition.parameters import (
     Prefix,
     ColumnNames as Cn
 )

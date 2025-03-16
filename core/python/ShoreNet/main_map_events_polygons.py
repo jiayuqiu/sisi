@@ -12,7 +12,7 @@ import traceback
 from sqlalchemy.orm import sessionmaker
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, Prefix
+from core.infrastructure.definition.parameters import ArgsDefinition as Ad, Prefix
 from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
 from core.ShoreNet.events.polygon import map_event_polygon
 from core.utils.setup_logger import set_logger

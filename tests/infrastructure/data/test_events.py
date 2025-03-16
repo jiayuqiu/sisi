@@ -8,15 +8,17 @@
 @Desc    :   None
 """
 
+import os
 import unittest
-
+from dotenv import load_dotenv
 import pandas as pd
 
 from core.infrastructure.data.events import EventsDataProcessor
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 
 class TestEvents(unittest.TestCase):
-    stage_env = "test"
+    load_dotenv(".env")
+    stage_env = os.environ["TEST_STAGE_ENV"]
     vars = Vm(stage_env)
 
     def test_events(self,):

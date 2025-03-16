@@ -8,6 +8,7 @@
 
 import os
 import unittest
+from dotenv import load_dotenv
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
@@ -16,7 +17,8 @@ from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
 
 
 class TestEvents(unittest.TestCase):
-    stage_env = "dummy"
+    load_dotenv(".env")
+    stage_env = os.environ["TEST_STAGE_ENV"]
     vars = ShoreNetVariablesManager(stage_env)
  
     def test_dock_pairs(self):

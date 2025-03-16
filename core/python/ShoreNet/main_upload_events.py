@@ -14,7 +14,7 @@ import argparse
 import pandas as pd
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
+from core.infrastructure.definition.parameters import ArgsDefinition as Ad
 from core.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
 from core.utils.setup_logger import set_logger
 

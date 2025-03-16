@@ -13,8 +13,13 @@ from sqlalchemy import text
 from sqlalchemy import inspect
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
+from core.infrastructure.definition.parameters import ArgsDefinition as Ad
 from core.ShoreNet.utils.db.base import Base
+from core.ShoreNet.utils.db.DataODPairs import DataODPairs
+from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+from core.ShoreNet.utils.db.DimPolygonType import DimPolygonType
+from core.ShoreNet.utils.db.DimShipsStatics import DimShipsStatics
+from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
 from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)

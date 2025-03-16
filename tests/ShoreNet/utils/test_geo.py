@@ -8,9 +8,9 @@
 @Desc    :   None
 '''
 
-import time
+import os
 import unittest
-from functools import wraps
+from dotenv import load_dotenv
 
 import numpy as np
 
@@ -20,7 +20,8 @@ from core.cython.geo_cython import point_poly_c
 
 
 class TestEvents(unittest.TestCase):
-    stage_env = "dummy"
+    load_dotenv(".env")
+    stage_env = os.environ["TEST_STAGE_ENV"]
     vars = ShoreNetVariablesManager(stage_env)
 
     def test_c_point_polygon(self):  # 7.5

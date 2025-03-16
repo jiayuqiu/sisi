@@ -59,7 +59,7 @@ class StaticsDataProcessor(BaseDataProcessor):
         group_cols = ['mmsi', 'date_id']
         group_df = data.groupby(group_cols)
         total_unique = group_df.ngroups
-        mmsi_group_bar = tqdm(group_df, total=total_unique, desc="Doing aggregate statics")
+        mmsi_group_bar = tqdm(group_df, total=total_unique, desc="Doing cleaning statics")
         for (mmsi, date_id), group in mmsi_group_bar:
             mmsi_info = {'mmsi': mmsi}
             length_var = np.var(group['length'])

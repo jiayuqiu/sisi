@@ -11,13 +11,15 @@
 
 import os
 import unittest
+from dotenv import load_dotenv
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.ShoreNet.utils.polygon import KMLParser, CoordinatePoint
 
 
 class TestEvents(unittest.TestCase):
-    stage_env = "test"
+    load_dotenv(".env")
+    stage_env = os.environ["TEST_STAGE_ENV"]
     vars = ShoreNetVariablesManager(stage_env)
     
     def test_kml_parse(self):

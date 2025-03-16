@@ -14,9 +14,9 @@ from sqlalchemy import func, or_, text
 from sqlalchemy.orm import sessionmaker
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import Prefix
+from core.infrastructure.definition.parameters import Prefix
 from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
-from core.ShoreNet.definitions.parameters import WarehouseDefinitions as tbn
+from core.infrastructure.definition.parameters import WarehouseDefinitions as tbn
 
 
 def load_events_all(year: int, month: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:

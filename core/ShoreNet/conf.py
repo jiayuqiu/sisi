@@ -2,7 +2,7 @@ import os
 
 from sqlalchemy import create_engine
 
-from core.ShoreNet.definitions.parameters import Prefix
+from core.infrastructure.definition.parameters import Prefix
 
 
 def connect_mysql(stage_env: str):

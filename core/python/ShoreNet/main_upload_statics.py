@@ -12,7 +12,7 @@ import argparse
 import pandas as pd
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
+from core.infrastructure.definition.parameters import ArgsDefinition as Ad
 from core.utils.setup_logger import set_logger
 from core.ShoreNet.statics.filter import clean_up_statics
 

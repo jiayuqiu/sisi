@@ -13,7 +13,7 @@ import sqlalchemy
 
 
 from core.ShoreNet.conf import connect_database
-from core.ShoreNet.definitions.parameters import (
+from core.infrastructure.definition.parameters import (
     Prefix,
     DirPathNames,
     FileNames,

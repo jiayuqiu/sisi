@@ -9,13 +9,15 @@
 
 import os
 import unittest
+from dotenv import load_dotenv
 
 from core.infrastructure.data.statics import StaticsDataProcessor
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 
 
 class TestEvents(unittest.TestCase):
-    stage_env = "test"
+    load_dotenv(".env")
+    stage_env = os.environ["TEST_STAGE_ENV"]
     month_str = "202311"
     vars = Vm(stage_env)
 
@@ -59,8 +61,3 @@ class TestEvents(unittest.TestCase):
         # 3. Check that mmsi column are all Integer
         self.assertTrue(self.wrangled_df['mmsi'].dtype.kind in 'iu',
                         "mmsi column is not of integer type")
-
-        # # 4. Check that callsign column are all Integer
-        # if 'callsign' in self.wrangled_df.columns:
-        #     self.assertTrue(self.wrangled_df['callsign'].dtype.kind in 'iu',
-        #                     "callsign column is not of integer type")

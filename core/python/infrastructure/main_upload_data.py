@@ -12,9 +12,11 @@ import os
 import argparse
 
 from core.infrastructure.data.statics import StaticsDataProcessor
+from core.infrastructure.data.events import EventsDataProcessor
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
-from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad
+from core.infrastructure.definition.parameters import ArgsDefinition as Ad
 from core.utils.setup_logger import set_logger
+from core.utils.helper.data_writer import PandasWriter
 
 _logger = set_logger(__name__)
 
@@ -37,14 +39,32 @@ def run_app():
 
     for month in range(start_month, end_month+1):
         month_str = f"{year}{month:02}"
-        _logger.info(f"{month_str} events processing...")
+
+        # 1. process statics data
+        _logger.info(f"{month_str} statics processing...")
         sd_processor = StaticsDataProcessor(
             os.path.join(
                 vars.dp_names.data_path, stage_env, 'statics', f"static_{month_str}.csv"
             )
         )
-        df = sd_processor.load()
-        df.to_sql("dim_ships_statics", con=vars.engine, if_exists='append', index=False)
+        statics_df = sd_processor.wrangle()
+        statics_writer = PandasWriter(
+            vars=vars,
+            data=statics_df,
+            table_name=vars.table_names.dim_ships_statics,
+            key_args=None
+        )
+        statics_writer.delsert()
+
+        # 2. process events data
+        _logger.info(f"{month_str} events processing...")
+        ed_processor = EventsDataProcessor(
+            os.path.join(
+                vars.dp_names.data_path, stage_env, 'events', f"{month_str}_new_sailingv4.csv"
+            )
+        )
+        print("Done")
+        
 
 
 if __name__ == "__main__":

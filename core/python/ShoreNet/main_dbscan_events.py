@@ -19,7 +19,7 @@ from scipy.spatial import ConvexHull, QhullError
 from simplification.cutil import simplify_coords
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad, ColumnNames as Cn
+from core.infrastructure.definition.parameters import ArgsDefinition as Ad, ColumnNames as Cn
 from core.ShoreNet.events.generic.tools import load_events_without_dock
 from core.ShoreNet.events.polygon import cluster_dock_polygon_dbscan
 
