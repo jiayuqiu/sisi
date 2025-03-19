@@ -17,7 +17,7 @@ class TestAnalysis(unittest.TestCase):
     stage_env = os.environ["TEST_STAGE_ENV"]
     var = ShoreNetVariablesManager(stage_env)
 
-    @unittest.skip("skip test")
+    @unittest.skip("skip test polgyon score has been deprecated.")
     def test_polygon_score(self):
         """
         Deprecated:

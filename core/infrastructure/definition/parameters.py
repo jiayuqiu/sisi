@@ -1,5 +1,5 @@
 """
-@Author： Jerry Qiu
+@Author:    Jerry Qiu
 @Email:     qiujiayu0212@gmail.com
 @FileName:  parameters.py
 @DateTime:  20/10/2024 3:16 pm
@@ -12,6 +12,10 @@ from dataclasses import dataclass
 @dataclass
 class Prefix:
     sisi: str = "sisi_"
+
+@dataclass
+class CoordinatePrecision:
+    precision: int = 6
 
 
 @dataclass
@@ -65,6 +69,10 @@ class ColumnNames:
     year: str = "begin_year"
     month: str = "begin_month"
     day: str = "begin_day"
+    date_id: str = "date_id"
+
+    statics_data_timestamp: str = "receivetime"
+    evnets_data_timestamp: str = timestamp
 
 @dataclass
 class FileNames:
