@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.infrastructure.definition.parameters import ArgsDefinition as Ad, Prefix
+from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
 from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
 from core.ShoreNet.events.polygon import map_event_polygon
 from core.utils.setup_logger import set_logger
@@ -62,6 +63,11 @@ def run_app() -> None:
         dock_tag = coal_events_df.parallel_apply(
             map_event_polygon, args=(dock_polygon_list,), axis=1
         )
+        
+        # dock_tag = coal_events_df.apply(
+        #     lambda row: map_event_polygon(row, dock_polygon_list),
+        #     axis=1
+        # )
 
         coal_events_df.loc[:, 'coal_dock_id'] = dock_tag
         coal_events_df = coal_events_df.loc[coal_events_df['coal_dock_id'].notnull()]
@@ -75,12 +81,18 @@ def run_app() -> None:
         try:
             # Perform the update within a transaction
             for _, row in coal_events_df.iterrows():
-                query = f"""
-                UPDATE {Prefix.sisi}{stage_env}.factor_all_stop_events
-                SET coal_dock_id = {int(row['coal_dock_id'])}
-                WHERE event_id = '{row['event_id']}'
-                """
-                session.execute(query)
+                # query = f"""
+                # UPDATE {Prefix.sisi}{stage_env}.factor_all_stop_events
+                # SET coal_dock_id = {int(row['coal_dock_id'])}
+                # WHERE event_id = '{row['event_id']}'
+                # """
+                # session.execute(query)
+
+                session.query(FactorAllStopEvents).filter(
+                    FactorAllStopEvents.event_id == row['event_id']
+                ).update({
+                    FactorAllStopEvents.coal_dock_id: int(row['coal_dock_id'])
+                }, synchronize_session=False)
 
             # Commit the transaction
             session.commit()

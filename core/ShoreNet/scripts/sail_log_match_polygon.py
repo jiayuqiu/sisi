@@ -52,21 +52,21 @@ def truncate_sailing():
         con.execute(text("TRUNCATE TABLE factor_stop_events"))
 
 
-def find_dock(event_row, dock_list):
-    """
-    calculate the distance between the first point of the event and the first point of the dock polygon.
-    """
-    from core.ShoreNet.utils.geo import point_poly, get_geodist
+# def find_dock(event_row, dock_list):
+#     """
+#     calculate the distance between the first point of the event and the first point of the dock polygon.
+#     """
+#     from core.ShoreNet.utils.geo import point_poly, get_geodist
 
-    for polygon in dock_list:
-        dst_list = []
-        for d_lng, d_lat in polygon['polygon']:
-            geodist = get_geodist(event_row['lng'], event_row['lat'], d_lng, d_lat)
-            dst_list.append(geodist)
+#     for polygon in dock_list:
+#         dst_list = []
+#         for d_lng, d_lat in polygon['polygon']:
+#             geodist = get_geodist(event_row['lng'], event_row['lat'], d_lng, d_lat)
+#             dst_list.append(geodist)
             
-        if min(dst_list) < 15:
-            if point_poly(event_row['lng'], event_row['lat'], polygon['polygon']):
-                return polygon['dock_id']
+#         if min(dst_list) < 15:
+#             if point_poly(event_row['lng'], event_row['lat'], polygon['polygon']):
+#                 return polygon['dock_id']
 
 
 def get_dock_polygon():

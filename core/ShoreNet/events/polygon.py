@@ -56,7 +56,8 @@ def cluster_dock_polygon_dbscan(
 
 def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
     from core.ShoreNet.utils.geo import get_geodist
-    from core.cython.geo_cython import point_poly_c
+    from sisi_geo import point_poly_c
+    # from core.cython.geo_cython import point_poly_c
     # if event_row["event_id"] == "20230101000030201202010":
     #     print(1)
         
