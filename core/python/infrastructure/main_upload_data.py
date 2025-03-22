@@ -9,16 +9,57 @@
 '''
 
 import os
+import glob
 import argparse
+from typing import Any, Union
 
 from core.infrastructure.data.statics import StaticsDataProcessor
 from core.infrastructure.data.events import EventsDataProcessor
+# from core.infrastructure.data.polygons import PolygonsDataProcessor
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
-from core.infrastructure.definition.parameters import ArgsDefinition as Ad
+from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
+from core.ShoreNet.utils.db.DimShipsStatics import DimShipsStatics
+from core.infrastructure.definition.parameters import (
+    DirPathNames as Dpn,
+    ColumnNames as Cn, 
+    ArgsDefinition as Ad
+)
 from core.utils.setup_logger import set_logger
 from core.utils.helper.data_writer import PandasWriter
 
 _logger = set_logger(__name__)
+
+
+def trigger_data_processor(vars: Vm,
+                           data_processor: Union[StaticsDataProcessor, EventsDataProcessor], 
+                           year: int, 
+                           month: int) -> None:
+    if isinstance(data_processor, StaticsDataProcessor):
+        processor_flag = Dpn.statics_folder_name
+        table_cls = DimShipsStatics
+    elif isinstance(data_processor, EventsDataProcessor):
+        processor_flag = Dpn.events_folder_name
+        table_cls = FactorAllStopEvents
+    else:
+        raise ValueError(f"Invalid data processor -> {data_processor}")
+    
+    _logger.info(f"{year}-{month:02} {processor_flag} processing...")
+    data = data_processor.wrangle(year=year, month=month)
+    data.rename(
+        columns={
+            Cn.year: table_cls.year.name,
+            Cn.month: table_cls.month.name
+        },
+        inplace=True
+    )
+    data_write = PandasWriter(
+        vars=vars,
+        data=data,
+        table_name=table_cls.__tablename__,
+        key_args={table_cls.year.name: year, table_cls.month.name: month}
+    )
+    _logger.info(f"{year}-{month:02} {processor_flag} : table -> {table_cls.__tablename__}, delserting...")
+    data_write.delsert()
 
 
 def run_app():
@@ -41,29 +82,37 @@ def run_app():
         month_str = f"{year}{month:02}"
 
         # 1. process statics data
-        _logger.info(f"{month_str} statics processing...")
-        sd_processor = StaticsDataProcessor(
+        statices_processor = StaticsDataProcessor(
             os.path.join(
-                vars.dp_names.data_path, stage_env, 'statics', f"static_{month_str}.csv"
+                vars.dp_names.data_path, stage_env, Dpn.statics_folder_name, f"{month_str}.csv"
             )
         )
-        statics_df = sd_processor.wrangle()
-        statics_writer = PandasWriter(
+        trigger_data_processor(
             vars=vars,
-            data=statics_df,
-            table_name=vars.table_names.dim_ships_statics,
-            key_args=None
+            data_processor=statices_processor,
+            year=year,
+            month=month
         )
-        statics_writer.delsert()
 
         # 2. process events data
-        _logger.info(f"{month_str} events processing...")
-        ed_processor = EventsDataProcessor(
+        events_processor = EventsDataProcessor(
             os.path.join(
-                vars.dp_names.data_path, stage_env, 'events', f"{month_str}_new_sailingv4.csv"
+                vars.dp_names.data_path, stage_env, Dpn.events_folder_name, f"{month_str}.csv"
             )
         )
-        print("Done")
+        trigger_data_processor(
+            vars=vars,
+            data_processor=events_processor,
+            year=year,
+            month=month
+        )
+
+        # # 3. NOTE: skip. if need to process polygon data, comment out this part
+        # _logger.info(f"{month_str} polygon processing...")
+        # kml_fn_ls = glob.glob(os.path.join(vars.dp_names.data_path, stage_env, "kml", '*.kml'))
+        # for kml_fn in kml_fn_ls:
+        #     parsed_kml_ls = PolygonsDataProcessor(kml_fn=kml_fn).get_polygon_detail()
+    print("Done")
         
 
 

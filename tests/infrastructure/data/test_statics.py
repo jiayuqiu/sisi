@@ -28,7 +28,7 @@ class TestEvents(unittest.TestCase):
                 self.vars.dp_names.data_path,
                 self.stage_env,
                 'statics',
-                f"static_{self.month_str}.csv"
+                f"{self.month_str}.csv"
             )
         )
         self.wrangled_df = sdp.wrangle()

@@ -21,7 +21,7 @@ def connect_mysql(stage_env: str):
         f"mysql+pymysql://{mysql_properties['user']}:{mysql_properties['password']}@{mysql_properties['host']}/"
         f"{mysql_properties['database']}?charset=utf8"
     )
-    mysql_engine = create_engine(mysql_uri)
+    mysql_engine = create_engine(mysql_uri, echo=False)
     return mysql_engine
 
 

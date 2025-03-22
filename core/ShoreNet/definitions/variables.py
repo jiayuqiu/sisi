@@ -74,9 +74,10 @@ class ShoreNetVariablesManager:
         self.warehouse_schema = f"{Prefix.sisi}{self.stage_env}"
 
     def define_dir_path(self) -> DirPathNames:
-        return DirPathNames(
-            output_path='output'
-        )
+        return DirPathNames()
+        # return DirPathNames(
+        #     output_path='output'
+        # )
 
     @staticmethod
     def define_file_names() -> FileNames:

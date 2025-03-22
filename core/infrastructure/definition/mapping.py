@@ -7,7 +7,6 @@
 @Desc    :
 """
 
-
 # add: destination, eta, etc.
 # format: shipname(uppercase)
 # keep: utc_ts, imo, callsign, 

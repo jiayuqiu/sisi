@@ -43,12 +43,12 @@ class DataWriter(ABC):
 class PandasWriter(DataWriter):
     def __init__(self, vars: Vm, data: PandasDF, table_name: str, key_args: Union[dict[str, Any], None]):
         super().__init__(vars, data, table_name, key_args)
+        # self.data.rename(columns=CN_MAPPING, inplace=True)
 
     def insert(self) -> None:
         """This function is to insert data into database
 
         steps:
-        1. through
         """
 
     def update(self) -> None:
@@ -81,6 +81,7 @@ class PandasWriter(DataWriter):
             with self.vars.engine.connect() as conn:
                 with conn.begin():
                     conn.execute(text(delete_query), self.key_args)
+            print(f"Data deleted from table '{self.table_name}' based on key arguments.")
         else:
             # No key_args provided; proceeding with insertion only.
             _logger.warning(
@@ -93,5 +94,7 @@ class PandasWriter(DataWriter):
             name=self.table_name,
             con=self.vars.engine,
             if_exists='append',
-            index=False
+            index=False,
+            method='multi',
+            chunksize=10000
         )

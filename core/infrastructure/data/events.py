@@ -81,41 +81,44 @@ class EventsDataProcessor(BaseDataProcessor):
             PandasDF: _description_
         """
         # Convert the begin_time column and add date parts.
-        if Cn.evnets_data_timestamp in data.columns:
-            data[Cn.evnets_data_timestamp] = pd.to_datetime(data[Cn.evnets_data_timestamp], errors='coerce')
-            if data[Cn.timestamp].isnull().all():
+        if Cn.events_data_timestamp in data.columns:
+            event_dt = pd.to_datetime(data[Cn.events_data_timestamp], errors='coerce', unit='s')
+            if event_dt.isnull().all():
                 _logger.warning("All timestamp values could not be converted to datetime.")
-            data[Cn.year] = data[Cn.evnets_data_timestamp].dt.year
-            data[Cn.month] = data[Cn.evnets_data_timestamp].dt.month
-            data[Cn.day] = data[Cn.evnets_data_timestamp].dt.day
+            data[Cn.year] = event_dt.dt.year
+            data[Cn.month] = event_dt.dt.month
+            data[Cn.day] = event_dt.dt.day
         else:
             _logger.warning("Timestamp column not found. Year, month, day columns were not added.")
         
         # if longitude and latitude are not in metrics, convert them to metrics
         precision = 10 ** Cp.precision
-        median_lng = data['begin_lng'].median()
-        median_lat = data['begin_lat'].median()
+        median_lng = data[Cn.lng].median()
+        median_lat = data[Cn.lat].median()
         if precision < abs(median_lng):
-            data['begin_lng'] = data['begin_lng'].divide(precision)
+            data[Cn.lng] = data[Cn.lng].divide(precision)
         if precision < abs(median_lat):
-            data['begin_lat'] = data['begin_lat'].divide(precision)
+            data[Cn.lat] = data[Cn.lat].divide(precision)
         
         if abs(median_lng) < 1:
-            data['begin_lng'] = data['begin_lng'].multiply(precision)
+            data[Cn.lng] = data[Cn.lng].multiply(precision)
         if abs(median_lat) < 1:
-            data['begin_lat'] = data['begin_lat'].multiply(precision)
+            data[Cn.lat] = data[Cn.lat].multiply(precision)
 
         return data
     
-    def wrangle(self) -> PandasDF:
+    def wrangle(self, year: int, month: int) -> PandasDF:
         """TODO: Documentation"""
         self.df = self.df.loc[:, list(EVENT_FIELDS_MAPPING.keys())]
         self.df.rename(columns=EVENT_FIELDS_MAPPING, inplace=True)
         formatted_df = self.preprocess(data=self.df)
+        formatted_df = formatted_df.loc[
+            (formatted_df[Cn.year] == year) & (formatted_df[Cn.month] == month)
+        ]
 
-        # -. add date_id column
-        msg_ts = pd.to_datetime(formatted_df[Cn.evnets_data_timestamp], unit='s')
-        formatted_df[Cn.date_id] = msg_ts.dt.strftime('%Y%m%d').astype(int)
+        # # -. add date_id column
+        # msg_ts = pd.to_datetime(formatted_df[Cn.evnets_data_timestamp], unit='s')
+        # formatted_df[Cn.date_id] = msg_ts.dt.strftime('%Y%m%d').astype(int)
 
         # -. aggregate by mmsi and date_id
         wrangled_df = self.clean_up(data=formatted_df)

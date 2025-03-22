@@ -8,12 +8,11 @@
 @Desc    :   None
 '''
 
-import os
-
-import pandas as pd
+# import os
+# import pandas as pd
 from pykml import parser
 
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
+# from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 # import pymssql
 # import time
 
@@ -42,9 +41,8 @@ class CoordinatePoint(object):
 
 
 class KMLParser(object):
-    def __init__(self, kml_file: str, var: ShoreNetVariablesManager) -> None:
+    def __init__(self, kml_file: str) -> None:
         self.kml_file = kml_file
-        # self.data = self.parse_kml()
 
     def parse_kml(self) -> list[dict]:
         """

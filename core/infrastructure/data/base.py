@@ -8,6 +8,7 @@
 @Desc    :   None
 """
 
+import os
 import pandas as pd
 from abc import ABC, abstractmethod
 
@@ -17,7 +18,10 @@ from pandas.core.frame import DataFrame as PandasDF
 class BaseDataProcessor(ABC):
     def __init__(self, csv_file):
         self.csv_file = csv_file
-        self.df = pd.read_csv(csv_file)
+        if os.path.exists(csv_file):
+            self.df = pd.read_csv(csv_file)
+        else:
+            raise FileNotFoundError(f"File {csv_file} not found.")
 
     @abstractmethod
     def clean_up(self, data: PandasDF) -> PandasDF:
@@ -28,5 +32,5 @@ class BaseDataProcessor(ABC):
         pass
     
     @abstractmethod
-    def wrangle(self,):
+    def wrangle(self, year: int, month: int) -> PandasDF:
         pass

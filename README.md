@@ -47,6 +47,7 @@ Dependences data:
 
 ### 2.3 Documentation
 
-| Module         | Arguments                                                                                                                                      | Details                                                                                                   |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| main_init_db   | `--stage_env` (str, required): Process stage environment <br> `--force` (flag): Set to true if provided                                                 | [See Details](./core/python/ShoreNet/README.md#main_init_db)              |
+| Module           | Description                                                          | Details                                                                   |
+|------------------|----------------------------------------------------------------------|---------------------------------------------------------------------------|
+| main_init_db     | Through SQLAlchemy ORM, create all necessay tables for SISI project. | [Docs Link](./core/python/infrastructure/README.md#main_init_db)              |
+| main_upload_data | Upload events, statics and polygons data.                            | [Docs Link]()

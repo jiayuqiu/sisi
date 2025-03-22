@@ -55,9 +55,11 @@ def cluster_dock_polygon_dbscan(
 
 
 def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
-    from core.ShoreNet.utils.geo import point_poly, get_geodist
-    if event_row["event_id"] == "20230101000030201202010":
-        print(1)
+    from core.ShoreNet.utils.geo import get_geodist
+    from core.cython.geo_cython import point_poly_c
+    # if event_row["event_id"] == "20230101000030201202010":
+    #     print(1)
+        
     for polygon in dock_list:
         dst_list = []
         for d_lat, d_lng in polygon['polygon']:
@@ -70,7 +72,7 @@ def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]
             dst_list.append(geodist)
 
         if min(dst_list) < EventFilterParameters.polygon_event_max_distance:
-            if point_poly(
+            if point_poly_c(
                 lng=event_row[ColumnNames.lng],
                 lat=event_row[ColumnNames.lat],
                 polygon_points=polygon['polygon']

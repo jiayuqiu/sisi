@@ -14,6 +14,10 @@ class Prefix:
     sisi: str = "sisi_"
 
 @dataclass
+class Suffix:
+    var: str = "_var"
+
+@dataclass
 class CoordinatePrecision:
     precision: int = 6
 
@@ -71,8 +75,18 @@ class ColumnNames:
     day: str = "begin_day"
     date_id: str = "date_id"
 
+    # statics column names
     statics_data_timestamp: str = "receivetime"
-    evnets_data_timestamp: str = timestamp
+    statics_data_length: str = "length"
+    statics_data_width: str = "width"
+    ship_name: str = "ship_name"
+    ship_type: str = "ship_type"
+    length_width_ratio: str = "length_width_ratio"
+    dwt: str = "dwt"
+
+    # events column names
+    events_data_timestamp: str = timestamp
+
 
 @dataclass
 class FileNames:
@@ -82,12 +96,15 @@ class FileNames:
 
 @dataclass
 class DirPathNames:
-    output_path: str
+    output_path: str = "./data/output"
     test_analyze_source_data_path: str = "tests/shared_data/analyze/source"
     test_analyze_result_data_path: str = "tests/shared_data/analyze/result"
     test_utils_data_path: str = "tests/shared_data/utils"
     root_path: str = "./"
     data_path: str = "./data"
+    statics_folder_name: str = "statics"
+    events_folder_name: str = "events"
+    kml_folder_name: str = "kml"
 
 
 @dataclass
