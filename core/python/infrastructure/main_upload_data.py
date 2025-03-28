@@ -56,6 +56,7 @@ def trigger_data_processor(vars: Vm,
         vars=vars,
         data=data,
         table_name=table_cls.__tablename__,
+        orm_class=table_cls,
         key_args={table_cls.year.name: year, table_cls.month.name: month}
     )
     _logger.info(f"{year}-{month:02} {processor_flag} : table -> {table_cls.__tablename__}, delserting...")

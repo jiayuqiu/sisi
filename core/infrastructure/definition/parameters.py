@@ -144,3 +144,9 @@ class StaticsCleanThreshold:
     """
     min_ratio_threshold: float = 3
     max_ratio_threshold: float = 7.1
+
+
+@dataclass
+class LibraryVariableNames:
+    # orm class variables
+    attribute_name_mapping: str = "attribute_name_mapping"

@@ -20,33 +20,35 @@ _logger = set_logger(__name__)
 
 def run_app():
     parser = argparse.ArgumentParser(description='process match polygon for events')
+    parser.add_argument('--stage_env', type=str, required=True, help='Stage environment')
     parser.add_argument('--year', type=int, required=True, help='Process year')
 
     args = parser.parse_args()
 
     year = args.year
+    stage_env = args.stage_env
 
-    var = ShoreNetVariablesManager(stage_env)
+    vars = ShoreNetVariablesManager(stage_env)
     # -. load events
-    events_with_dock_df = load_events_with_dock(year=year, con=var.engine)
+    events_with_dock_df = load_events_with_dock(year=year, vars=vars)
 
     # -. clean up events
-    events_with_dock_df = clean_up_events(events_with_dock_df, var)
+    events_with_dock_df = clean_up_events(events_with_dock_df, vars)
 
     # -. map od pairs
-    events_od_df = map_dock_pairs(events_with_dock_df, var.process_workers)
+    events_od_df = map_dock_pairs(events_with_dock_df, vars.process_workers)
 
     # -. write od pairs, to database and csv
     events_od_df.to_csv(
         path_or_buf=os.path.join(
-            var.data_path, var.dp_names.output_path, 'csv', f"{year}_od_pairs.csv"
+            vars.dp_names.output_path, 'csv', f"{year}_od_pairs.csv"
         ),
         index=False
     )
 
     events_od_df.to_sql(
-        name=var.table_names.data_od_pairs,
-        con=var.engine,
+        name=vars.table_names.data_od_pairs,
+        con=vars.engine,
         if_exists='replace',
         index=False
     )

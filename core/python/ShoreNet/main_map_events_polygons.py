@@ -6,16 +6,23 @@
 @DESC    :  match polygon for events which is without polygon
 """
 
+import time
 import argparse
 import traceback
 
+import numpy as np
 from sqlalchemy.orm import sessionmaker
+from numba import cuda, njit
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.infrastructure.definition.parameters import ArgsDefinition as Ad, Prefix
+from core.infrastructure.definition.parameters import (
+    ArgsDefinition as Ad,
+    ColumnNames as Cn
+)
 from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
 from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
 from core.ShoreNet.events.polygon import map_event_polygon
+from core.ShoreNet.utils.geo import point_poly_cuda
 from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
@@ -50,8 +57,8 @@ def run_app() -> None:
         _logger.info(f"original events shape: {events_df.shape}")
 
         # -. load coal mmsi statics and get coal events
-        coal_events_df = events_df
-        _logger.info(f"coal events shape: {coal_events_df.shape}")
+        # events_df = events_df
+        _logger.info(f"coal events shape: {events_df.shape}")
 
         # -. load polygon data
         dock_polygon_list = load_dock_polygon(vars)
@@ -60,18 +67,18 @@ def run_app() -> None:
         # -. match polygon
         from pandarallel import pandarallel
         pandarallel.initialize(progress_bar=True, nb_workers=vars.process_workers)
-        dock_tag = coal_events_df.parallel_apply(
+        start_t = time.time()
+        dock_tag = events_df.parallel_apply(
             map_event_polygon, args=(dock_polygon_list,), axis=1
         )
-        
-        # dock_tag = coal_events_df.apply(
-        #     lambda row: map_event_polygon(row, dock_polygon_list),
-        #     axis=1
-        # )
+        end_t = time.time()
+        _logger.info(f"CPU matching time: {end_t - start_t}")
 
-        coal_events_df.loc[:, 'coal_dock_id'] = dock_tag
-        coal_events_df = coal_events_df.loc[coal_events_df['coal_dock_id'].notnull()]
-        if coal_events_df.shape[0] == 0:
+        events_df.loc[:, 'coal_dock_id'] = dock_tag
+        events_df = events_df.loc[events_df['coal_dock_id'].notnull()]
+        _logger.info(f"matched events shape: {events_df.shape}")
+
+        if events_df.shape[0] == 0:
             _logger.info(f"{month_str} didn't pair any polygons. ")
             continue
 
@@ -80,7 +87,7 @@ def run_app() -> None:
         session = Session()
         try:
             # Perform the update within a transaction
-            for _, row in coal_events_df.iterrows():
+            for _, row in events_df.iterrows():
                 # query = f"""
                 # UPDATE {Prefix.sisi}{stage_env}.factor_all_stop_events
                 # SET coal_dock_id = {int(row['coal_dock_id'])}

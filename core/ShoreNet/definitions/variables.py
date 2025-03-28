@@ -55,7 +55,7 @@ class ShoreNetVariablesManager:
         }
 
         # MULTIPLE PROCESS WORKERS SETTINGS
-        self.process_workers = 8
+        self.process_workers = 16
 
         # TODO: add loading of parameters from config file(yml)
         # connect to database

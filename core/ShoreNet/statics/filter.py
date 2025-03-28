@@ -13,3 +13,4 @@ import numpy as np
 
 
 def clean_up_statics(df: DataFrame) -> DataFrame:
+    pass

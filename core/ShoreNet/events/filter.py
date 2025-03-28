@@ -60,15 +60,3 @@ def clean_up_events(
         # if there is no mmsi_enum_list, return _df directly
         print_clean_up_effect(df, _df)
         return _df
-
-
-# def csv_fields_mapping(data: DataFrame, fields_map: dict[str, str]) -> DataFrame:
-#     """
-#     through fields_map clean events column names
-#
-#     :param data: dataframe loaded from csv directly
-#     :param fields_map: mapping variables
-#     :return: cleaned event dataframe
-#     """
-#     data.rename(columns=fields_map, inplace=True)
-#     return data
