@@ -71,12 +71,13 @@ class PandasWriter(DataWriter):
         total_rows = self.data.shape[0]
         num_chunks = (total_rows + chunksize - 1) // chunksize
         Session = sessionmaker(bind=self.vars.engine)
-        session = Session()
+        
         for start in tqdm(range(0, total_rows, chunksize), total=num_chunks, desc="Inserting chunks"):
             end = min(total_rows, start + chunksize)
             chunk = self.data.iloc[start:end]
             # Create a new session from engine
             try:
+                session = Session()
                 for _, row in chunk.iterrows():
                     insert_row = {}
                     # For each key in the row, if it exists in DB mapping, use the custom mapping if available.
@@ -95,7 +96,8 @@ class PandasWriter(DataWriter):
                 session.rollback()
                 _logger.error(f"Failed to insert chunk rows {start} to {end}: {e}")
                 sys.exit(1)
-        session.close()
+            finally:
+                session = Session()
     
     @timer
     def mysql_insert(self) -> None:

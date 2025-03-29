@@ -6,13 +6,13 @@
 @DESC    :  match polygon for events which is without polygon
 """
 
-import time
 import argparse
 import traceback
 
 import numpy as np
+from numba.typed import List
+from numba import njit, prange
 from sqlalchemy.orm import sessionmaker
-from numba import cuda, njit
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.infrastructure.definition.parameters import (
@@ -21,11 +21,26 @@ from core.infrastructure.definition.parameters import (
 )
 from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
 from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
-from core.ShoreNet.events.polygon import map_event_polygon
-from core.ShoreNet.utils.geo import point_poly_cuda
+from core.ShoreNet.events.polygon import map_event_polygon, map_event_polygon_numba, point_in_poly
+# from core.ShoreNet.utils.geo import point_poly_cuda
 from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
+
+
+@njit(parallel=True)
+def match_polygons(points, polygons):
+    n_points = points.shape[0]
+    result = -np.ones(n_points, dtype=np.int64)
+    for i in prange(n_points):
+        lng = points[i, 0]
+        lat = points[i, 1]
+        for j in range(len(polygons)):
+            poly = polygons[j]
+            if point_in_poly(lat, lng, poly):
+                result[i] = j  # here polygon index is used as the dock tag
+                break
+    return result
 
 
 def run_app() -> None:
@@ -62,22 +77,29 @@ def run_app() -> None:
 
         # -. load polygon data
         dock_polygon_list = load_dock_polygon(vars)
+        numba_polygons = List()
+        for poly in dock_polygon_list:
+            numba_polygons.append(np.array(poly["polygon"], dtype=np.float64))
         _logger.info(f"dock polygon count: {len(dock_polygon_list)}")
 
-        # -. match polygon
-        from pandarallel import pandarallel
-        pandarallel.initialize(progress_bar=True, nb_workers=vars.process_workers)
-        start_t = time.time()
-        dock_tag = events_df.parallel_apply(
-            map_event_polygon, args=(dock_polygon_list,), axis=1
-        )
-        end_t = time.time()
-        _logger.info(f"CPU matching time: {end_t - start_t}")
+        points = events_df[[Cn.lng, Cn.lat]].to_numpy(dtype=np.float64)
+        dock_ids = match_polygons(points, numba_polygons)
+        events_df.loc[:, 'coal_dock_id'] = dock_ids
+        events_df = events_df.loc[events_df['coal_dock_id'] != -1]
 
-        events_df.loc[:, 'coal_dock_id'] = dock_tag
-        events_df = events_df.loc[events_df['coal_dock_id'].notnull()]
+        # # -. match polygon
+        # from pandarallel import pandarallel
+        # pandarallel.initialize(progress_bar=True, nb_workers=vars.process_workers)
+        # start_t = time.time()
+        # dock_tag = events_df.parallel_apply(
+        #     map_event_polygon, args=(dock_polygon_list,), axis=1
+        # )
+        # end_t = time.time()
+        # _logger.info(f"CPU matching time: {end_t - start_t}")
+        # events_df.loc[:, 'coal_dock_id'] = dock_tag
+        # events_df = events_df.loc[events_df['coal_dock_id'].notnull()]
+
         _logger.info(f"matched events shape: {events_df.shape}")
-
         if events_df.shape[0] == 0:
             _logger.info(f"{month_str} didn't pair any polygons. ")
             continue
@@ -88,13 +110,6 @@ def run_app() -> None:
         try:
             # Perform the update within a transaction
             for _, row in events_df.iterrows():
-                # query = f"""
-                # UPDATE {Prefix.sisi}{stage_env}.factor_all_stop_events
-                # SET coal_dock_id = {int(row['coal_dock_id'])}
-                # WHERE event_id = '{row['event_id']}'
-                # """
-                # session.execute(query)
-
                 session.query(FactorAllStopEvents).filter(
                     FactorAllStopEvents.event_id == row['event_id']
                 ).update({

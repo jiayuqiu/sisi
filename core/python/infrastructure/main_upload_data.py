@@ -83,30 +83,37 @@ def run_app():
         month_str = f"{year}{month:02}"
 
         # 1. process statics data
-        statices_processor = StaticsDataProcessor(
-            os.path.join(
-                vars.dp_names.data_path, stage_env, Dpn.statics_folder_name, f"{month_str}.csv"
+        statiacs_data_fp = os.path.join(
+            vars.dp_names.data_path, stage_env, Dpn.statics_folder_name, f"{month_str}.csv"
+        )
+        if os.path.exists(statiacs_data_fp):
+            _logger.info(f"{month_str} statics data found, process...")
+            statices_processor = StaticsDataProcessor(statiacs_data_fp)
+            trigger_data_processor(
+                vars=vars,
+                data_processor=statices_processor,
+                year=year,
+                month=month
             )
-        )
-        trigger_data_processor(
-            vars=vars,
-            data_processor=statices_processor,
-            year=year,
-            month=month
-        )
+        else:
+            _logger.warning(f"{month_str} statics data not found, skip processing...")
 
         # 2. process events data
-        events_processor = EventsDataProcessor(
-            os.path.join(
-                vars.dp_names.data_path, stage_env, Dpn.events_folder_name, f"{month_str}.csv"
+        events_data_fp = os.path.join(
+            vars.dp_names.data_path, stage_env, Dpn.events_folder_name, f"{month_str}.csv"
+        )
+        if os.path.exists(events_data_fp):
+            _logger.info(f"{month_str} events data found, process...")
+            events_processor = EventsDataProcessor(events_data_fp)
+            trigger_data_processor(
+                vars=vars,
+                data_processor=events_processor,
+                year=year,
+                month=month
             )
-        )
-        trigger_data_processor(
-            vars=vars,
-            data_processor=events_processor,
-            year=year,
-            month=month
-        )
+        else:
+            _logger.warning(f"{month_str} events data not found, skip processing...")
+            continue
 
         # # 3. NOTE: skip. if need to process polygon data, comment out this part
         # _logger.info(f"{month_str} polygon processing...")

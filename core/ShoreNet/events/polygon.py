@@ -8,12 +8,14 @@
 from typing import Union
 
 import numpy as np
+from numba import njit, prange
 import pandas as pd
 from pandas.core.frame import DataFrame
 from sklearn.cluster import DBSCAN
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager, EventFilterParameters
 from core.infrastructure.definition.parameters import ColumnNames
+from core.ShoreNet.utils.geo import haversine, point_in_poly
 
 
 def cluster_dock_polygon_dbscan(
@@ -57,9 +59,6 @@ def cluster_dock_polygon_dbscan(
 def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
     from core.ShoreNet.utils.geo import get_geodist
     from sisi_geo import point_poly_c
-    # from core.cython.geo_cython import point_poly_c
-    # if event_row["event_id"] == "20230101000030201202010":
-    #     print(1)
         
     for polygon in dock_list:
         dst_list = []
@@ -79,3 +78,23 @@ def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]
                 polygon_points=polygon['polygon']
             ):
                 return polygon['dock_id']
+
+
+@njit(parallel=True)
+def map_event_polygon_numba(event_begin_lng, event_begin_lat, event_lng, event_lat,
+                            polygons, dock_ids, polygon_event_max_distance):
+    n_polys = len(polygons)
+    for i in prange(n_polys):
+        poly = polygons[i]
+        n_points = poly.shape[0]
+        min_dst = 1e12
+        for j in range(n_points):
+            d_lat = poly[j, 0]
+            d_lng = poly[j, 1]
+            geodist = haversine(event_begin_lng, event_begin_lat, d_lng, d_lat)
+            if geodist < min_dst:
+                min_dst = geodist
+        if min_dst < polygon_event_max_distance:
+            if point_in_poly(event_lng, event_lat, poly):
+                return dock_ids[i]
+    return -1  # no matching polygon found
