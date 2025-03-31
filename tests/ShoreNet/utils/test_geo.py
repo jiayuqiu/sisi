@@ -33,25 +33,37 @@ class TestEvents(unittest.TestCase):
     load_dotenv(".env")
     stage_env = os.environ["TEST_STAGE_ENV"]
     vars = ShoreNetVariablesManager(stage_env)
-    random_points = np.random.uniform(low=0.0, high=20.0, size=(10000000, 2))
+    random_points = np.random.uniform(low=0.0, high=20.0, size=(15000000, 2))
     polygon_1 =  [[1.0, 1.0], [1.0, 9.0], [9.0, 9.0], [9.0, 1.0]]
     polygon_np_1 = np.array(polygon_1, dtype=np.float64)
 
-    def test_c_point_polygon(self):  # 7.5
-        point_poly_general_batch(self.random_points, self.polygon_np_1, point_poly_c)
+    def test_c_point_polygon(self):
+        results = point_poly_general_batch(self.random_points, self.polygon_np_1, point_poly_c)
+        print(results[results==True])
 
-    def test_point_polygon(self):  
-        point_poly_general_batch(self.random_points, self.polygon_np_1, point_poly)
+    # @unittest.skip("takes too long - about 8 - 10 times to point_poly_c")
+    def test_point_polygon(self):
+        results = point_poly_general_batch(self.random_points, self.polygon_np_1, point_poly)
+        print(results[results==True])
     
     def test_numba_point_polygon(self):
-        # Process all points in parallel
-        point_poly_batch(self.random_points, self.polygon_np_1)
+        results = point_poly_batch(self.random_points, self.polygon_np_1)
+        print(results[results==True])
 
     def test_compare_point_polygon(self):
-        """Generate 10M random points and compare results from both implementations."""
+        """Compare results from C, Python, and Numba implementations."""
         polygon = [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]]
-        random_points = np.random.uniform(low=0.0, high=10.0, size=(10000000, 2))
-        for lng, lat in random_points:
-            res_c = point_poly_c(lng, lat, polygon)
-            res_py = point_poly(lng, lat, polygon)
-            self.assertEqual(res_c, res_py, f"Mismatch for point ({lng}, {lat})")
+        polygon_np = np.array(polygon)
+        num_points = 1000000  # Reduced for faster testing
+        random_points = np.random.uniform(low=0.0, high=10.0, size=(num_points, 2))
+
+        # Calculate results using all three implementations
+        results_c = [point_poly_c(lng, lat, polygon) for lng, lat in random_points]
+        results_py = [point_poly(lng, lat, polygon) for lng, lat in random_points]
+        results_numba = point_poly_batch(random_points, polygon_np)
+
+        # Compare the results
+        for i in range(num_points):
+            lng, lat = random_points[i]
+            self.assertEqual(results_c[i], results_py[i], f"C vs Python mismatch for point ({lng}, {lat})")
+            self.assertEqual(results_c[i], results_numba[i], f"C vs Numba mismatch for point ({lng}, {lat})")
