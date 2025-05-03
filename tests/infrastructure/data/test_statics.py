@@ -19,6 +19,8 @@ class TestEvents(unittest.TestCase):
     load_dotenv(".env")
     stage_env = os.environ["TEST_STAGE_ENV"]
     month_str = "202311"
+    year = 2023
+    month = 11
     vars = Vm(stage_env)
 
     def setUp(self):
@@ -31,7 +33,7 @@ class TestEvents(unittest.TestCase):
                 f"{self.month_str}.csv"
             )
         )
-        self.wrangled_df = sdp.wrangle()
+        self.wrangled_df = sdp.wrangle(year=self.year, month=self.month)
 
     def tearDown(self):
         """Run some functions at end of the testing. Nothing to do yet."""

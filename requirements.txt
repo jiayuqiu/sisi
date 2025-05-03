@@ -20,3 +20,4 @@ geopandas
 cryptography
 pytest
 simplification
+numba

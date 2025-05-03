@@ -19,12 +19,13 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 
 - [x] Database initialization  
   - [ ] Statics structure update
+- [ ] Replace AIS data with events data
 - [x] Uploading data
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
 - [x] Matching events with polygons script  
   - [x] Apply cython version `point_poly`, accelerate 10 times to matching events with polygons.
-- [ ] Output ship mmsi list.
+- [x] Output ship mmsi list.
 - [x] DBSCAN  
   - [x] DBSCAN events with null dock id, and then output new polygons  
   - [x] Plot polygons on map in HTML.

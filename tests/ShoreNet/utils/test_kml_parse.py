@@ -28,7 +28,7 @@ class TestEvents(unittest.TestCase):
             self.vars.dp_names.test_utils_data_path,
             'kml', 'qhd.kml'
         )
-        kp = KMLParser(kml_file, self.vars).parse_kml()[0]
+        kp = KMLParser(kml_file).parse_kml()[0]
 
         # mock data
         mock_points = [[123.123, 23.23], [124.124, 24.24], [125.125, 25.25], [126.126, 26.26], [123.123, 23.23]]
