@@ -67,3 +67,27 @@ class TestEvents(unittest.TestCase):
             lng, lat = random_points[i]
             self.assertEqual(results_c[i], results_py[i], f"C vs Python mismatch for point ({lng}, {lat})")
             self.assertEqual(results_c[i], results_numba[i], f"C vs Numba mismatch for point ({lng}, {lat})")
+
+    def test_numba_point_polygon_on_ais(self):
+        import pandas as pd
+
+        ais_df = pd.read_csv(
+            os.path.join(self.vars.dp_names.data_path, "dummy/ais/202301.csv")
+        )
+
+        ais_df.loc[:, "longitude"] = ais_df.loc[:, "longitude"] / 1e6
+        ais_df.loc[:, "latitude"] = ais_df.loc[:, "latitude"] / 1e6
+
+        polygon = [
+            [121.7, 29.0],  # bottom-left
+            [121.7, 29.3],  # top-left
+            [122.0, 29.3],  # top-right
+            [122.0, 29.0]  # bottom-right
+        ]
+
+        results: np.ndarray = point_poly_batch(np.array(ais_df.loc[:, ["longitude", "latitude"]]),
+                                               np.array(polygon, dtype=np.float64))
+
+        # count true and false results value
+        self.assertEqual(len(results[results == True]), 1178)
+        self.assertEqual(len(results[results == False]), 8822)

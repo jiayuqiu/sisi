@@ -14,11 +14,12 @@ def point_poly_numba(lng, lat, polygon):
     j = cor - 1
     inside = False
     while i < cor:
-        if (((polygon[i, 1] < lng and polygon[j, 1] >= lng) or 
-             (polygon[j, 1] < lng and polygon[i, 1] >= lng)) and 
-            (polygon[i, 0] <= lat or polygon[j, 0] <= lat)):
-            a = polygon[i, 0] + (lng - polygon[i, 1]) / (polygon[j, 1] - polygon[i, 1]) * (polygon[j, 0] - polygon[i, 0])
-            if a < lat:
+        if (((polygon[i, 1] < lat and polygon[j, 1] >= lat) or
+             (polygon[j, 1] < lat and polygon[i, 1] >= lat)) and
+                (polygon[i, 0] <= lng or polygon[j, 0] <= lng)):
+            a = polygon[i, 0] + (lat - polygon[i, 1]) / (polygon[j, 1] - polygon[i, 1]) * (
+                        polygon[j, 0] - polygon[i, 0])
+            if a < lng:
                 inside = not inside
         j = i
         i += 1
@@ -26,7 +27,7 @@ def point_poly_numba(lng, lat, polygon):
 
 
 @njit(parallel=False)
-def point_poly_batch(points, polygon):
+def point_poly_batch(points, polygon) -> np.ndarray:
     """
     Process multiple points in parallel.
     :param points: numpy array of shape (n, 2) where each row is [lng, lat]
@@ -44,30 +45,26 @@ def point_poly_batch(points, polygon):
 
 def point_poly(lng, lat, polygon_points):
     """
-    判断点是否在多边形内
-    :param lng: 该点的经度，类型：float
-    :param lat: 该点的纬度，类型：float
-    :param polygon_points: 多边形的经纬度坐标列表，类型：list
-    :return: t/f
+    Check if a point (lng, lat) is inside a polygon.
+    :param lng: Longitude (float)
+    :param lat: Latitude (float)
+    :param polygon_points: List of [lng, lat] pairs
+    :return: True if inside, False otherwise
     """
     polygon = np.array(polygon_points)
-    polygon = np.array([[float(x) for x in line] for line in polygon])
     cor = len(polygon)
     i = 0
     j = cor - 1
     inside = False
     while i < cor:
-        if ((((polygon[i, 1] < lng) & (polygon[j, 1] >= lng))
-             | ((polygon[j, 1] < lng) & (polygon[i, 1] >= lng)))
-                & ((polygon[i, 0] <= lat) | (polygon[j, 0] <= lat))):
-            a = (polygon[i, 0] +
-                 (lng - polygon[i, 1]) / (polygon[j, 1] - polygon[i, 1]) *
-                 (polygon[j, 0] - polygon[i, 0]))
-
-            if a < lat:
+        if (((polygon[i, 1] < lat and polygon[j, 1] >= lat) or
+             (polygon[j, 1] < lat and polygon[i, 1] >= lat)) and
+            (polygon[i, 0] <= lng or polygon[j, 0] <= lng)):
+            a = polygon[i, 0] + (lat - polygon[i, 1]) / (polygon[j, 1] - polygon[i, 1]) * (polygon[j, 0] - polygon[i, 0])
+            if a < lng:
                 inside = not inside
         j = i
-        i = i + 1
+        i += 1
     return inside
 
 

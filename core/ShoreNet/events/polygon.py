@@ -78,6 +78,7 @@ def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]
                 polygon_points=polygon['polygon']
             ):
                 return polygon['dock_id']
+    return None
 
 
 @njit(parallel=True)

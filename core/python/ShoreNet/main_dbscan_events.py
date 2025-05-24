@@ -16,7 +16,6 @@ import numpy as np
 import pandas as pd
 
 from scipy.spatial import ConvexHull, QhullError
-from simplification.cutil import simplify_coords
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.infrastructure.definition.parameters import ArgsDefinition as Ad, ColumnNames as Cn

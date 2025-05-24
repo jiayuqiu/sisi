@@ -13,7 +13,6 @@ def point_poly_c(double lng, double lat, object polygon_points):
     Returns:
         bool: 点是否在多边形内
     """
-    # Ensure that polygon_points is a numpy array of type float64 with two dimensions.
     cdef np.ndarray[double, ndim=2] polygon_arr = np.asarray(polygon_points, dtype=np.float64)
     cdef int cor = polygon_arr.shape[0]
     cdef int i, j
@@ -22,13 +21,12 @@ def point_poly_c(double lng, double lat, object polygon_points):
 
     j = cor - 1
     for i in range(cor):
-        # Use Python logical operators for clarity.
-        if (((polygon_arr[i, 1] < lng and polygon_arr[j, 1] >= lng) or
-             (polygon_arr[j, 1] < lng and polygon_arr[i, 1] >= lng)) and
-            ((polygon_arr[i, 0] <= lat) or (polygon_arr[j, 0] <= lat))):
+        if (((polygon_arr[i, 1] < lat and polygon_arr[j, 1] >= lat) or
+             (polygon_arr[j, 1] < lat and polygon_arr[i, 1] >= lat)) and
+            ((polygon_arr[i, 0] <= lng) or (polygon_arr[j, 0] <= lng))):
 
-            a = polygon_arr[i, 0] + (lng - polygon_arr[i, 1]) / (polygon_arr[j, 1] - polygon_arr[i, 1]) * (polygon_arr[j, 0] - polygon_arr[i, 0])
-            if a < lat:
+            a = polygon_arr[i, 0] + (lat - polygon_arr[i, 1]) / (polygon_arr[j, 1] - polygon_arr[i, 1]) * (polygon_arr[j, 0] - polygon_arr[i, 0])
+            if a < lng:
                 inside = not inside
         j = i
     return inside

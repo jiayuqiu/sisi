@@ -10,7 +10,7 @@ import re
 
 import pandas as pd
 
-from sqlalchemy import func, or_, text
+from sqlalchemy import func, text
 from sqlalchemy.orm import sessionmaker
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
@@ -47,8 +47,13 @@ def load_events_all(year: int, month: int, vars: ShoreNetVariablesManager) -> pd
 def load_events_with_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     load events with dock
-    :param year: year condition
-    :return: dataframe
+
+    Args:
+        year: int, year of events
+        vars: ShoreNetVariablesManager, framework variables
+
+    Returns:
+        Pandas DataFrame
     """
     _df = pd.read_sql(
         sql=f"""
@@ -79,9 +84,13 @@ def load_events_with_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataF
 
 def load_events_without_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
-    load events with dock
-    :param year: year condition
-    :return: dataframe
+    load events without dock
+    Args:
+        year: int, year of events
+        vars: ShoreNetVariablesManager, framework variables
+
+    Returns:
+        Pandas DataFrame
     """
     _df = pd.read_sql(
         sql=f"""
@@ -110,10 +119,15 @@ def load_events_without_dock(year: int, vars: ShoreNetVariablesManager) -> pd.Da
     return _df
 
 
-def load_dock_polygon(vars: ShoreNetVariablesManager) -> pd.DataFrame:
+def load_dock_polygon(vars: ShoreNetVariablesManager) -> list[dict]:
     """
     get dock polygon from sql server
-    :return: [{'dock_id': ..., 'name': ..., 'polygon': [...], 'province': ... }]
+
+    Args:
+        vars: ShoreNetVariablesManager, framework variables
+
+    Returns:
+        a list of polygons details
     """
     Session = sessionmaker(bind=vars.engine)
     session = Session()
@@ -155,8 +169,13 @@ def load_dock_polygon(vars: ShoreNetVariablesManager) -> pd.DataFrame:
 def load_od_pairs(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     load od pairs
-    :param year: year condition
-    :return: dataframe
+
+    Args:
+        vars: ShoreNetVariablesManager, framework variables
+        year: int, year of events
+
+    Returns:
+        Pandas DataFrame
     """
     _df = pd.read_sql(
         sql=f"""

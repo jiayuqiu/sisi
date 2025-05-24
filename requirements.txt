@@ -1,5 +1,5 @@
 matplotlib
-numpy
+numpy==1.26.4
 pandas==2.1.4
 jupyterlab
 pykml
@@ -19,5 +19,4 @@ python-dotenv
 geopandas
 cryptography
 pytest
-simplification
 numba

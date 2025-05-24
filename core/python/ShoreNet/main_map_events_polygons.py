@@ -82,22 +82,11 @@ def run_app() -> None:
             numba_polygons.append(np.array(poly["polygon"], dtype=np.float64))
         _logger.info(f"dock polygon count: {len(dock_polygon_list)}")
 
+        # -. match polygon
         points = events_df[[Cn.lng, Cn.lat]].to_numpy(dtype=np.float64)
         dock_ids = match_polygons(points, numba_polygons)
         events_df.loc[:, 'coal_dock_id'] = dock_ids
         events_df = events_df.loc[events_df['coal_dock_id'] != -1]
-
-        # # -. match polygon
-        # from pandarallel import pandarallel
-        # pandarallel.initialize(progress_bar=True, nb_workers=vars.process_workers)
-        # start_t = time.time()
-        # dock_tag = events_df.parallel_apply(
-        #     map_event_polygon, args=(dock_polygon_list,), axis=1
-        # )
-        # end_t = time.time()
-        # _logger.info(f"CPU matching time: {end_t - start_t}")
-        # events_df.loc[:, 'coal_dock_id'] = dock_tag
-        # events_df = events_df.loc[events_df['coal_dock_id'].notnull()]
 
         _logger.info(f"matched events shape: {events_df.shape}")
         if events_df.shape[0] == 0:
