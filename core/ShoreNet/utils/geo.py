@@ -26,7 +26,7 @@ def point_poly_numba(lng, lat, polygon):
     return inside
 
 
-@njit(parallel=False)
+@njit(parallel=True)
 def point_poly_batch(points, polygon) -> np.ndarray:
     """
     Process multiple points in parallel.

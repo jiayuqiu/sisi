@@ -56,46 +56,40 @@ def cluster_dock_polygon_dbscan(
     return cleaned_event_df
 
 
-def map_event_polygon(event_row: pd.Series, dock_list: list) -> Union[int, None]:
-    from core.ShoreNet.utils.geo import get_geodist
-    from sisi_geo import point_poly_c
-        
-    for polygon in dock_list:
-        dst_list = []
-        for d_lat, d_lng in polygon['polygon']:
-            geodist = get_geodist(
-                lon1=event_row['begin_lng'],
-                lat1=event_row['begin_lat'],
-                lon2=d_lng,
-                lat2=d_lat
-            )
-            dst_list.append(geodist)
-
-        if min(dst_list) < EventFilterParameters.polygon_event_max_distance:
-            if point_poly_c(
-                lng=event_row[ColumnNames.lng],
-                lat=event_row[ColumnNames.lat],
-                polygon_points=polygon['polygon']
-            ):
-                return polygon['dock_id']
-    return None
+@njit(parallel=True)
+def match_polygons(points, polygons):
+    n_points = points.shape[0]
+    result = -np.ones(n_points, dtype=np.int64)
+    for i in prange(n_points):
+        lng = points[i, 0]
+        lat = points[i, 1]
+        for j in range(len(polygons)):
+            poly = polygons[j]
+            if point_in_poly(lat, lng, poly):
+                result[i] = j  # here polygon index is used as the dock tag
+                break
+    return result
 
 
 @njit(parallel=True)
 def map_event_polygon_numba(event_begin_lng, event_begin_lat, event_lng, event_lat,
                             polygons, dock_ids, polygon_event_max_distance):
-    n_polys = len(polygons)
-    for i in prange(n_polys):
-        poly = polygons[i]
-        n_points = poly.shape[0]
-        min_dst = 1e12
-        for j in range(n_points):
-            d_lat = poly[j, 0]
-            d_lng = poly[j, 1]
-            geodist = haversine(event_begin_lng, event_begin_lat, d_lng, d_lat)
-            if geodist < min_dst:
-                min_dst = geodist
-        if min_dst < polygon_event_max_distance:
-            if point_in_poly(event_lng, event_lat, poly):
-                return dock_ids[i]
-    return -1  # no matching polygon found
+    # n_polys = len(polygons)
+    # for i in prange(n_polys):
+    #     poly = polygons[i]
+    #     n_points = poly.shape[0]
+    #     min_dst = 1e12
+    #     for j in range(n_points):
+    #         d_lat = poly[j, 0]
+    #         d_lng = poly[j, 1]
+    #         geodist = haversine(event_begin_lng, event_begin_lat, d_lng, d_lat)
+    #         if geodist < min_dst:
+    #             min_dst = geodist
+    #     if min_dst < polygon_event_max_distance:
+    #         if point_in_poly(event_lng, event_lat, poly):
+    #             return dock_ids[i]
+    # return -1  # no matching polygon found
+    raise NotImplementedError(
+        "map_event_polygon_numba is not implemented yet. Please use match_polygons instead."
+        "Keep this function for future reference."
+    )

@@ -11,8 +11,8 @@ import traceback
 
 import numpy as np
 from numba.typed import List
-from numba import njit, prange
 from sqlalchemy.orm import sessionmaker
+from tqdm import tqdm
 
 from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from core.infrastructure.definition.parameters import (
@@ -20,27 +20,11 @@ from core.infrastructure.definition.parameters import (
     ColumnNames as Cn
 )
 from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
-from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
-from core.ShoreNet.events.polygon import map_event_polygon, map_event_polygon_numba, point_in_poly
-# from core.ShoreNet.utils.geo import point_poly_cuda
+from core.ShoreNet.events.generic.tools import load_events_month, load_dock_polygon, load_csv_dock_polygon
+from core.ShoreNet.events.polygon import match_polygons
 from core.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
-
-
-@njit(parallel=True)
-def match_polygons(points, polygons):
-    n_points = points.shape[0]
-    result = -np.ones(n_points, dtype=np.int64)
-    for i in prange(n_points):
-        lng = points[i, 0]
-        lat = points[i, 1]
-        for j in range(len(polygons)):
-            poly = polygons[j]
-            if point_in_poly(lat, lng, poly):
-                result[i] = j  # here polygon index is used as the dock tag
-                break
-    return result
 
 
 def run_app() -> None:
@@ -64,19 +48,17 @@ def run_app() -> None:
         _logger.info(f"{month_str} events polygon pairing processing...")
 
         # -. load events without polygon
-        events_df = load_events_all(
+        events_df = load_events_month(
             year=year,
             month=month,
             vars=vars
         )
         _logger.info(f"original events shape: {events_df.shape}")
 
-        # -. load coal mmsi statics and get coal events
-        # events_df = events_df
-        _logger.info(f"coal events shape: {events_df.shape}")
-
         # -. load polygon data
-        dock_polygon_list = load_dock_polygon(vars)
+        # dock_polygon_list = load_dock_polygon(vars)
+        dock_polygon_list = load_csv_dock_polygon("/mnt/smbfn/data/sisi/dock/coal_docks_polygon.csv")
+
         numba_polygons = List()
         for poly in dock_polygon_list:
             numba_polygons.append(np.array(poly["polygon"], dtype=np.float64))
@@ -84,7 +66,8 @@ def run_app() -> None:
 
         # -. match polygon
         points = events_df[[Cn.lng, Cn.lat]].to_numpy(dtype=np.float64)
-        dock_ids = match_polygons(points, numba_polygons)
+        matched_index_list = match_polygons(points, numba_polygons)
+        dock_ids = [dock_polygon_list[i]['dock_id'] if i != -1 else None for i in matched_index_list]
         events_df.loc[:, 'coal_dock_id'] = dock_ids
         events_df = events_df.loc[events_df['coal_dock_id'] != -1]
 
@@ -98,11 +81,17 @@ def run_app() -> None:
         session = Session()
         try:
             # Perform the update within a transaction
-            for _, row in events_df.iterrows():
+            for _, row in tqdm(events_df.iterrows(), total=events_df.shape[0], desc=f"Updating Events {month_str}"):
+                if row['coal_dock_id'] is None:
+                    coal_dock_id_val = None
+                elif np.isnan(row['coal_dock_id']):
+                    coal_dock_id_val = None
+                else:
+                    coal_dock_id_val = int(row['coal_dock_id'])
                 session.query(FactorAllStopEvents).filter(
                     FactorAllStopEvents.event_id == row['event_id']
                 ).update({
-                    FactorAllStopEvents.coal_dock_id: int(row['coal_dock_id'])
+                    FactorAllStopEvents.coal_dock_id: coal_dock_id_val
                 }, synchronize_session=False)
 
             # Commit the transaction

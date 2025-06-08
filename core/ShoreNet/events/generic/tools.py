@@ -19,7 +19,7 @@ from core.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from core.infrastructure.definition.parameters import WarehouseDefinitions as tbn
 
 
-def load_events_all(year: int, month: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
+def load_events_month(year: int, month: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
     query = f"""
     SELECT
         event_id,
@@ -163,6 +163,32 @@ def load_dock_polygon(vars: ShoreNetVariablesManager) -> list[dict]:
     # print(f"Dock polygon count: {len(dock_polygon_list)}")
     session.close()
     # dock_polygon_df = pd.DataFrame(dock_polygon_list)
+    return dock_polygon_list
+
+
+def load_csv_dock_polygon(file_path: str) -> list[dict]:
+    """
+    load dock polygon from csv file
+
+    Args:
+        file_path: str, path to the csv file
+
+    Returns:
+        a list of polygons details
+    """
+    dock_polygon_df = pd.read_csv(file_path)
+    dock_polygon_list = []
+    for _, row in dock_polygon_df.iterrows():
+        _polygon_points = eval(row['polygon'])
+        dock_polygon_list.append(
+            {
+                'dock_id': row['dock_id'],
+                'name': row['name'],
+                'polygon': _polygon_points,
+                'lng': _polygon_points[0][1],
+                'lat': _polygon_points[0][0]
+            }
+        )
     return dock_polygon_list
 
 

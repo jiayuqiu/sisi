@@ -20,7 +20,7 @@ from core.infrastructure.definition.parameters import (
     ColumnNames as Cn
 )
 from core.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
-from core.ShoreNet.events.generic.tools import load_events_all, load_dock_polygon
+from core.ShoreNet.events.generic.tools import load_events_month, load_dock_polygon
 from core.ShoreNet.events.polygon import map_event_polygon, map_event_polygon_numba, point_in_poly
 # from core.ShoreNet.utils.geo import point_poly_cuda
 from core.utils.setup_logger import set_logger

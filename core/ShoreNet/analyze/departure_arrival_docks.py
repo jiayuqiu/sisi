@@ -25,7 +25,7 @@ def map_od_paris_mmsi(df: pd.DataFrame) -> list[dict]:
     :param df: one mmsi events dataframe
     :return: records list
     """
-    _logger.info(f"mmsi -> {df['mmsi'].iloc[0]} is mapping departure and arrival docks...")
+    # _logger.info(f"mmsi -> {df['mmsi'].iloc[0]} is mapping departure and arrival docks...")
     records_list: list = []
     df.sort_values('begin_time', inplace=True)
     df.loc[:, 'next_polygon_id'] = df['coal_dock_id'].shift(-1)
