@@ -15,6 +15,10 @@ from abc import ABC, abstractmethod
 from pandas.core.frame import DataFrame as PandasDF
 
 
+def column_validate():
+    pass
+
+
 class BaseDataProcessor(ABC):
     def __init__(self, csv_file):
         self.csv_file = csv_file

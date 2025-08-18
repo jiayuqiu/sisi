@@ -109,6 +109,10 @@ class EventsDataProcessor(BaseDataProcessor):
     
     def wrangle(self, year: int, month: int) -> PandasDF:
         """TODO: Documentation"""
+        for k, _ in EVENT_FIELDS_MAPPING.items():
+            if k not in self.df.columns:
+                _logger.error(f"Column {k} not found in the data.")
+
         self.df = self.df.loc[:, list(EVENT_FIELDS_MAPPING.keys())]
         self.df.rename(columns=EVENT_FIELDS_MAPPING, inplace=True)
         formatted_df = self.preprocess(data=self.df)
