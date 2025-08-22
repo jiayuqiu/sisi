@@ -11,8 +11,8 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from core.infrastructure.data.statics import StaticsDataProcessor
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
+from sisi_ops.infrastructure.data.statics import StaticsDataProcessor
+from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 
 
 class TestEvents(unittest.TestCase):

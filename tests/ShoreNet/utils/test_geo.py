@@ -14,8 +14,8 @@ from dotenv import load_dotenv
 
 import numpy as np
 
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.utils.geo import point_poly, point_poly_batch
+from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
+from sisi_ops.ShoreNet.utils.geo import point_poly, point_poly_batch
 from core.cython.geo_cython import point_poly_c
 
 

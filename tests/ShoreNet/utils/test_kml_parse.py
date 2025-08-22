@@ -13,8 +13,8 @@ import os
 import unittest
 from dotenv import load_dotenv
 
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.utils.polygon import KMLParser, CoordinatePoint
+from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
+from sisi_ops.ShoreNet.utils.polygon import KMLParser, CoordinatePoint
 
 
 class TestEvents(unittest.TestCase):

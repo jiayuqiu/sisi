@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from core.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
+from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
+from sisi_ops.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
 
 
 class TestEvents(unittest.TestCase):

@@ -10,7 +10,7 @@ import os
 from dotenv import load_dotenv
 import unittest
 
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager
+from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 
 class TestAnalysis(unittest.TestCase):
     load_dotenv(".env")

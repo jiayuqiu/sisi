@@ -32,7 +32,8 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 - [x] OD pairs Calculation script
 - [x] Unit test
 - [ ] Documentation
-- [ ] Moor, stop event classifier.  # point to He zhiqiang.
+- [ ] For scalability, replace pandas with pyspark
+- [ ] migrate project to databricks.
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:

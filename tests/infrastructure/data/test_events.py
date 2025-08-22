@@ -13,8 +13,8 @@ import unittest
 from dotenv import load_dotenv
 import pandas as pd
 
-from core.infrastructure.data.events import EventsDataProcessor
-from core.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
+from sisi_ops.infrastructure.data.events import EventsDataProcessor
+from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
