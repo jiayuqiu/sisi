@@ -20,3 +20,5 @@ geopandas
 cryptography
 pytest
 numba
+pyspark==3.5.1
+delta-spark==3.1.0

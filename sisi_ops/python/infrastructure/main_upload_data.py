@@ -15,7 +15,6 @@ from typing import Any, Union
 
 from sisi_ops.infrastructure.data.statics import StaticsDataProcessor
 from sisi_ops.infrastructure.data.events import EventsDataProcessor
-# from core.infrastructure.data.polygons import PolygonsDataProcessor
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
 from sisi_ops.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
 from sisi_ops.ShoreNet.utils.db.DimShipsStatics import DimShipsStatics

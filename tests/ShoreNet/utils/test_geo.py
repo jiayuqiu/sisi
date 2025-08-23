@@ -16,7 +16,7 @@ import numpy as np
 
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from sisi_ops.ShoreNet.utils.geo import point_poly, point_poly_batch
-from core.cython.geo_cython import point_poly_c
+from sisi_ops.cython.geo_cython import point_poly_c
 
 
 def point_poly_general_batch(points, polygon, inspect_method):
