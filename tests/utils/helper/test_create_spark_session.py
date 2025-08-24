@@ -1,5 +1,5 @@
 import unittest
-from sisi_ops.utils.helper.testing_tools import SharedParameters
+from sisi_ops.utils.helper.testing_tools import SharedParametersTools
 from pyspark.sql import SparkSession
 
 APP_NAME = "sisi ops test"
@@ -11,7 +11,7 @@ LOG_LEVEL = "WARN"
 
 class TestCreateSparkSession(unittest.TestCase):
     def test_create_spark_session(self):
-        spark = SharedParameters.create_spark_session()
+        spark = SharedParametersTools.create_spark_session()
         self.assertIsNotNone(spark)
         self.assertIsInstance(spark, SparkSession)
         self.assertIn(DELTA_EXTENSION, spark.conf.get("spark.sql.extensions"))

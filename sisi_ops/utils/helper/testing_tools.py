@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 from delta import configure_spark_with_delta_pip
 
 
-class SharedParameters(object):
+class SharedParametersTools(object):
     def __init__(self, use_spark: bool = False):
         if use_spark:
             self.spark = self.create_spark_session()
