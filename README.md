@@ -2,8 +2,6 @@
 
 ## 1 Overview
 
-![roadmap](dataflow_roadmap.png)
-
 ### 1.1 Transportation Network
 This project focuses on:
 - Generate coal docks in China.
