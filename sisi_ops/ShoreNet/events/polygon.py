@@ -5,10 +5,10 @@
 @DateTime:  19/10/2024 12:52 am
 """
 
-from typing import Union
+# from typing import Union
 
 import numpy as np
-from numba import njit, prange
+from numba import njit, prange, set_num_threads
 import pandas as pd
 from pandas.core.frame import DataFrame
 from sklearn.cluster import DBSCAN
@@ -16,6 +16,9 @@ from sklearn.cluster import DBSCAN
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager, EventFilterParameters
 from sisi_ops.infrastructure.definition.parameters import ColumnNames
 from sisi_ops.ShoreNet.utils.geo import haversine, point_in_poly
+
+
+set_num_threads(8)
 
 
 def cluster_dock_polygon_dbscan(

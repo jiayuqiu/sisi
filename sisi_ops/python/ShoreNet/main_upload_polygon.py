@@ -12,6 +12,7 @@ import os
 import glob
 import argparse
 
+import pandas as pd
 from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
 
@@ -22,6 +23,9 @@ from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
 from sisi_ops.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
+
+
+def generate_polygon_
 
 
 def insert_polygon(vars: ShoreNetVariablesManager, parsed_kp_ls: list) -> None:
@@ -68,19 +72,29 @@ def run_app():
     """
     parser = argparse.ArgumentParser(description='process match polygon for events')
     parser.add_argument(f"--{Ad.stage_env}", type=str, required=True, help='Process stage name')
+    parser.add_argument(f"--{Ad.polygon_fn}", type=str, required=False, help='Polygon file path')
     args = parser.parse_args()
     stage_env = args.__getattribute__(Ad.stage_env)
+    polygon_storage_path = args.__getattribute__(Ad.polygon_fn)
 
     vars = ShoreNetVariablesManager(stage_env)
+
+    if polygon_storage_path is None:
+        # DEFAULT: get all kml files from 'data/{stage_env}' folder by `glob`
+        kml_fn_ls = glob.glob(os.path.join(vars.dp_names.data_path, stage_env, "kml", '*.kml'))
+        parsed_kml_kp_ls = []
+
+        # parse polygon from kml files
+        for kml_fn in kml_fn_ls:
+            parsed_kml_ls = KMLParser(kml_fn, vars).parse_kml()
+            for parsed_kml in parsed_kml_ls:
+                parsed_kml_kp_ls.append(parsed_kml)
+    elif os.path.isfile(polygon_storage_path) & polygon_storage_path.endwith(".csv"):
+        # csv polygon 
+        polygon_df = pd.read_csv(polygon_storage_path)
+    else:
+        raise ValueError(f"Only Support csv file now. Currently input polygon_storage_path: {polygon_storage_path}.")
     
-    # get all kml files by `glob`
-    kml_fn_ls = glob.glob(os.path.join(vars.dp_names.data_path, stage_env, "kml", '*.kml'))
-    
-    parsed_kml_kp_ls = []
-    for kml_fn in kml_fn_ls:
-        parsed_kml_ls = KMLParser(kml_fn, vars).parse_kml()
-        for parsed_kml in parsed_kml_ls:
-            parsed_kml_kp_ls.append(parsed_kml)
     
     # insert polygon data into database
     insert_polygon(vars, parsed_kml_kp_ls)

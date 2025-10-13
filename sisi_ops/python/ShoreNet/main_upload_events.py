@@ -15,7 +15,7 @@ import pandas as pd
 
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from sisi_ops.infrastructure.definition.parameters import ArgsDefinition as Ad
-from sisi_ops.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
+from sisi_ops.infrastructure.definition.mapping import EVENT_FIELDS_MAPPING
 from sisi_ops.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)

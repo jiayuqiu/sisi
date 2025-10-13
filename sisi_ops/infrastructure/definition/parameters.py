@@ -121,6 +121,8 @@ class ArgsDefinition:
     year: str = "year"
     start_month: str = "start_month"
     end_month: str = "end_month"
+    polygon_fn: str = "polygon_fn"
+    reset_flag: str = "reset_flag"
 
 
 @dataclass

@@ -4,11 +4,11 @@
     - `--force` (flag, optional): Set to true if provided.
   - **Example:**
     ```bash
-    python -m core.python.ShoreNet.main_init_db --stage_env=dummy [--force]
+    python -m sisi_ops.python.infrastructure.main_init_db --stage_env=dev [--force]
     ```
 
 
-- **main_update_data**
+- **main_upload_data**
   - **Argument Parsing:**
     - `--stage_env` (str, required): Process stage environment.
     - `--year` (int, required): data year.
@@ -17,5 +17,6 @@
   
   - **Example:**
     ```bash
-    
+    # upload Jan 2023 data sets
+    python -m sisi_ops.python.infrastructure.main_init_db --stage_env=dev --year=2023 --start_month=1 --end_month=1
     ```

@@ -16,8 +16,8 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
 ### 2.1 TODO List
 
 - [x] Database initialization  
-  - [ ] Statics structure update
-- [ ] Replace AIS data with events data
+  - [x] Statics structure update
+- [ ] Replace AIS data with events data. TODO: for phase 2
 - [x] Uploading data
 - [x] Generate dummy data for test
 - [x] Parsing kml files from Google Earth Pro
@@ -29,9 +29,8 @@ The analysis is conducted using Python, leveraging libraries such as Pandas, Num
   - [x] Plot polygons on map in HTML.
 - [x] OD pairs Calculation script
 - [x] Unit test
-- [ ] Documentation
-- [ ] For scalability, replace pandas with pyspark
-- [ ] migrate project to databricks.
+- [x] Documentation
+- [ ] For scalability, replace pandas with pyspark. TODO: for phase 2
 
 ### 2.2 Flow Details
 Make a delievery srcipt, including:
@@ -43,11 +42,21 @@ Make a delievery srcipt, including:
 
 Dependences data:
 1. global or regional ships events log
-2. ais ships statical data
+2. ais statical data
 
-### 2.3 Documentation
+### 2.3 Operations
 
-| Module           | Description                                                          | Details                                                                   |
-|------------------|----------------------------------------------------------------------|---------------------------------------------------------------------------|
-| main_init_db     | Through SQLAlchemy ORM, create all necessay tables for SISI project. | [Docs Link](./core/python/infrastructure/README.md#main_init_db)              |
-| main_upload_data | Upload events, statics and polygons data.                            | [Docs Link]()
+### 2.3.2 Prepare Data
+|Step| Module                  | Description                                                                    | Details                                                                        |
+|-|-------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+|1| main_init_db            | Through SQLAlchemy ORM, create all necessary tables for SISI project.          | [Docs Link](./sisi_ops/python/infrastructure/README.md#main_init_db)            |
+|2| main_upload_data        | Upload events, statics and polygons data.                                      | [Docs Link](./sisi_ops/python/infrastructure/README.md#main_update_data)        |
+|3| main_map_events_polygons| Match event data with polygon data to identify dock stops.                     | [Docs Link](./sisi_ops/python/ShoreNet/README.md#main_map_events_polygons)     |
+|4| main_mapping_od_paris   | Calculate origin-destination pairs for shipping routes.                        | [Docs Link](./sisi_ops/python/ShoreNet/README.md#main_mapping_od_paris)        |
+
+### 2.3.3 DBSCAN for Coal Terminal Polygons
+|Step| Module                  | Description                                                                    | Details                                                                        |
+|-|-------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+|1| main_dbscan_events      | Cluster events with DBSCAN algorithm to identify potential dock locations.     | [Docs Link](./sisi_ops/python/ShoreNet/README.md#main_dbscan_events)           |
+|2| manual check dbscan polygons| need manual check | |
+|3| main_map_events_polygons| Match event data with polygon data to identify dock stops.                     | [Docs Link](./sisi_ops/python/ShoreNet/README.md#main_map_events_polygons)     |
