@@ -31,7 +31,7 @@ def point_poly_general_batch(points, polygon, inspect_method):
 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
-    stage_env = os.environ["TEST_STAGE_ENV"]
+    stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
     vars = ShoreNetVariablesManager(stage_env)
     random_points = np.random.uniform(low=0.0, high=20.0, size=(15000000, 2))
     polygon_1 =  [[1.0, 1.0], [1.0, 9.0], [9.0, 9.0], [9.0, 1.0]]

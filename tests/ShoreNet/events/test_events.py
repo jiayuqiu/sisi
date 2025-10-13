@@ -18,7 +18,7 @@ from sisi_ops.ShoreNet.analyze.departure_arrival_docks import map_dock_pairs
 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
-    stage_env = os.environ["TEST_STAGE_ENV"]
+    stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
     vars = ShoreNetVariablesManager(stage_env)
  
     def test_dock_pairs(self):

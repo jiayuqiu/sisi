@@ -46,6 +46,22 @@ Dependences data:
 
 ### 2.3 Operations
 
+### 2.3.1 Database
+
+- Install MySQL
+- Create .env under ${workspace} input
+```
+SISI_DB_TYPE=mysql
+SISI_DB_HOST=127.0.0.1
+SISI_DB_PORT=3306
+SISI_DB_USER=@your_username
+SISI_DB_PASSWORD=@your_password
+
+DATA_PATH=/your/data/path
+ROOT_PATH=/your/project/path
+TEST_STAGE_ENV=dev
+```
+
 ### 2.3.2 Prepare Data
 |Step| Module                  | Description                                                                    | Details                                                                        |
 |-|-------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|

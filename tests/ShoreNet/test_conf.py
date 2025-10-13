@@ -19,7 +19,7 @@ from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
-    stage_env = os.environ["TEST_STAGE_ENV"]
+    stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
     vars = ShoreNetVariablesManager(stage_env)
 
     def test_connect_mysql(self):

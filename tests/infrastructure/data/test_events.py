@@ -18,7 +18,7 @@ from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager as 
 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
-    stage_env = os.environ["TEST_STAGE_ENV"]
+    stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
     month_str = "202311"
     year = 2023
     month = 11

@@ -14,7 +14,7 @@ from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 
 class TestAnalysis(unittest.TestCase):
     load_dotenv(".env")
-    stage_env = os.environ["TEST_STAGE_ENV"]
+    stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
     var = ShoreNetVariablesManager(stage_env)
 
     @unittest.skip("skip test polgyon score has been deprecated.")
