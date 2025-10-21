@@ -113,8 +113,8 @@ class EventsDataProcessor(BaseDataProcessor):
             if k not in self.df.columns:
                 _logger.error(f"Column {k} not found in the data.")
 
-        # self.df = self.df.loc[:, list(EVENT_FIELDS_MAPPING.keys())]
-        self.df = self.df.loc[:, list(EVENT_FIELDS_MAPPING.values())]
+        self.df = self.df.loc[:, list(EVENT_FIELDS_MAPPING.keys())]
+        # self.df = self.df.loc[:, list(EVENT_FIELDS_MAPPING.values())]
         self.df.rename(columns=EVENT_FIELDS_MAPPING, inplace=True)
         formatted_df = self.preprocess(data=self.df)
         formatted_df = formatted_df.loc[

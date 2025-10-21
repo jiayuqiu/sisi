@@ -20,10 +20,20 @@ _logger = set_logger(__name__)
 
 
 def map_od_paris_mmsi(df: pd.DataFrame) -> list[dict]:
-    """
-    calculate od paris for one mmsi
-    :param df: one mmsi events dataframe
-    :return: records list
+    """Calculate OD pairs for a single MMSI.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing events for one MMSI. Required columns:
+            'mmsi', 'begin_time', 'end_time', 'coal_dock_id', and coordinate
+            columns referenced by Cn.lng and Cn.lat.
+
+    Returns:
+        list[dict]: List of dictionaries, each representing an OD record with keys:
+            'mmsi', 'departure_dock_id', 'arrival_dock_id', 'departure_time',
+            'arrival_time', 'departure_year', 'arrival_year', 'departure_month',
+            'arrival_month', 'departure_quarter', 'arrival_quarter',
+            'departure_lng', 'departure_lat', 'arrival_lng', 'arrival_lat',
+            and 'sail_duration'.
     """
     # _logger.info(f"mmsi -> {df['mmsi'].iloc[0]} is mapping departure and arrival docks...")
     records_list: list = []
@@ -64,11 +74,20 @@ def map_od_paris_mmsi(df: pd.DataFrame) -> list[dict]:
     return records_list
 
 def map_dock_pairs(df, process_workders=8) -> pd.DataFrame:
-    """
-    map departure and arrival docks for events
+    """Map departure and arrival docks for events.
 
-    :param df: events with polygons dataframe.
-    :return:
+    Args:
+        df (pd.DataFrame): Events dataframe with polygon information (must contain
+            'coal_dock_id' and 'mmsi').
+        process_workders (int): Number of worker processes to use for parallel processing.
+
+    Returns:
+        pd.DataFrame: DataFrame of mapped OD records. Each record contains fields
+            such as 'mmsi', 'departure_dock_id', 'arrival_dock_id', 'departure_time',
+            'arrival_time', 'departure_year', 'arrival_year', etc.
+
+    Raises:
+        ValueError: If there are events without a dock polygon id in 'coal_dock_id'.
     """
     # -. check if exists data without dock_polygon_id.
     if df['coal_dock_id'].isnull().sum() > 0:
@@ -90,11 +109,18 @@ def map_dock_pairs(df, process_workders=8) -> pd.DataFrame:
 
 def calculate_dd_event_count_month(year: int, month: int, dock_id: int, con) -> (int, int):
     """
-    calculate departure and arrival ship count for dock
-    :param year: year
-    :param month: month
-    :param dock_id: dock_id
-    :return: ship count
+    Deprecated: Calculate departure and arrival ship count for a dock for a given month.
+
+    Args:
+        year (int): Year of the events.
+        month (int): Month of the events.
+        dock_id (int): Identifier of the dock.
+        con: Database connection object (e.g., SQLAlchemy engine/connection).
+
+    Returns:
+        tuple[int, int]: A tuple containing:
+            - departure_ship_count (int): Number of departure events for the dock in the given month.
+            - arrival_ship_count (int): Number of arrival events for the dock in the given month.
     """
     departure_query = f"""
              SELECT
@@ -128,11 +154,18 @@ def calculate_dd_event_count_month(year: int, month: int, dock_id: int, con) -> 
 
 def calculate_dd_event_count_quarter(year: int, quarter: int, dock_id: int, con) -> (int, int):
     """
-    calculate departure and arrival ship count for dock
-    :param year: year
-    :param quarter: quarter
-    :param dock_id: dock_id
-    :return: ship count
+    Deprecated: Calculate departure and arrival ship count for a dock for a given quarter.
+
+    Args:
+        year (int): Year of the events.
+        quarter (int): Quarter number (1-4).
+        dock_id (int): Identifier of the dock.
+        con: Database connection object (e.g., SQLAlchemy engine/connection).
+
+    Returns:
+        tuple[int, int]: A tuple containing:
+            - departure_ship_count (int): Number of departure events for the dock in the given quarter.
+            - arrival_ship_count (int): Number of arrival events for the dock in the given quarter.
     """
     departure_query = f"""
              SELECT

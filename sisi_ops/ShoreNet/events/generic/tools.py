@@ -44,17 +44,22 @@ def load_events_month(year: int, month: int, vars: ShoreNetVariablesManager) -> 
     return df
 
 
-def load_events_with_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataFrame:
+def load_events_with_dock(year_list: list[str], vars: ShoreNetVariablesManager) -> pd.DataFrame:
     """
     load events with dock
 
     Args:
-        year: int, year of events
+        year_list: list[str], a year list
         vars: ShoreNetVariablesManager, framework variables
 
     Returns:
         Pandas DataFrame
     """
+    if len(year_list) >= 2:
+        year_filter_str = ", ".join(year_list)
+    else:
+        year_filter_str = year_list[0]
+
     _df = pd.read_sql(
         sql=f"""
             SELECT
@@ -74,7 +79,8 @@ def load_events_with_dock(year: int, vars: ShoreNetVariablesManager) -> pd.DataF
             FROM
                 {vars.warehouse_schema}.{tbn.all_stop_events}
             WHERE
-                begin_year = {year} and coal_dock_id is not null
+                begin_year IN ({year_filter_str})
+                and coal_dock_id is not null
             """
         ,
         con=vars.engine

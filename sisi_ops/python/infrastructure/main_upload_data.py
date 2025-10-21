@@ -28,6 +28,9 @@ from sisi_ops.utils.helper.data_writer import PandasWriter
 
 _logger = set_logger(__name__)
 
+STATICS_DATE_TYPE_FLAGS = ["all", "statics"]
+EVENTS_DATA_TYPE_FLAGS = ["all", "events"]
+
 
 def trigger_data_processor(vars: Vm,
                            data_processor: Union[StaticsDataProcessor, EventsDataProcessor], 
@@ -64,9 +67,10 @@ def trigger_data_processor(vars: Vm,
 
 def run_app():
     parser = argparse.ArgumentParser(description='process: upload events')
-    parser.add_argument(f"--{Ad.stage_env}", type=str, required=True, help='Process stage name')
+    parser.add_argument(f'--{Ad.stage_env}', type=str, required=True, help='Process stage name')
     parser.add_argument(f'--{Ad.year}', type=int, required=True, help='Process year')
     parser.add_argument(f'--{Ad.start_month}', type=int, required=True, help='The start month')
+    parser.add_argument(f'--{Ad.data_type}', type=str, default='all', required=True, choices=['all', 'statics', 'events'], help='The start month')
     parser.add_argument(f'--{Ad.end_month}', type=int, required=True, help='The end month')
 
     args = parser.parse_args()
@@ -75,6 +79,7 @@ def run_app():
     year = args.__getattribute__(Ad.year)
     start_month = args.__getattribute__(Ad.start_month)
     end_month = args.__getattribute__(Ad.end_month)
+    data_type = args.__getattribute__(Ad.data_type)
     
     vars = Vm(stage_env)
 
@@ -82,37 +87,39 @@ def run_app():
         month_str = f"{year}{month:02}"
 
         # 1. process statics data
-        statiacs_data_fp = os.path.join(
-            vars.dp_names.data_path, stage_env, Dpn.statics_folder_name, f"{month_str}.csv"
-        )
-        if os.path.exists(statiacs_data_fp):
-            _logger.info(f"{month_str} statics data found, process...")
-            statices_processor = StaticsDataProcessor(statiacs_data_fp)
-            trigger_data_processor(
-                vars=vars,
-                data_processor=statices_processor,
-                year=year,
-                month=month
+        if data_type in STATICS_DATE_TYPE_FLAGS:
+            statiacs_data_fp = os.path.join(
+                vars.dp_names.data_path, stage_env, Dpn.statics_folder_name, f"{month_str}.csv"
             )
-        else:
-            _logger.warning(f"{month_str} statics data not found, skip processing...")
+            if os.path.exists(statiacs_data_fp):
+                _logger.info(f"{month_str} statics data found, process...")
+                statices_processor = StaticsDataProcessor(statiacs_data_fp)
+                trigger_data_processor(
+                    vars=vars,
+                    data_processor=statices_processor,
+                    year=year,
+                    month=month
+                )
+            else:
+                _logger.warning(f"{month_str} statics data not found, skip processing...")
 
         # 2. process events data
-        events_data_fp = os.path.join(
-            vars.dp_names.data_path, stage_env, Dpn.events_folder_name, f"{month_str}.csv"
-        )
-        if os.path.exists(events_data_fp):
-            _logger.info(f"{month_str} events data found, process...")
-            events_processor = EventsDataProcessor(events_data_fp)
-            trigger_data_processor(
-                vars=vars,
-                data_processor=events_processor,
-                year=year,
-                month=month
+        if data_type in ['all', 'events']:
+            events_data_fp = os.path.join(
+                vars.dp_names.data_path, stage_env, Dpn.events_folder_name, f"{month_str}.csv"
             )
-        else:
-            _logger.warning(f"{month_str} events data not found, skip processing...")
-            continue
+            if os.path.exists(events_data_fp):
+                _logger.info(f"{month_str} events data found, process...")
+                events_processor = EventsDataProcessor(events_data_fp)
+                trigger_data_processor(
+                    vars=vars,
+                    data_processor=events_processor,
+                    year=year,
+                    month=month
+                )
+            else:
+                _logger.warning(f"{month_str} events data not found, skip processing...")
+                continue
 
         # # 3. NOTE: skip. if need to process polygon data, comment out this part
         # _logger.info(f"{month_str} polygon processing...")

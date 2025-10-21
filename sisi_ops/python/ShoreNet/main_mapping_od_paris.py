@@ -21,16 +21,20 @@ _logger = set_logger(__name__)
 def run_app():
     parser = argparse.ArgumentParser(description='process match polygon for events')
     parser.add_argument('--stage_env', type=str, required=True, help='Stage environment')
-    parser.add_argument('--year', type=int, required=True, help='Process year')
+    parser.add_argument('--years', type=str, required=True, help='Process years, please use comma to split the year. e.g, 2022,2023')
 
     args = parser.parse_args()
 
-    year = args.year
     stage_env = args.stage_env
+    years = args.years
+    year_list = [_year for _year in years.split(",")]
 
     vars = ShoreNetVariablesManager(stage_env)
     # -. load events
-    events_with_dock_df = load_events_with_dock(year=year, vars=vars)
+    events_with_dock_df = load_events_with_dock(
+        year_list=year_list, 
+        vars=vars
+    )
 
     # -. clean up events
     events_with_dock_df = clean_up_events(events_with_dock_df, vars)
@@ -41,7 +45,7 @@ def run_app():
     # -. write od pairs, to database and csv
     events_od_df.to_csv(
         path_or_buf=os.path.join(
-            vars.dp_names.output_path, 'csv', f"{year}_od_pairs.csv"
+            vars.dp_names.output_path, 'csv', f"{years}_od_pairs.csv"
         ),
         index=False
     )

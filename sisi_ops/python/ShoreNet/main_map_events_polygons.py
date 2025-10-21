@@ -49,7 +49,7 @@ def run_app() -> None:
     parser.add_argument(f'--{Ad.year}', type=int, required=True, help='Process year')
     parser.add_argument(f'--{Ad.start_month}', type=int, required=True, help='The start month')
     parser.add_argument(f'--{Ad.end_month}', type=int, required=True, help='The end month')
-    parser.add_argument(f'--{Ad.polygon_fn}', type=int, required=True, help='The end month')
+    parser.add_argument(f'--{Ad.polygon_fn}', type=str, required=True, help='The end month')
     parser.add_argument(f"--{Ad.reset_flag}", type=flag_str2bool, 
                         help='If reset coal_dock_id as null before map.',
                         nargs="?",
