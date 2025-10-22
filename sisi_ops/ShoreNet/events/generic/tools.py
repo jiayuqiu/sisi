@@ -37,10 +37,10 @@ def load_events_month(year: int, month: int, vars: ShoreNetVariablesManager) -> 
     WHERE
         begin_year = {year} AND begin_month = {month}
     """
-    with vars.engine.connect() as conn:
-        df = pd.read_sql(
-            sql=text(query), con=conn
-        )
+    df = pd.read_sql(
+        sql=text(query), 
+        con=vars.engine
+    )
     return df
 
 

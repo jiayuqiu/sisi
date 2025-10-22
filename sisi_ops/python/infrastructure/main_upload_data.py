@@ -104,7 +104,7 @@ def run_app():
                 _logger.warning(f"{month_str} statics data not found, skip processing...")
 
         # 2. process events data
-        if data_type in ['all', 'events']:
+        if data_type in EVENTS_DATA_TYPE_FLAGS:
             events_data_fp = os.path.join(
                 vars.dp_names.data_path, stage_env, Dpn.events_folder_name, f"{month_str}.csv"
             )

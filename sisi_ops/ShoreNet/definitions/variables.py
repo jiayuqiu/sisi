@@ -10,6 +10,8 @@ import os
 import platform
 from dotenv import load_dotenv
 import sqlalchemy
+from sqlalchemy.engine.base import Engine
+from sqlalchemy.exc import OperationalError
 
 
 from sisi_ops.ShoreNet.conf import connect_database
@@ -58,26 +60,26 @@ class ShoreNetVariablesManager:
         self.process_workers = 16
 
         # TODO: add loading of parameters from config file(yml)
-        # connect to database
-        self.engine = connect_database(stage_env)
 
-        if self.engine is None:
-            raise ValueError("database connection failed")
-        else:
-            try:
-                self.engine.connect()
-            except sqlalchemy.exc.OperationalError as e:
-                if "Unknown database" in str(e):
-                    raise ConnectionError(f"database connection failed. error: {e}, please create database first.")
-                else:
-                    raise ConnectionError(f"database connection failed. error: {e}")
+        # connect to database
+        self.db_engine = connect_database(stage_env)
         self.warehouse_schema = f"{Prefix.sisi}{self.stage_env}"
 
     def define_dir_path(self) -> DirPathNames:
         return DirPathNames()
-        # return DirPathNames(
-        #     output_path='output'
-        # )
+
+    def engine(self) -> Engine:
+        if self.db_engine is None:
+            raise ValueError("database connection failed")
+        else:
+            try:
+                self.db_engine.connect()
+            except OperationalError as e:
+                if "Unknown database" in str(e):
+                    raise ConnectionError(f"database connection failed. error: {e}, please create database first.")
+                else:
+                    raise ConnectionError(f"database connection failed. error: {e}")
+        return self.db_engine
 
     @staticmethod
     def define_file_names() -> FileNames:
