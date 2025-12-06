@@ -1,2 +1,5 @@
-"mmsi","shipname","shiptype","length","breadth","DWT_float"
-414761000,HUA RUN DIAN LI 10,70.0,199.0,32.0,43402.0
+mmsi,imo,callsign,shipname,shiptype,length,breadth,pos_fixing_device,eta,draught,destination,classtype,receivetime,to_bow,to_stern,to_port,to_starboard
+538008220,9846225,V7A2100,PULAU TOUYI,70,127,19,1,10-27 07:00,53,JP NGO TOKAIF-8,B,1698804383,110,17,15,4
+250003739,"""""",EI QX 3,"""""",37,10,3,0,"""""","""""","""""",A,1698850174,8,2,2,1
+215000038,"""""","""""",MOBIUS,0,"""""","""""",0,"""""","""""","""""",B,1698829835,0,0,0,0
+413793561,"""""","""""",YUXINHUO13399,70,121,21,9,10-29 11:00,18,NANJING,"""""",1698768691,100,21,11,10

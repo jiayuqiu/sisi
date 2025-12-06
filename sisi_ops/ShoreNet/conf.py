@@ -1,11 +1,12 @@
 import os
 
 from sqlalchemy import create_engine
+from sqlalchemy.engine.base import Engine
 
 from sisi_ops.infrastructure.definition.parameters import Prefix
 
 
-def connect_mysql(stage_env: str):
+def connect_mysql(stage_env: str) -> Engine:
     """
     connect mysql
     :return:
@@ -21,20 +22,20 @@ def connect_mysql(stage_env: str):
         f"mysql+pymysql://{mysql_properties['user']}:{mysql_properties['password']}@{mysql_properties['host']}/"
         f"{mysql_properties['database']}?charset=utf8"
     )
-    mysql_engine = create_engine(mysql_uri, echo=False)
+    mysql_engine: Engine = create_engine(mysql_uri, echo=False)
     return mysql_engine
 
 
-def connect_sqlite():
+def connect_sqlite(db_path) -> Engine:
     """
     connect sqlite
     :return:
     """
-    sqlite_engine = create_engine(f"sqlite:///./data/dummy/sisi.db")
+    sqlite_engine: Engine = create_engine(f"sqlite:///{db_path}")
     return sqlite_engine
 
 
-def connect_database(stage_env: str, sql_type: str = "mysql"):
+def connect_database(stage_env: str, sql_type: str = "sqlite", db_path: str = "") -> Engine:
     """
     connect database
 
@@ -45,7 +46,7 @@ def connect_database(stage_env: str, sql_type: str = "mysql"):
         _e = connect_mysql(stage_env)
         return _e
     elif sql_type == "sqlite":
-        _e = connect_sqlite()
+        _e = connect_sqlite(db_path)
         return _e
     else:
-        return None
+        NotImplementedError(f"{sql_type} is not supported.")

@@ -9,8 +9,8 @@
 import os
 import platform
 from dotenv import load_dotenv
-import sqlalchemy
-from sqlalchemy.engine.base import Engine
+# import sqlalchemy
+# from sqlalchemy.engine.base import Engine
 from sqlalchemy.exc import OperationalError
 
 
@@ -30,6 +30,7 @@ class ShoreNetVariablesManager:
     def __init__(self, stage_env: str):
         load_dotenv("./.env")
         self.stage_env = stage_env
+        self.db_path = os.environ["DB_PATH"]
         self.root_path = os.environ["ROOT_PATH"]
         
         # dir path
@@ -62,24 +63,22 @@ class ShoreNetVariablesManager:
         # TODO: add loading of parameters from config file(yml)
 
         # connect to database
-        self.db_engine = connect_database(stage_env)
+        self.engine = connect_database(stage_env=stage_env, db_path=self.db_path)
+        self.connect_engine()
         self.warehouse_schema = f"{Prefix.sisi}{self.stage_env}"
 
     def define_dir_path(self) -> DirPathNames:
         return DirPathNames()
 
-    def engine(self) -> Engine:
-        if self.db_engine is None:
-            raise ValueError("database connection failed")
-        else:
-            try:
-                self.db_engine.connect()
-            except OperationalError as e:
-                if "Unknown database" in str(e):
-                    raise ConnectionError(f"database connection failed. error: {e}, please create database first.")
-                else:
-                    raise ConnectionError(f"database connection failed. error: {e}")
-        return self.db_engine
+    def connect_engine(self) -> None:
+        try:
+            self.engine.connect()
+        except OperationalError as e:
+            if "Unknown database" in str(e):
+                raise ConnectionError(f"database connection failed. error: {e}, please create database first.")
+            else:
+                raise ConnectionError(f"database connection failed. error: {e}")
+        # return self.engine
 
     @staticmethod
     def define_file_names() -> FileNames:

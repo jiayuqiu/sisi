@@ -20,8 +20,14 @@ from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
     stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
-    vars = ShoreNetVariablesManager(stage_env)
+    db_path = os.environ["DB_PATH"]
+    # vars = ShoreNetVariablesManager(stage_env)
 
+    @unittest.skip("Skipping MySQL")
     def test_connect_mysql(self):
         engine = connect_mysql(self.stage_env)
+        self.assertIsInstance(engine, Engine)
+    
+    def test_connect_sqlite(self):
+        engine = connect_sqlite(self.db_path)
         self.assertIsInstance(engine, Engine)

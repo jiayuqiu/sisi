@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sisi_ops"
+version = "0.1.0"
+description = "SISI: Shipping Infrastructure and ShoreNet analysis"
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+authors = [
+  { name = "Jiayu Qiu", email = "qiujiayu0212@gmail.com" }
+]
+license = { text = "MIT" }
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+
+# Core runtime dependencies - keep in sync with requirements.txt
+dependencies = [
+  "numpy==1.26.4",
+  "pandas==2.1.4",
+  "SQLAlchemy==1.4.54",
+  "python-dotenv",
+  "geoalchemy2",
+  "shapely",
+  "plotly",
+  "pymysql",
+  "pymssql",
+  "pytest",
+  "tqdm",
+  "cryptography"
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "ruff",
+  "isort"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sisi_ops*"]
+
+[project.scripts]
+main_init_db = "sisi_ops.python.infrastructure.main_init_db:run_app"
+main_upload_data = "sisi_ops.python.infrastructure.main_upload_data:run_app"
+main_upload_statics = "sisi_ops.python.ShoreNet.main_upload_statics:run_app"
+main_upload_polygon = "sisi_ops.python.ShoreNet.main_upload_polygon:run_app"
