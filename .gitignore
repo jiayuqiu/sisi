@@ -309,7 +309,6 @@ output/*
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python,jupyternotebooks
 
 # set ignore folders
-db/
 tmp/
 .vscode/
 data/*

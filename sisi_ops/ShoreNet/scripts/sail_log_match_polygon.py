@@ -16,10 +16,9 @@ parent_path = os.path.abspath('../../')
 sys.path.append(parent_path)
 # print(sys.path)
 
-from sisi_ops.ShoreNet.conf import mysql_engine
+from sisi_ops.conf import mysql_engine
 from sisi_ops.ShoreNet.utils.get_stage_id import get_stage_id
-from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
-
+from sisi_ops.utils.db.o2m.ShoreNet import DimDockPolygon
 
 argv_list = sys.argv[1:]
 if len(argv_list) < 1:

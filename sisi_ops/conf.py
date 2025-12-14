@@ -31,11 +31,11 @@ def connect_sqlite(db_path) -> Engine:
     connect sqlite
     :return:
     """
-    sqlite_engine: Engine = create_engine(f"sqlite:///{db_path}")
+    sqlite_engine: Engine = create_engine(f"sqlite:///{db_path}", connect_args={"timeout": 60})
     return sqlite_engine
 
 
-def connect_database(stage_env: str, sql_type: str = "sqlite", db_path: str = "") -> Engine:
+def connect_database(stage_env: str, sql_type: str = "mysql", db_path: str = "") -> Engine:
     """
     connect database
 

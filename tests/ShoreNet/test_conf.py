@@ -13,14 +13,13 @@ import unittest
 from dotenv import load_dotenv
 from sqlalchemy.engine import Engine
 
-from sisi_ops.ShoreNet.conf import connect_mysql, connect_sqlite
-from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
+from sisi_ops.conf import connect_mysql, connect_sqlite
 
 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
     stage_env = os.environ["TEST_STAGE_ENV"]  # TODO: deduplicate stage_env loading code.
-    db_path = os.environ["DB_PATH"]
+    db_path = os.environ.get("DB_PATH", "")
     # vars = ShoreNetVariablesManager(stage_env)
 
     @unittest.skip("Skipping MySQL")

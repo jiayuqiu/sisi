@@ -28,9 +28,9 @@ sys.path.append(parent_path)
 print(sys.path)
 
 # from core.ShoreNet.scripts.parse_kml import parse_kml_document
-from sisi_ops.ShoreNet.conf import mysql_engine
+from sisi_ops.conf import mysql_engine
 from sisi_ops.ShoreNet.utils.amap import amap_request
-from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+from sisi_ops.utils.db.o2m.ShoreNet import DimDockPolygon
 
 
 def insert_data():

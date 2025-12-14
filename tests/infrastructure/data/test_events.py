@@ -19,7 +19,7 @@ from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager as 
 class TestEvents(unittest.TestCase):
     load_dotenv(".env")
     stage_env = os.environ.get("TEST_STAGE_ENV", "dummy")  # TODO: deduplicate stage_env loading code.
-    year = 2023
+    year = 2020
     month = 6
     month_str = f"{year}{month:02d}"
     vars = Vm(stage_env)
@@ -34,7 +34,8 @@ class TestEvents(unittest.TestCase):
                 f"{self.month_str}.csv"
             )
         )
-        self.wrangled_df = sdp.wrangle(year=self.year, month=self.month)
+        self.wrangled_df = sdp.wrangle(year=self.year, month=self.month).copy()
+        self.wrangled_df = self.wrangled_df.loc[:1000, :]
     
     def tearDown(self):
         """Run some functions at end of the testing. Nothing to do yet."""

@@ -24,7 +24,7 @@ from sisi_ops.infrastructure.definition.parameters import (
     ColumnNames as Cn
 )
 from sisi_ops.ShoreNet.utils.polygon import KMLParser
-from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+from sisi_ops.utils.db.o2m.ShoreNet import DimDockPolygon
 from sisi_ops.ShoreNet.definitions.mapping import EVENT_FIELDS_MAPPING
 from sisi_ops.ShoreNet.statics.filter import clean_up_statics
 # from core.ShoreNet.definitions.parameters import ArgsDefinition as Ad

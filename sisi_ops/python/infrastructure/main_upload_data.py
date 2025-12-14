@@ -9,15 +9,13 @@
 '''
 
 import os
-import glob
 import argparse
-from typing import Any, Union
+from typing import Union
 
 from sisi_ops.infrastructure.data.statics import StaticsDataProcessor
 from sisi_ops.infrastructure.data.events import EventsDataProcessor
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager as Vm
-from sisi_ops.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
-from sisi_ops.ShoreNet.utils.db.DimShipsStatics import DimShipsStatics
+from sisi_ops.utils.db.o2m.ShoreNet.FactorAllStopEvent import FactorAllStopEvents, DimShipsStatics
 from sisi_ops.infrastructure.definition.parameters import (
     DirPathNames as Dpn,
     ColumnNames as Cn, 

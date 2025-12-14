@@ -30,7 +30,6 @@ class TestEvents(unittest.TestCase):
         # -. load tests data
         df = pd.read_csv(
             os.path.join(
-                self.vars.root_path,
                 self.vars.dp_names.test_analyze_source_data_path,
                 'test_departure_arrival_docks.csv'
             ),
@@ -43,7 +42,6 @@ class TestEvents(unittest.TestCase):
                                             "sail_duration"]]
         res_dd_df = pd.read_csv(
             os.path.join(
-                self.vars.root_path,
                 self.vars.dp_names.test_analyze_result_data_path,
                 'test_departure_arrival_docks.csv'
             ),

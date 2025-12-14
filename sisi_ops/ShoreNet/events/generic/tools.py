@@ -10,12 +10,11 @@ import re
 
 import pandas as pd
 
-from sqlalchemy import func, text
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from sisi_ops.infrastructure.definition.parameters import Prefix
-from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+from sisi_ops.utils.db.o2m.ShoreNet import DimDockPolygon
 from sisi_ops.infrastructure.definition.parameters import WarehouseDefinitions as tbn
 
 

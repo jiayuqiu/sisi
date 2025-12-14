@@ -19,8 +19,8 @@ from sisi_ops.infrastructure.definition.parameters import (
     ArgsDefinition as Ad,
     ColumnNames as Cn
 )
-from sisi_ops.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
-from sisi_ops.ShoreNet.events.generic.tools import load_events_month, load_dock_polygon, load_csv_dock_polygon
+from sisi_ops.utils.db.o2m.ShoreNet.FactorAllStopEvent import FactorAllStopEvents
+from sisi_ops.ShoreNet.events.generic.tools import load_events_month, load_csv_dock_polygon
 from sisi_ops.ShoreNet.events.polygon import match_polygons
 from sisi_ops.utils.setup_logger import set_logger
 from sisi_ops.utils.helper.tools import flag_str2bool

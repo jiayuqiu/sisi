@@ -9,17 +9,18 @@
 '''
 
 import argparse
-from sqlalchemy import text
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
+from sqlalchemy.orm import sessionmaker
 
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from sisi_ops.infrastructure.definition.parameters import ArgsDefinition as Ad
-from sisi_ops.ShoreNet.utils.db.base import Base
-from sisi_ops.ShoreNet.utils.db.DataODPairs import DataODPairs
-from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
-from sisi_ops.ShoreNet.utils.db.DimPolygonType import DimPolygonType
-from sisi_ops.ShoreNet.utils.db.DimShipsStatics import DimShipsStatics
-from sisi_ops.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
+from sisi_ops.utils.db.o2m.ShoreNet.base import Base
+from sisi_ops.utils.db.o2m.ShoreNet.DimDockPolygon import DimDockPolygon
+from sisi_ops.utils.db.o2m.ShoreNet.FactorAllStopEvent import FactorAllStopEvents
+from sisi_ops.utils.db.o2m.ShoreNet.DataODPairs import DataODPairs
+from sisi_ops.utils.db.o2m.ShoreNet.DimPolygonType import DimPolygonType
+from sisi_ops.utils.db.o2m.ShoreNet.DimShipsStatics import DimShipsStatics
+from sisi_ops.utils.db.definitions.sqlite import SQLiteConfig
 from sisi_ops.utils.setup_logger import set_logger
 
 _logger = set_logger(__name__)
@@ -34,20 +35,29 @@ def run_app():
     force = args.__getattribute__(Ad.force_flag)
     
     vars = ShoreNetVariablesManager(stage_env)
+    if vars.db_type == "sqlite":
+        # db_config = SQLiteConfig(db_path=vars.db_path)
+        # db_config.create_db_file()
+        raise NotImplementedError("SQLite database initialization is not implemented yet.")
+    elif vars.db_type == "mysql":
+        # raise NotImplementedError("MySQL database initialization is not implemented yet.")
+        # -. check database if exists
+        with vars.engine.connect() as con:
+            result = con.execute(
+                text("SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :db_name"),
+                {"db_name": vars.warehouse_schema}
+            )
 
-    # -. check database if exists
-    with vars.engine.connect() as con:
-        result = con.execute(
-            text("SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :db_name"),
-            {"db_name": vars.warehouse_schema}
-        )
-    
-    if not result.scalar():
-        raise RuntimeError(
-            f"Database '{vars.warehouse_schema}' not found. Please create the database first."
-        )
+        if not result.scalar():
+            raise RuntimeError(
+                f"Database '{vars.warehouse_schema}' not found. Please create the database first."
+            )
+        else:
+            _logger.info(f"Database '{vars.warehouse_schema}' already existed.")
     else:
-        _logger.info(f"Database '{vars.warehouse_schema}' already existed.")
+        raise ValueError(f"Unsupported database type: {vars.db_type}")
+
+
     
     # -. check tables
     inspector = inspect(vars.engine)
@@ -65,7 +75,6 @@ def run_app():
     ]
     
     if tables_to_create:
-        _logger.info(f"Creating tables: {tables_to_create}")
         Base.metadata.create_all(vars.engine)
         _logger.info("Tables created successfully!")
     else:

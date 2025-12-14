@@ -5,7 +5,7 @@ import traceback
 
 import math
 
-from sisi_ops.ShoreNet.conf import ss_engine
+from sisi_ops.conf import ss_engine
 
 
 def str_to_int(value):

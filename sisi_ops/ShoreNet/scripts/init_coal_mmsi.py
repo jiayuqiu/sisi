@@ -33,7 +33,7 @@ elif os.name == 'posix' or os_name == 'Linux':
 else:
     DATA_PATH = r"/mnt/d/data/sisi/"
 
-from sisi_ops.ShoreNet.conf import ss_engine
+from sisi_ops.conf import ss_engine
 from sisi_ops.ShoreNet.scripts.sail_log_match_polygon import find_dock
 
 

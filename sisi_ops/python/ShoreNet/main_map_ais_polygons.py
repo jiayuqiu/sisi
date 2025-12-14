@@ -6,22 +6,11 @@
 @DESC    :  match polygon for events which is without polygon
 """
 
-import argparse
-import traceback
-
 import numpy as np
 from numba.typed import List
 from numba import njit, prange
-from sqlalchemy.orm import sessionmaker
 
-from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
-from sisi_ops.infrastructure.definition.parameters import (
-    ArgsDefinition as Ad,
-    ColumnNames as Cn
-)
-from sisi_ops.ShoreNet.utils.db.FactorAllStopEvent import FactorAllStopEvents
-from sisi_ops.ShoreNet.events.generic.tools import load_events_month, load_dock_polygon
-from sisi_ops.ShoreNet.events.polygon import map_event_polygon, map_event_polygon_numba, point_in_poly
+from sisi_ops.ShoreNet.events.polygon import map_event_polygon, point_in_poly
 # from core.ShoreNet.utils.geo import point_poly_cuda
 from sisi_ops.utils.setup_logger import set_logger
 

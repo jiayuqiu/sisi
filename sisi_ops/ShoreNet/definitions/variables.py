@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from sqlalchemy.exc import OperationalError
 
 
-from sisi_ops.ShoreNet.conf import connect_database
+from sisi_ops.conf import connect_database
 from sisi_ops.infrastructure.definition.parameters import (
     Prefix,
     DirPathNames,
@@ -30,8 +30,9 @@ class ShoreNetVariablesManager:
     def __init__(self, stage_env: str):
         load_dotenv("./.env")
         self.stage_env = stage_env
-        self.db_path = os.environ["DB_PATH"]
-        self.root_path = os.environ["ROOT_PATH"]
+        self.db_path = os.environ.get("DB_PATH", "")
+        self.db_type = os.environ["SISI_DB_TYPE"]
+        # self.root_path = os.environ["ROOT_PATH"]
         
         # dir path
         self.dp_names: DirPathNames = self.define_dir_path()
@@ -73,6 +74,7 @@ class ShoreNetVariablesManager:
     def connect_engine(self) -> None:
         try:
             self.engine.connect()
+            self.engine.dispose()
         except OperationalError as e:
             if "Unknown database" in str(e):
                 raise ConnectionError(f"database connection failed. error: {e}, please create database first.")

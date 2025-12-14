@@ -28,7 +28,7 @@ print(sys.path)
 
 from sklearn.cluster import DBSCAN
 
-from sisi_ops.ShoreNet.conf import sql_server_properties
+from sisi_ops.conf import sql_server_properties
 
 
 os_name = platform.system()

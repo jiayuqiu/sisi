@@ -12,7 +12,7 @@
 from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
 
-from sisi_ops.ShoreNet.utils.db.DimDockPolygon import DimDockPolygon
+from sisi_ops.utils.db.o2m.ShoreNet import DimDockPolygon
 from sisi_ops.ShoreNet.utils.polygon import KMLParser
 from sisi_ops.ShoreNet.definitions.variables import ShoreNetVariablesManager
 from sisi_ops.utils.setup_logger import set_logger
